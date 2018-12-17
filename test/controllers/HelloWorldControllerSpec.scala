@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.AppConfig
+package controllers
 
-@(appConfig: AppConfig)(implicit request: Request[_], messages: Messages)
+import base.SpecBase
+import play.api.test.Helpers.{contentAsString, _}
 
-@main_template(
-    title = messages("unauthorised.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+class HelloWorldControllerSpec extends SpecBase {
 
-    @templates.heading(messages("unauthorised.heading"))
+  object TestHelloWorldController extends HelloWorldController
 
+  "HelloWorldController" must {
+
+    "return 200 for a GET" in {
+      val result = TestHelloWorldController.show()(fakeRequest)
+      status(result) mustBe OK
+      contentAsString(result) mustBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
+    }
+  }
 }

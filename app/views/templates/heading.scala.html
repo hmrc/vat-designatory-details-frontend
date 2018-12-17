@@ -14,15 +14,8 @@
  * limitations under the License.
  *@
 
-@import config.AppConfig
+@(heading: String)(implicit messages: Messages)
 
-@(appConfig: AppConfig)(implicit request: Request[_], messages: Messages)
-
-@main_template(
-    title = messages("unauthorised.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
-
-    @templates.heading(messages("unauthorised.heading"))
-
-}
+<header>
+    <h1 class="heading-large">@heading</h1>
+</header>
