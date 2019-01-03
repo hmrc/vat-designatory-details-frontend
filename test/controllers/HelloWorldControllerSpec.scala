@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package views
+package controllers
 
-import play.api.data.Form
-import play.api.i18n.Messages
+import base.SpecBase
+import play.api.test.Helpers.{contentAsString, _}
 
-object ViewUtils {
+class HelloWorldControllerSpec extends SpecBase {
 
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
+  object TestHelloWorldController extends HelloWorldController
+
+  "HelloWorldController" must {
+
+    "return 200 for a GET" in {
+      val result = TestHelloWorldController.show()(fakeRequest)
+      status(result) mustBe OK
+      contentAsString(result) mustBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
+    }
   }
 }

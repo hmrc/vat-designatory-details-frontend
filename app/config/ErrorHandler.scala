@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package views
+package config
 
-import play.api.data.Form
-import play.api.i18n.Messages
+import javax.inject.{Inject, Singleton}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.Request
+import play.twirl.api.Html
+import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 
-object ViewUtils {
+@Singleton
+class ErrorHandler @Inject()(appConfig: AppConfig,
+                             val messagesApi: MessagesApi) extends FrontendErrorHandler with I18nSupport {
 
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
-  }
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
+    views.html.templates.error_template(pageTitle, heading, message, appConfig)
 }
+

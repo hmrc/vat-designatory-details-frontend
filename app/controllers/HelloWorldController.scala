@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package views
+package controllers
 
-import play.api.data.Form
-import play.api.i18n.Messages
+import javax.inject.Inject
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import config.AppConfig
 
-object ViewUtils {
+class HelloWorldController @Inject()(implicit val appConfig: AppConfig,
+                                     implicit val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
 
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
+  def show: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.index())
   }
 }

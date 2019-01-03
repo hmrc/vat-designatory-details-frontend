@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package views
+package config.filters
 
-import play.api.data.Form
-import play.api.i18n.Messages
+import javax.inject.Inject
+import play.api.http.DefaultHttpFilters
+import play.filters.csrf.CSRFFilter
+import uk.gov.hmrc.play.bootstrap.filters.FrontendFilters
 
-object ViewUtils {
-
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
-  }
-}
+class ServiceFilters @Inject()(defaultFilters: FrontendFilters,
+                               excludingCSRFFilter: ExcludingCSRFFilter,
+                               whitelistFilter: WhitelistFilter) extends DefaultHttpFilters(
+  {
+    defaultFilters
+      .filters
+      .filterNot(f => f.isInstanceOf[CSRFFilter]) :+
+    excludingCSRFFilter :+
+    whitelistFilter
+  }: _*
+)
