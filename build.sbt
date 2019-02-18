@@ -4,6 +4,7 @@ import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, s
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
+lazy val appDependencies: Seq[ModuleID] = compile ++ test
 lazy val appName: String = "vat-designatory-details-frontend"
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
@@ -34,6 +35,25 @@ lazy val coverageSettings: Seq[Setting[_]] = {
   )
 }
 
+val compile = Seq(
+  play.sbt.PlayImport.ws,
+  "uk.gov.hmrc" %% "govuk-template" % "5.22.0",
+  "uk.gov.hmrc" %% "play-ui" % "7.32.0-play-25",
+  "uk.gov.hmrc" %% "bootstrap-play-25" % "4.9.0",
+  "uk.gov.hmrc" %% "play-whitelist-filter" % "2.0.0",
+  "uk.gov.hmrc" %% "play-language" % "3.4.0"
+)
+
+val test = Seq(
+  "uk.gov.hmrc" %% "hmrctest" % "3.5.0-play-25",
+  "org.scalatest" %% "scalatest" % "3.0.5",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
+  "org.pegdown" % "pegdown" % "1.6.0",
+  "org.jsoup" % "jsoup" % "1.11.3",
+  "com.typesafe.play" %% "play-test" % PlayVersion.current,
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0"
+).map(_ % Test)
+
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {
   test =>
      Group(
@@ -55,7 +75,7 @@ lazy val microservice: Project = Project(appName, file("."))
       Keys.fork in Test := true,
       javaOptions in Test += "-Dlogger.resource=logback-test.xml",
       scalaVersion := "2.11.11",
-      libraryDependencies ++= AppDependencies(),
+      libraryDependencies ++= appDependencies,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
       routesGenerator := InjectedRoutesGenerator
