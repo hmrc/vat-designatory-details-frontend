@@ -37,15 +37,15 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 
 val compile = Seq(
   play.sbt.PlayImport.ws,
-  "uk.gov.hmrc" %% "govuk-template" % "5.28.0-play-25",
-  "uk.gov.hmrc" %% "play-ui" % "7.32.0-play-25",
-  "uk.gov.hmrc" %% "bootstrap-play-25" % "4.9.0",
+  "uk.gov.hmrc" %% "govuk-template" % "5.35.0-play-25",
+  "uk.gov.hmrc" %% "play-ui" % "7.39.0-play-25",
+  "uk.gov.hmrc" %% "bootstrap-play-25" % "4.11.0",
   "uk.gov.hmrc" %% "play-whitelist-filter" % "2.0.0",
   "uk.gov.hmrc" %% "play-language" % "3.4.0"
 )
 
 val test = Seq(
-  "uk.gov.hmrc" %% "hmrctest" % "3.5.0-play-25",
+  "uk.gov.hmrc" %% "hmrctest" % "3.8.0-play-25",
   "org.scalatest" %% "scalatest" % "3.0.5",
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
   "org.pegdown" % "pegdown" % "1.6.0",
