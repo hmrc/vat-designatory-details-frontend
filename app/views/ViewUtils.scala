@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.utils
+package views
 
 import play.api.data.Form
 import play.api.i18n.Messages
