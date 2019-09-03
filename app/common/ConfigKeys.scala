@@ -30,7 +30,7 @@ object ConfigKeys {
   val whitelistShutterPage: String = "whitelist.shutter-page-url"
   val vatSummaryHost: String = "vat-summary-frontend.host"
   val vatSummaryAccessibilityUrl: String = "vat-summary-frontend.accessibilityStatement.url"
-  val languageTranslationEnabled: String = "features.welsh-translation"
-  val accessibilityStatementEnabled: String = "features.accessibility-statement"
+  val languageToggleEnabled: String = "features.welsh-language.enabled"
+  val accessibilityStatementEnabled: String = "features.accessibility-statement.enabled"
 
 }

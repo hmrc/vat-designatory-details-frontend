@@ -17,6 +17,7 @@
 package base
 
 import config.AppConfig
+import config.features.Features
 import play.api.Mode.Mode
 import play.api.mvc.Call
 import play.api.{Configuration, Mode}
@@ -34,8 +35,7 @@ class MockAppConfig(implicit val runModeConfiguration: Configuration) extends Ap
   override val shutterPage: String = ""
   override val betaFeedbackUrl: String = ""
   override val betaFeedbackUnauthenticatedUrl: String = ""
-  override val languageTranslationEnabled: Boolean = false
-  override val accessibilityStatementEnabled: Boolean = true
   override val accessibilityStatementUrl: String = "/accessibility"
+  override val features: Features = new Features(runModeConfiguration)
 
 }
