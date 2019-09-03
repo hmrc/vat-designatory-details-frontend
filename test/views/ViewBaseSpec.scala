@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package controllers
+package views
 
 import base.BaseSpec
-import play.api.test.Helpers.{contentAsString, _}
+import org.jsoup.nodes.{Document, Element}
 
-class HelloWorldControllerSpec extends BaseSpec {
+trait ViewBaseSpec extends BaseSpec {
 
-  object TestHelloWorldController extends HelloWorldController
+  def element(cssSelector: String)(implicit document: Document): Element = {
+    val elements = document.select(cssSelector)
 
-  "HelloWorldController" must {
-
-    "return 200 for a GET" in {
-      val result = TestHelloWorldController.show()(fakeRequest)
-      status(result) shouldBe OK
-      contentAsString(result) shouldBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
+    if (elements.size == 0) {
+      fail(s"No element exists with the selector '$cssSelector'")
     }
+
+    document.select(cssSelector).first()
+  }
+
+  def elementText(selector: String)(implicit document: Document): String = {
+    element(selector).text()
   }
 }

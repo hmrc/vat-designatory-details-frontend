@@ -37,6 +37,8 @@ trait AppConfig extends ServicesConfig {
   val whitelistExcludedPaths: Seq[Call]
   val shutterPage: String
   val languageTranslationEnabled: Boolean
+  val accessibilityStatementUrl: String
+  val accessibilityStatementEnabled: Boolean
 }
 
 @Singleton
@@ -72,5 +74,8 @@ class FrontendAppConfig @Inject() (val runModeConfiguration: Configuration,
   private def whitelistConfig(key: String): Seq[String] = Some(new String(Base64.getDecoder
     .decode(getString(key)), "UTF-8"))
     .map(_.split(",")).getOrElse(Array.empty).toSeq
+
+  override lazy val accessibilityStatementUrl: String = getString(Keys.vatSummaryHost) + getString(Keys.vatSummaryAccessibilityUrl)
+  override lazy val accessibilityStatementEnabled: Boolean = getBoolean(Keys.accessibilityStatementEnabled)
 
 }

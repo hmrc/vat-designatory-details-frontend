@@ -35,5 +35,7 @@ class MockAppConfig(implicit val runModeConfiguration: Configuration) extends Ap
   override val betaFeedbackUrl: String = ""
   override val betaFeedbackUnauthenticatedUrl: String = ""
   override val languageTranslationEnabled: Boolean = false
+  override val accessibilityStatementEnabled: Boolean = true
+  override val accessibilityStatementUrl: String = "/accessibility"
 
 }

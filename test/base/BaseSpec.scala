@@ -16,7 +16,7 @@
 
 package base
 
-import org.scalatestplus.play.PlaySpec
+import org.scalatest.{WordSpec, Matchers}
 import org.scalatestplus.play.guice._
 import play.api.Configuration
 import play.api.i18n.{Messages, MessagesApi}
@@ -24,7 +24,7 @@ import play.api.inject.Injector
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite {
+trait BaseSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
 
   lazy val injector: Injector = app.injector
 
