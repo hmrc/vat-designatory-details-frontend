@@ -25,7 +25,8 @@ lazy val coverageSettings: Seq[Setting[_]] = {
     "config.*",
     ".*LanguageSwitchController",
     "prod.*",
-    "views.*")
+    "views.*",
+    "testOnly.*")
 
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
