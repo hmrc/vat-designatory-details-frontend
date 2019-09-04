@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package controllers
+@(field: Field, label: String)(implicit messages: Messages)
 
-import base.BaseSpec
-import play.api.test.Helpers.{contentAsString, _}
+@value = @{ field.value match { case Some(x) => x case None => "false" case x => x }}
 
-class HelloWorldControllerSpec extends BaseSpec {
+<div class="multiple-choice">
+    <input id="@{field.name}" name="@{field.name}" type="checkbox" value="true" @if(value == "true"){ checked }>
+    <label for="@{field.name}">@label</label>
+</div>
 
-  object TestHelloWorldController extends HelloWorldController
-
-  "HelloWorldController" must {
-
-    "return 200 for a GET" in {
-      val result = TestHelloWorldController.show()(fakeRequest)
-      status(result) shouldBe OK
-      contentAsString(result) shouldBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
-    }
-  }
-}

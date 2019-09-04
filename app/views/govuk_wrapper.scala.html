@@ -60,7 +60,11 @@
 }
 
 @footerTop = {}
-@footerLinks = {}
+@footerLinks = {
+  @uiLayouts.footer_links(
+    accessibilityFooterUrl = if(appConfig.features.accessibilityStatementEnabled()) Some(appConfig.accessibilityStatementUrl) else None
+  )
+}
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
@@ -89,4 +93,4 @@
       sidebar = sidebar)
 }
 
-@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@hmrcGovUkTemplate(title = Some(title), bodyClasses = bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), nav = true)(content)

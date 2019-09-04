@@ -17,8 +17,10 @@
 package config
 
 import java.util.Base64
+
 import com.google.inject.{Inject, Singleton}
 import common.{ConfigKeys => Keys}
+import config.features.Features
 import play.api.{Configuration, Environment}
 import play.api.Mode.Mode
 import play.api.i18n.Lang
@@ -36,7 +38,8 @@ trait AppConfig extends ServicesConfig {
   val whitelistedIps: Seq[String]
   val whitelistExcludedPaths: Seq[Call]
   val shutterPage: String
-  val languageTranslationEnabled: Boolean
+  val accessibilityStatementUrl: String
+  val features: Features
 }
 
 @Singleton
@@ -60,7 +63,6 @@ class FrontendAppConfig @Inject() (val runModeConfiguration: Configuration,
   override lazy val whitelistedIps: Seq[String] = whitelistConfig(Keys.whitelistedIps)
   override lazy val whitelistExcludedPaths: Seq[Call] = whitelistConfig(Keys.whitelistExcludedPaths).map(path => Call("GET", path))
   override lazy val shutterPage: String = getString(Keys.whitelistShutterPage)
-  override lazy val languageTranslationEnabled: Boolean = getBoolean(Keys.languageTranslationEnabled)
 
   //Language switching
   lazy val routeToSwitchLanguage: String => Call = (lang: String) => controllers.routes.LanguageSwitchController.switchToLanguage(lang)
@@ -72,5 +74,8 @@ class FrontendAppConfig @Inject() (val runModeConfiguration: Configuration,
   private def whitelistConfig(key: String): Seq[String] = Some(new String(Base64.getDecoder
     .decode(getString(key)), "UTF-8"))
     .map(_.split(",")).getOrElse(Array.empty).toSeq
+
+  override lazy val accessibilityStatementUrl: String = getString(Keys.vatSummaryHost) + getString(Keys.vatSummaryAccessibilityUrl)
+  override val features = new Features(runModeConfiguration)
 
 }

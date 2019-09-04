@@ -25,7 +25,8 @@ lazy val coverageSettings: Seq[Setting[_]] = {
     "config.*",
     ".*LanguageSwitchController",
     "prod.*",
-    "views.*")
+    "views.*",
+    "testOnly.*")
 
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
@@ -37,9 +38,9 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 
 val compile = Seq(
   play.sbt.PlayImport.ws,
-  "uk.gov.hmrc" %% "govuk-template" % "5.36.0-play-25",
-  "uk.gov.hmrc" %% "play-ui" % "7.40.0-play-25",
-  "uk.gov.hmrc" %% "bootstrap-play-25" % "4.13.0",
+  "uk.gov.hmrc" %% "govuk-template" % "5.38.0-play-25",
+  "uk.gov.hmrc" %% "play-ui" % "8.0.0-play-25",
+  "uk.gov.hmrc" %% "bootstrap-play-25" % "4.16.0",
   "uk.gov.hmrc" %% "play-whitelist-filter" % "3.1.0-play-25",
   "uk.gov.hmrc" %% "play-language" % "3.4.0"
 )
@@ -66,6 +67,7 @@ def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {
 lazy val microservice: Project = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins: _*)
   .settings(coverageSettings: _*)
+  .settings(PlayKeys.playDefaultPort := 9165)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)

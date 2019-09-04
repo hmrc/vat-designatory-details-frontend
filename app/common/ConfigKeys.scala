@@ -28,6 +28,9 @@ object ConfigKeys {
   val whitelistedIps: String = "whitelist.allowedIps"
   val whitelistExcludedPaths: String = "whitelist.excludedPaths"
   val whitelistShutterPage: String = "whitelist.shutter-page-url"
-  val languageTranslationEnabled: String = "features.welsh-translation"
+  val vatSummaryHost: String = "vat-summary-frontend.host"
+  val vatSummaryAccessibilityUrl: String = "vat-summary-frontend.accessibilityStatement.url"
+  val languageToggleEnabled: String = "features.welsh-language.enabled"
+  val accessibilityStatementEnabled: String = "features.accessibility-statement.enabled"
 
 }

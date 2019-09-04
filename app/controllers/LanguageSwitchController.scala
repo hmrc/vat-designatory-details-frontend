@@ -35,7 +35,7 @@ class LanguageSwitchController @Inject()(configuration: Configuration,
 
   def switchToLanguage(language: String): Action[AnyContent] = Action {
     implicit request =>
-      val enabled = appConfig.languageTranslationEnabled
+      val enabled = appConfig.features.languageToggleEnabled()
       val lang = if (enabled) {
         languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
       } else {

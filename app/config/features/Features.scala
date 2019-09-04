@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package config.features
 
-import base.BaseSpec
-import play.api.test.Helpers.{contentAsString, _}
+import common.ConfigKeys
+import javax.inject.{Inject, Singleton}
+import play.api.Configuration
 
-class HelloWorldControllerSpec extends BaseSpec {
-
-  object TestHelloWorldController extends HelloWorldController
-
-  "HelloWorldController" must {
-
-    "return 200 for a GET" in {
-      val result = TestHelloWorldController.show()(fakeRequest)
-      status(result) shouldBe OK
-      contentAsString(result) shouldBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
-    }
-  }
+@Singleton
+class Features @Inject()(config: Configuration) {
+  val languageToggleEnabled = new Feature(ConfigKeys.languageToggleEnabled, config)
+  val accessibilityStatementEnabled = new Feature(ConfigKeys.accessibilityStatementEnabled, config)
 }

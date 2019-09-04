@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package controllers
+package testOnly.forms
 
-import base.BaseSpec
-import play.api.test.Helpers.{contentAsString, _}
+import common.ConfigKeys
+import play.api.data.Form
+import play.api.data.Forms._
+import testOnly.models.FeatureSwitchModel
 
-class HelloWorldControllerSpec extends BaseSpec {
+object FeatureSwitchForm {
 
-  object TestHelloWorldController extends HelloWorldController
-
-  "HelloWorldController" must {
-
-    "return 200 for a GET" in {
-      val result = TestHelloWorldController.show()(fakeRequest)
-      status(result) shouldBe OK
-      contentAsString(result) shouldBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
-    }
-  }
+  val form: Form[FeatureSwitchModel] = Form(
+    mapping(
+      ConfigKeys.languageToggleEnabled -> boolean,
+      ConfigKeys.accessibilityStatementEnabled -> boolean
+  )(FeatureSwitchModel.apply)(FeatureSwitchModel.unapply)
+  )
 }

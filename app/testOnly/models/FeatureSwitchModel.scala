@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-package controllers
+package testOnly.models
 
-import base.BaseSpec
-import play.api.test.Helpers.{contentAsString, _}
-
-class HelloWorldControllerSpec extends BaseSpec {
-
-  object TestHelloWorldController extends HelloWorldController
-
-  "HelloWorldController" must {
-
-    "return 200 for a GET" in {
-      val result = TestHelloWorldController.show()(fakeRequest)
-      status(result) shouldBe OK
-      contentAsString(result) shouldBe views.html.index()(fakeRequest, messages, mockAppConfig).toString
-    }
-  }
-}
+case class FeatureSwitchModel(
+                               languageToggle: Boolean,
+                               accessibilityStatementToggle: Boolean
+                             )
