@@ -30,8 +30,8 @@
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 
 @linkElem = {
-        <link rel="stylesheet" href='@routes.Assets.versioned("public/css/focus.css")' />
-        <link rel="stylesheet" href='@routes.Assets.versioned("public/css/palette.css")' />
+        <link rel="stylesheet" href='@routes.Assets.at("css/focus.css")' />
+        <link rel="stylesheet" href='@routes.Assets.at("css/palette.css")' />
 }
 
 @head = {
@@ -60,7 +60,6 @@
       ssoUrl = None,
       scriptElem = scriptElem,
       gaCalls = None)
-      <script src='@routes.Assets.versioned("javascripts/vatdesignatorydetailsfrontend-app.min.js")'> </script>
 }
 
 @footerTop = {}
