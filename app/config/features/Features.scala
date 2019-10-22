@@ -23,5 +23,4 @@ import play.api.Configuration
 @Singleton
 class Features @Inject()(config: Configuration) {
   val languageToggleEnabled = new Feature(ConfigKeys.languageToggleEnabled, config)
-  val accessibilityStatementEnabled = new Feature(ConfigKeys.accessibilityStatementEnabled, config)
 }

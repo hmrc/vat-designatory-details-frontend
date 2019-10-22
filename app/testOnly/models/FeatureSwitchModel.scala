@@ -17,6 +17,5 @@
 package testOnly.models
 
 case class FeatureSwitchModel(
-                               languageToggle: Boolean,
-                               accessibilityStatementToggle: Boolean
+                               languageToggle: Boolean
                              )

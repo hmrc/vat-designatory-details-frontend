@@ -25,8 +25,7 @@ object FeatureSwitchForm {
 
   val form: Form[FeatureSwitchModel] = Form(
     mapping(
-      ConfigKeys.languageToggleEnabled -> boolean,
-      ConfigKeys.accessibilityStatementEnabled -> boolean
+      ConfigKeys.languageToggleEnabled -> boolean
   )(FeatureSwitchModel.apply)(FeatureSwitchModel.unapply)
   )
 }

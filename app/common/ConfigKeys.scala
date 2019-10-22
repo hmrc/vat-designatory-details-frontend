@@ -31,6 +31,5 @@ object ConfigKeys {
   val vatSummaryHost: String = "vat-summary-frontend.host"
   val vatSummaryAccessibilityUrl: String = "vat-summary-frontend.accessibilityStatement.url"
   val languageToggleEnabled: String = "features.welsh-language.enabled"
-  val accessibilityStatementEnabled: String = "features.accessibility-statement.enabled"
 
 }

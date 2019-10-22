@@ -31,8 +31,7 @@ class FeatureSwitchController @Inject()(val messagesApi: MessagesApi,
   def featureSwitch: Action[AnyContent] = Action { implicit request =>
     Ok(testOnly.views.html.featureSwitch(FeatureSwitchForm.form.fill(
       FeatureSwitchModel(
-        languageToggle = appConfig.features.languageToggleEnabled(),
-        accessibilityStatementToggle = appConfig.features.accessibilityStatementEnabled()
+        languageToggle = appConfig.features.languageToggleEnabled()
       )
     )))
   }
@@ -46,7 +45,6 @@ class FeatureSwitchController @Inject()(val messagesApi: MessagesApi,
 
   def handleSuccess(model: FeatureSwitchModel): Result = {
     appConfig.features.languageToggleEnabled(model.languageToggle)
-    appConfig.features.accessibilityStatementEnabled(model.accessibilityStatementToggle)
     Redirect(routes.FeatureSwitchController.featureSwitch())
   }
 }
