@@ -1,0 +1,24 @@
+# microservice specific routes
+
+GET         /assets/*file                          controllers.Assets.at(path="/public", file)
+
+GET         /language/:lang                        controllers.LanguageController.switchToLanguage(lang: String)
+GET         /sign-out                              controllers.SignOutController.signOut(feedbackOnSignOut: Boolean)
+
+# capture trading name
+GET         /new-trading-name                      controllers.tradingName.CaptureTradingNameController.show
+POST        /new-trading-name                      controllers.tradingName.CaptureTradingNameController.submit
+
+# confirm trading name
+GET         /confirm-new-trading-name              controllers.tradingName.ConfirmTradingNameController.show
+GET         /update-trading-name                   controllers.tradingName.ConfirmTradingNameController.updateTradingName
+
+# tradingName change successful
+GET         /trading-name-confirmation             controllers.ChangeSuccessController.tradingName
+
+# remove trading name
+GET         /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.show
+GET         /update-remove-trading-name            controllers.tradingName.ConfirmRemoveTradingNameController.removeTradingNameAddress
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                          controllers.Assets.at(path="/public", file)
