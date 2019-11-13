@@ -30,6 +30,11 @@ class OrganisationDetailsSpec extends UnitSpec {
         val result = organisationDetailsJson.as[OrganisationDetails]
         result shouldBe organisationDetailsModel
       }
+
+      "no fields are present" in {
+        val result = organisationDetailsJsonMin.as[OrganisationDetails]
+        result shouldBe organisationDetailsModelMin
+      }
     }
 
     "parse to Json" when {
@@ -37,6 +42,11 @@ class OrganisationDetailsSpec extends UnitSpec {
       "all fields are present" in {
         val result = Json.toJson(organisationDetailsModel)
         result shouldBe organisationDetailsJson
+      }
+
+      "no fields are present" in {
+        val result = Json.toJson(organisationDetailsModelMin)
+        result shouldBe organisationDetailsJsonMin
       }
     }
   }

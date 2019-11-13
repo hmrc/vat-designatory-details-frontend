@@ -134,20 +134,12 @@ class InFlightPredicateSpec extends MockAuth {
       "the user has a change pending which isn't trading name" should {
 
         lazy val result = {
-          setup(Right(minCustomerInfoModel.copy(pendingChanges = Some(PendingChanges(None)))))
-          await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get
+          setup(Right(fullCustomerInfoModelSameTradingName))
+          await(inflightTradingNamePredicate.refine(userWithoutSession))
         }
 
-        "return 303" in {
-          status(result) shouldBe Status.SEE_OTHER
-        }
-
-        "redirect the user to the capture trading name page" in {
-          redirectLocation(result) shouldBe Some("/redirect-location")
-        }
-
-        "add the inflight indicator 'false' to session" in {
-          session(result).get(inFlightTradingNameChangeKey) shouldBe Some("false")
+        "pass through the predicate" in {
+          result shouldBe Right(userWithoutSession)
         }
       }
 
