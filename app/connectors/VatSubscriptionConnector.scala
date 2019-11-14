@@ -57,22 +57,5 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
   def updateOrganisationDetails(vrn: String, orgDetails: OrganisationDetails)
                 (implicit hc: HeaderCarrier,
                  ec: ExecutionContext,
-                 user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
-
-    import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
-
-    val updateModel = UpdateOrganisationDetails(
-      orgDetails.organisationName, orgDetails.individual,
-      orgDetails.tradingName, user.session.get(SessionKeys.verifiedAgentEmail)
-    )
-
-    http.PUT[UpdateOrganisationDetails, HttpPutResult[UpdateOrganisationDetailsSuccess]](
-      updateOrganisationDetailsUrl(vrn), updateModel).map {
-      case result@Right(_) =>
-        result
-      case httpError@Left(error) =>
-        logWarn("[VatSubscriptionConnector][updateOrganisationDetails] received error - " + error.message)
-        httpError
-    }
-  }
+                 user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = ???
 }

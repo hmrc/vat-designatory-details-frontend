@@ -1,4 +1,4 @@
-# VAT Correspondence Details Frontend
+# VAT Designatory Details Frontend
 
 [![Build Status](https://travis-ci.org/hmrc/vat-designatory-details-frontend.svg)](https://travis-ci.org/hmrc/vat-designatory-details-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/vat-designatory-details-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/vat-designatory-details-frontend/_latestVersion)
 
