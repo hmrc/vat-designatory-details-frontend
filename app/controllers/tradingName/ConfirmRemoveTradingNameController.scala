@@ -42,7 +42,7 @@ class ConfirmRemoveTradingNameController @Inject()(val errorHandler: ErrorHandle
 
   def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
-    extractSessionTradingNameAddress(user) match {
+    extractSessionTradingName(user) match {
       case Some(tradingName) =>
         Future.successful(Ok(confirmRemoveTradingName(tradingName)))
       case _ =>
@@ -50,9 +50,9 @@ class ConfirmRemoveTradingNameController @Inject()(val errorHandler: ErrorHandle
       }
   }
 
-  def removeTradingNameAddress(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def removeTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
-    extractSessionTradingNameAddress(user) match {
+    extractSessionTradingName(user) match {
       case Some(_) =>
         Future.successful(Redirect(routes.ConfirmTradingNameController.updateTradingName())
           .addingToSession(prepopulationTradingNameKey -> ""))
@@ -61,6 +61,6 @@ class ConfirmRemoveTradingNameController @Inject()(val errorHandler: ErrorHandle
     }
   }
 
-  private[controllers] def extractSessionTradingNameAddress(user: User[AnyContent]): Option[String] =
+  private[controllers] def extractSessionTradingName(user: User[AnyContent]): Option[String] =
     user.session.get(validationTradingNameKey).filter(_.nonEmpty)
 }

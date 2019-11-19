@@ -16,29 +16,19 @@
 
 package audit.models
 
-import play.api.libs.json.{JsValue, Json, Writes}
-import utils.JsonObjectSugar
+import play.api.libs.json.{Format, JsValue, Json}
 
 case class ChangedTradingNameAuditModel(currentTradingName: Option[String],
-                                           requestedTradingName: String,
-                                           vrn: String,
-                                           isAgent: Boolean,
-                                           arn: Option[String]) extends ExtendedAuditModel {
+                                        requestedTradingName: String,
+                                        vrn: String,
+                                        isAgent: Boolean,
+                                        arn: Option[String]) extends AuditModel {
 
+  override val transactionName: String = "change-vat-trading-name"
   override val auditType: String = "ChangeTradingName"
   override val detail: JsValue = Json.toJson(this)
-  override val transactionName: String = "change-vat-trading-name"
 }
 
-object ChangedTradingNameAuditModel extends JsonObjectSugar {
-
-  implicit val writes: Writes[ChangedTradingNameAuditModel] = Writes { model =>
-    jsonObjNoNulls(
-      "isAgent" -> model.isAgent,
-      "arn" -> model.arn,
-      "vrn" -> model.vrn,
-      "currentTradingName" -> model.currentTradingName,
-      "requestedTradingName" -> model.requestedTradingName
-    )
-  }
+object ChangedTradingNameAuditModel {
+  implicit val format: Format[ChangedTradingNameAuditModel] = Json.format[ChangedTradingNameAuditModel]
 }

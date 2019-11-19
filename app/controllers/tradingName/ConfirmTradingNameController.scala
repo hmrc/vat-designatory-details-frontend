@@ -60,14 +60,15 @@ class ConfirmTradingNameController @Inject()(val errorHandler: ErrorHandler,
       case Some(tradingName) =>
         vatSubscriptionService.updateTradingName(user.vrn, tradingName) map {
           case Right(_) =>
-            auditService.extendedAudit(
+            auditService.audit(
               ChangedTradingNameAuditModel(
                 user.session.get(validationTradingNameKey),
                 tradingName,
                 user.vrn,
                 user.isAgent,
                 user.arn
-              )
+              ),
+              Some(controllers.tradingName.routes.ConfirmTradingNameController.updateTradingName().url)
             )
             Redirect(controllers.routes.ChangeSuccessController.tradingName())
               .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "tradingName")

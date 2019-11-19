@@ -17,6 +17,7 @@
 package controllers.tradingName
 
 import assets.CustomerInfoConstants.fullCustomerInfoModel
+import audit.AuditingService
 import common.SessionKeys
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import controllers.ControllerBaseSpec
@@ -47,7 +48,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
     new CaptureTradingNameController(
       mockVatSubscriptionService,
       mockErrorHandler,
-      mockAuditingService,
+      inject[AuditingService],
       inject[CaptureTradingNameView],
       inject[NotFoundView]
     )

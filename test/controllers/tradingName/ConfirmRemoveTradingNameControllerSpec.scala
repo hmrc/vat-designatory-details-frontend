@@ -37,7 +37,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
 
   "Calling .show in ConfirmRemoveTradingNameController" when {
 
-    "there is a trading name address in session" should {
+    "there is a trading name in session" should {
 
       "return 200" in {
         val result = controller.show(requestWithValidationTradingNameKey)
@@ -45,7 +45,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
       }
     }
 
-    "there is no trading name address in session" should {
+    "there is no trading name in session" should {
 
       lazy val result = controller.show(request)
 
@@ -71,11 +71,11 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
     }
   }
 
-  "Calling .removeTradingNameAddress() in ConfirmRemoveTradingNameController" when {
+  "Calling .removeTradingName() in ConfirmRemoveTradingNameController" when {
 
-    "there is a validation trading name address in session" should {
+    "there is a validation trading name in session" should {
 
-      lazy val result = controller.removeTradingNameAddress()(requestWithValidationTradingNameKey)
+      lazy val result = controller.removeTradingName()(requestWithValidationTradingNameKey)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -90,9 +90,9 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
       }
     }
 
-    "there is no validation trading name address in session" should {
+    "there is no validation trading name in session" should {
 
-      lazy val result = controller.removeTradingNameAddress()(request)
+      lazy val result = controller.removeTradingName()(request)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -108,7 +108,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
       "return 403" in {
         val result = {
           mockIndividualWithoutEnrolment()
-          controller.removeTradingNameAddress()(requestWithValidationTradingNameKey)
+          controller.removeTradingName()(requestWithValidationTradingNameKey)
         }
 
         status(result) shouldBe Status.FORBIDDEN

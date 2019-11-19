@@ -17,12 +17,14 @@
 package controllers.tradingName
 
 import assets.BaseTestConstants._
+import audit.AuditingService
 import audit.models.ChangedTradingNameAuditModel
 import controllers.ControllerBaseSpec
 import models.customerInformation.UpdateOrganisationDetailsSuccess
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
-import org.mockito.Mockito.reset
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, verify}
 import play.api.http.Status
 import play.api.http.Status.{CONFLICT, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers._
@@ -96,8 +98,7 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
         }
 
         "audit the trading name change event" in {
-          verifyExtendedAudit(ChangedTradingNameAuditModel(None, testTradingName, vrn, isAgent = false, None))
-          reset(mockAuditingService)
+          verify(mockAuditingService).audit(any(), any())(any(), any())
         }
 
         "redirect to the trading name changed success page" in {

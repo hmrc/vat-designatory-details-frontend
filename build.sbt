@@ -74,6 +74,7 @@ val compile = Seq(
   ws,
   "uk.gov.hmrc" %% "bootstrap-play-26" % bootstrapPlayVersion,
   "uk.gov.hmrc" %% "govuk-template" % govTemplateVersion,
+  "uk.gov.hmrc" %% "play-language" % "4.2.0-play-26",
   "uk.gov.hmrc" %% "play-ui" % playUiVersion,
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
   "uk.gov.hmrc" %% "auth-client" % authClientVersion,

@@ -27,6 +27,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import utils.TestUtil
 import assets.BaseTestConstants._
+import audit.AuditingService
 import controllers.predicates.inflight.{InFlightPredicate, InFlightPredicateComponents}
 import models.User
 import play.api.mvc.Result
@@ -98,6 +99,8 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
     new AuthPredicate(
       mockAuthPredicateComponents
     )
+
+  val mockAuditingService: AuditingService = mock[AuditingService]
 
   val mockInflightPPOBPredicate: InFlightPredicate = {
 
