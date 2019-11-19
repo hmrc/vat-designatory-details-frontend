@@ -17,14 +17,12 @@
 package controllers.tradingName
 
 import assets.BaseTestConstants._
-import audit.AuditingService
-import audit.models.ChangedTradingNameAuditModel
 import controllers.ControllerBaseSpec
 import models.customerInformation.UpdateOrganisationDetailsSuccess
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, verify}
+import org.mockito.Mockito.verify
 import play.api.http.Status
 import play.api.http.Status.{CONFLICT, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers._
