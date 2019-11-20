@@ -16,7 +16,7 @@
 
 package controllers
 
-import mocks.{MockAuth, MockHttp}
+import mocks.MockAuth
 import play.api.http.Status
 import play.api.mvc.{Action, AnyContent}
 import play.api.test.Injecting
