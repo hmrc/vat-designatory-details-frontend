@@ -33,26 +33,38 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
 
   "The AuthPredicateSpec" when {
 
-    "the user is an Agent" when {
+    "the user is an Agent" should {
 
       "the Agent has an active HMRC-AS-AGENT enrolment" should {
 
-        "return OK (200)" in {
+        lazy val result = {
           mockAgentAuthorised()
-          status(authPredicate(fakeRequestWithClientsVRN)) shouldBe Status.OK
+          authPredicate(agent)
+        }
+
+        "return Internal Server Error (500)" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        }
+
+        "render the Technical Difficulties page" in {
+          messages(Jsoup.parse(bodyOf(result)).title) shouldBe
+            "There is a problem with the service - Your client’s VAT details - GOV.UK"
         }
       }
       "the Agent does NOT have an Active HMRC-AS-AGENT enrolment" should {
 
-        lazy val result = await(authPredicate(agent))
-
-        "return Forbidden" in {
+        lazy val result = {
           mockAgentWithoutEnrolment()
+          authPredicate(agent)
+        }
+
+        "return Forbidden (403)" in {
           status(result) shouldBe Status.FORBIDDEN
         }
 
         "render the Unauthorised Agent page" in {
-          messages(Jsoup.parse(bodyOf(result)).title) shouldBe "You can not use this service yet - Your client’s VAT details - GOV.UK"
+          messages(Jsoup.parse(bodyOf(result)).title) shouldBe
+            "You can not use this service yet - Your client’s VAT details - GOV.UK"
         }
       }
     }

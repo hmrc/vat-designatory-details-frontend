@@ -43,8 +43,7 @@ class AuthPredicate(authComps: AuthPredicateComponents)
     authComps.enrolmentsAuthService.authorised().retrieve(v2.Retrievals.affinityGroup and v2.Retrievals.allEnrolments) {
       case Some(affinityGroup) ~ allEnrolments =>
         (isAgent(affinityGroup), allEnrolments) match {
-          case (true, enrolments) =>
-              checkAgentEnrolment(enrolments, block)
+          case (true, enrolments) => checkAgentEnrolment(enrolments, block)
           case (false, enrolments) => checkVatEnrolment(enrolments, block)
         }
       case _ =>
@@ -64,7 +63,7 @@ class AuthPredicate(authComps: AuthPredicateComponents)
   private[AuthPredicate] def checkAgentEnrolment[A](enrolments: Enrolments, block: User[A] => Future[Result])(implicit request: Request[A]) =
     if (enrolments.enrolments.exists(_.key == EnrolmentKeys.agentEnrolmentId)) {
       logDebug("[AuthPredicate][checkAgentEnrolment] - Authenticating as agent")
-      authComps.authenticateAsAgentWithClient.invokeBlock(request, block)
+      Future.successful(authComps.errorHandler.showInternalServerError)
     } else {
       logDebug(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment. Enrolments: $enrolments")
       logWarn(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment.")
