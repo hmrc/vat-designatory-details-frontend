@@ -18,7 +18,6 @@ package connectors
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
-import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import helpers.IntegrationBaseSpec
 import models.User
 import models.customerInformation._

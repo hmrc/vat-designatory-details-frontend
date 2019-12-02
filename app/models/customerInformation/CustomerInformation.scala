@@ -25,7 +25,7 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
                                organisationName: Option[String],
                                tradingName: Option[String]) {
 
-  val pendingTradingName: Option[String] = pendingChanges.flatMap(_.organisationDetails.flatMap(_.tradingName))
+  val pendingTradingName: Option[String] = pendingChanges.flatMap(_.tradingName)
 
   val sameTradingName: Boolean = pendingTradingName == tradingName
 

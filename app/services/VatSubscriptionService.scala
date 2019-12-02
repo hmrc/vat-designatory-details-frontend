@@ -21,7 +21,6 @@ import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import javax.inject.{Inject, Singleton}
 import models.User
-import models.customerInformation.OrganisationDetails
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}

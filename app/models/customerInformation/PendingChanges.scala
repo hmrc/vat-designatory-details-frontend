@@ -16,18 +16,14 @@
 
 package models.customerInformation
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.json.{JsPath, Reads}
 
-case class PendingChanges(organisationDetails: Option[OrganisationDetails])
+case class PendingChanges(tradingName: Option[String])
 
 object PendingChanges {
 
-  private val organisationDetailsPath = JsPath \ "organisationDetails"
+  private val organisationDetailsPath = JsPath \ "organisationDetails" \ "tradingName"
 
   implicit val reads: Reads[PendingChanges] =
-    organisationDetailsPath.readNullable[OrganisationDetails].map(PendingChanges.apply)
-
-  implicit val writes: Writes[PendingChanges] =
-    organisationDetailsPath.writeNullable[OrganisationDetails].contramap(unlift(PendingChanges.unapply))
+    organisationDetailsPath.readNullable[String].map(PendingChanges.apply)
 }

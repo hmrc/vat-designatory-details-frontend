@@ -21,15 +21,14 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class CustomerInformationSpec extends UnitSpec {
 
-  val modelNoPending: CustomerInformation = fullCustomerInfoModel.copy(pendingChanges = None)
 
   "CustomerInformation" should {
 
     "parse from JSON" when {
 
       "all fields are present" in {
-        val result = customerInfoPendingTradingNameJson.as[CustomerInformation]
-        result shouldBe customerInfoPendingTradingNameModel
+        val result = fullCustomerInfoJson.as[CustomerInformation]
+        result shouldBe fullCustomerInfoModel
       }
 
       "the minimum number of fields are present" in {

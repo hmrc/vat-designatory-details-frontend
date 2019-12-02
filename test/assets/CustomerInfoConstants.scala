@@ -23,53 +23,18 @@ import play.api.libs.json.{JsObject, Json}
 
 object CustomerInfoConstants {
 
-  val organisationDetailsModel = OrganisationDetails(
-    Some("Org name"),
-    Some("Individual"),
-    Some("Trading name")
-  )
-
-  val organisationDetailsJson: JsObject = Json.obj(
-    "organisationName" -> "Org name",
-    "individual" -> "Individual",
-    "tradingName" -> "Trading name"
-  )
-
-  val organisationDetailsModelMin = OrganisationDetails(
-    None,
-    None,
-    None
-  )
-
   val organisationDetailsJsonMin: JsObject = Json.obj()
 
   val pendingTradingNameJson: JsObject = Json.obj(
-    "organisationDetails" -> Json.obj(
-        "organisationName" -> "Org name",
-        "individual" -> "Individual",
-        "tradingName" -> "Pending trading name"
-    )
+    "organisationDetails" -> Json.obj("tradingName" -> "New trading name")
   )
 
-  val pendingTradingNameModel: PendingChanges = PendingChanges(
-    Some(organisationDetailsModel.copy(tradingName = Some("Pending trading name"))))
+  val pendingTradingNameModel: PendingChanges = PendingChanges(Some("New trading name"))
 
   val minCustomerInfoModel = CustomerInformation(None, None, None, None, None)
   val minCustomerInfoJson: JsObject = Json.obj()
 
   val fullCustomerInfoModel = CustomerInformation(
-    pendingChanges = Some(PendingChanges(Some(organisationDetailsModel))),
-    firstName = Some("Pepsi"),
-    lastName = Some("Mac"),
-    organisationName = Some("PepsiMac Ltd"),
-    tradingName = Some("PepsiMac")
-  )
-
-  val fullCustomerInfoModelSameTradingName = fullCustomerInfoModel.copy(
-    tradingName = Some("Trading name")
-  )
-
-  val customerInfoPendingTradingNameModel: CustomerInformation = CustomerInformation(
     pendingChanges = Some(pendingTradingNameModel),
     firstName = Some("Pepsi"),
     lastName = Some("Mac"),
@@ -77,7 +42,11 @@ object CustomerInfoConstants {
     tradingName = Some("PepsiMac")
   )
 
-  val customerInfoPendingTradingNameJson: JsObject = Json.obj(
+  val fullCustomerInfoModelSameTradingName: CustomerInformation = fullCustomerInfoModel.copy(
+    tradingName = Some("New trading name")
+  )
+
+  val fullCustomerInfoJson: JsObject = Json.obj(
     "pendingChanges" -> pendingTradingNameJson,
     "customerDetails" -> Json.obj(
       "firstName" -> "Pepsi",
@@ -86,6 +55,14 @@ object CustomerInfoConstants {
       "tradingName" -> "PepsiMac"
     )
   )
+
+  val updateOrganisationDetailsModel = UpdateOrganisationDetails("PepsiMac", Some("myAgentEmail@email.com"))
+  val updateOrganisationDetailsModelMin = UpdateOrganisationDetails("PepsiMac", None)
+
+  val updateOrganisationDetailsJson: JsObject = Json.obj(
+    "tradingName" -> "PepsiMac", "transactorOrCapacitorEmail" -> "myAgentEmail@email.com"
+  )
+  val updateOrganisationDetailsJsonMin: JsObject = Json.obj("tradingName" -> "PepsiMac")
 
   val invalidJsonError = ErrorModel(Status.INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON.")
 }

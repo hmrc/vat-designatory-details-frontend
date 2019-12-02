@@ -16,13 +16,11 @@
 
 package connectors
 
-import common.SessionKeys
 import config.AppConfig
 import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
 import javax.inject.{Inject, Singleton}
 import models.User
-import models.customerInformation.{CustomerInformation, OrganisationDetails,
-  UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{CustomerInformation, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.LoggerUtil.{logDebug, logWarn}
@@ -54,8 +52,8 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
     }
   }
 
-  def updateOrganisationDetails(vrn: String, orgDetails: OrganisationDetails)
-                (implicit hc: HeaderCarrier,
-                 ec: ExecutionContext,
-                 user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = ???
+  def updateOrganisationDetails(vrn: String, orgDetails: UpdateOrganisationDetails)
+                               (implicit hc: HeaderCarrier,
+                                ec: ExecutionContext,
+                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = ???
 }

@@ -33,7 +33,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
 
   "The AuthPredicateSpec" when {
 
-    "the user is an Agent" should {
+    "the user is an Agent" when {
 
       "the Agent has an active HMRC-AS-AGENT enrolment" should {
 

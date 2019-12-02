@@ -27,17 +27,15 @@ class UpdateOrganisationDetailsSpec extends UnitSpec {
     "all optional fields are present" should {
 
       "parse to JSON correctly" in {
-        Json.toJson(organisationDetailsModel) shouldBe organisationDetailsJson
+        Json.toJson(updateOrganisationDetailsModel) shouldBe updateOrganisationDetailsJson
       }
     }
 
     "no optional fields are present" should {
 
       "parse to JSON correctly" in {
-        Json.toJson(organisationDetailsModelMin) shouldBe organisationDetailsJsonMin
+        Json.toJson(updateOrganisationDetailsModelMin) shouldBe updateOrganisationDetailsJsonMin
       }
     }
   }
 }
-
-

@@ -29,16 +29,7 @@ object GetCustomerInfoHttpParser {
   implicit object CustomerInfoReads extends HttpReads[GetCustomerInfoResponse] {
     override def read(method: String, url: String, response: HttpResponse): GetCustomerInfoResponse = {
       response.status match {
-        case OK => response.json.validate[CustomerInformation].fold(
-          invalid => {
-            logWarn(s"[GetCustomerInfoHttpParser][read] - Invalid JSON: $invalid")
-            Left(ErrorModel(INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON."))
-          },
-          valid => {
-            logDebug(s"Successfully parsed the get customer info JSON: $valid")
-            Right(valid)
-          }
-        )
+        case OK => Right(response.json.as[CustomerInformation])
         case status =>
           logWarn(s"[GetCustomerInfoHttpParser][read]: Unexpected Response, Status $status returned,with " +
             s"response: ${response.body}")

@@ -19,7 +19,7 @@ package controllers.predicates.inflight
 import common.SessionKeys.inFlightTradingNameChangeKey
 import config.AppConfig
 import models.User
-import models.customerInformation.{CustomerInformation, PendingChanges}
+import models.customerInformation.CustomerInformation
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.{Conflict, Redirect}
@@ -53,7 +53,7 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
     inFlightComps.vatSubscriptionService.getCustomerInfo(vrn).map {
       case Right(customerInfo) =>
         customerInfo.pendingChanges match {
-          case Some(changes) if changes.organisationDetails.isDefined =>
+          case Some(changes) if changes.tradingName.isDefined =>
             comparePendingAndCurrent(customerInfo)
           case _ =>
             logDebug("[InFlightPredicate][getCustomerInfoCall] - There are no in-flight changes. " +

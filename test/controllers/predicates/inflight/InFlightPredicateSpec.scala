@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class InFlightPredicateSpec extends MockAuth {
 
-  def setup(result: GetCustomerInfoResponse = Right(customerInfoPendingTradingNameModel)): Unit =
+  def setup(result: GetCustomerInfoResponse = Right(fullCustomerInfoModel)): Unit =
     when(mockVatSubscriptionService.getCustomerInfo(any[String])(any[HeaderCarrier], any[ExecutionContext]))
       .thenReturn(Future.successful(result))
 
@@ -128,18 +128,6 @@ class InFlightPredicateSpec extends MockAuth {
 
         "add the inflight indicator 'false' to session" in {
           session(result).get(inFlightTradingNameChangeKey) shouldBe Some("false")
-        }
-      }
-
-      "the user has a change pending which isn't trading name" should {
-
-        lazy val result = {
-          setup(Right(fullCustomerInfoModelSameTradingName))
-          await(inflightTradingNamePredicate.refine(userWithoutSession))
-        }
-
-        "pass through the predicate" in {
-          result shouldBe Right(userWithoutSession)
         }
       }
 

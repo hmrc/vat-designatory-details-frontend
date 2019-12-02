@@ -16,30 +16,30 @@
 
 package connectors.httpParsers
 
-import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads._
 import assets.UpdateTradingNameConstants._
+import assets.CustomerInfoConstants.invalidJsonError
+import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads._
 import models.errors.ErrorModel
-import org.scalatest.EitherValues
 import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateOrganisationDetailsHttpParserSpec extends UnitSpec with EitherValues {
+class UpdateOrganisationDetailsHttpParserSpec extends UnitSpec {
 
   "read" when {
     "the response status is OK" should {
       "return a updateTradingNameSuccess when the response Json can be parsed" in {
         val httpResponse = HttpResponse(Status.OK, Some(Json.obj("formBundle" -> s"$formBundle")))
 
-        read("", "", httpResponse).right.value shouldBe updateTradingNameSuccess
+        read("", "", httpResponse) shouldBe Right(updateTradingNameSuccess)
       }
 
       "return the expected Left Error Model when the response Json cannot be parsed" in {
         val httpResponse = HttpResponse(Status.OK, Some(Json.obj("notExpectedKey" -> s"$formBundle")))
 
-        read("", "", httpResponse).left.value shouldBe ErrorModel(INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON.")
+        read("", "", httpResponse) shouldBe Left(invalidJsonError)
       }
     }
 
@@ -48,7 +48,7 @@ class UpdateOrganisationDetailsHttpParserSpec extends UnitSpec with EitherValues
         val httpResponse: HttpResponse = HttpResponse(
           responseStatus = INTERNAL_SERVER_ERROR
         )
-        read("", "", httpResponse).left.value shouldBe ErrorModel(INTERNAL_SERVER_ERROR, httpResponse.body)
+        read("", "", httpResponse) shouldBe Left(ErrorModel(INTERNAL_SERVER_ERROR, httpResponse.body))
       }
     }
   }

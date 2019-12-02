@@ -19,22 +19,16 @@ package models.customerInformation
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Writes}
 
-case class UpdateOrganisationDetails(organisationName: Option[String],
-                                     individual: Option[String],
-                                     tradingName: Option[String],
+case class UpdateOrganisationDetails(tradingName: String,
                                      capacitorEmail: Option[String])
 
 object UpdateOrganisationDetails {
 
-  private val organisationNamePath = JsPath \ "organisationName"
-  private val individualPath = JsPath \ "individual"
   private val tradingNamePath = JsPath \ "tradingName"
   private val capacitorEmailPath = JsPath \ "transactorOrCapacitorEmail"
 
   implicit val writes: Writes[UpdateOrganisationDetails] = (
-    organisationNamePath.writeNullable[String] and
-    individualPath.writeNullable[String] and
-    tradingNamePath.writeNullable[String] and
+    tradingNamePath.write[String] and
     capacitorEmailPath.writeNullable[String]
   )(unlift(UpdateOrganisationDetails.unapply))
 }
