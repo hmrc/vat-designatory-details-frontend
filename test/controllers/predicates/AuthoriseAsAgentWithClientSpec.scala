@@ -55,17 +55,17 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
       }
     }
 
-    "the agent is not authorised" should {
+    "the agent is not authorised for the client" should {
 
       lazy val result = target(fakeRequestWithClientsVRN)
 
-      "return 200" in {
+      "return 303" in {
         mockAuthorisationException()
-        status(result) shouldBe Status.OK
+        status(result) shouldBe Status.SEE_OTHER
       }
 
-      "page title is correct" in {
-        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "You are not authorised for this client - VAT - GOV.UK"
+      s"redirect to ${mockConfig.vatAgentClientLookupUnauthorisedForClient}" in {
+        redirectLocation(result) shouldBe Some(mockConfig.vatAgentClientLookupUnauthorisedForClient)
       }
     }
 

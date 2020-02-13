@@ -43,9 +43,9 @@ trait AppConfig {
   val shutterPage: String
   val signInUrl: String
   val signInContinueUrl: String
-  val agentInvitationsFastTrack: String
   val govUkCommercialSoftware: String
   val vatAgentClientLookupServicePath: String
+  val vatAgentClientLookupUnauthorisedForClient: String
   val vatSubscriptionHost: String
   val manageVatSubscriptionServiceUrl: String
   val manageVatSubscriptionServicePath: String
@@ -102,19 +102,22 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override lazy val whitelistExcludedPaths: Seq[Call] = whitelistConfig(Keys.whitelistExcludedPaths).map(path => Call("GET", path))
   override lazy val shutterPage: String = sc.getString(Keys.whitelistShutterPage)
 
-  override lazy val agentInvitationsFastTrack: String = sc.getString(Keys.agentInvitationsFastTrack)
   override lazy val govUkCommercialSoftware: String = sc.getString(Keys.govUkCommercialSoftware)
 
   private lazy val host: String = sc.getString(Keys.host)
 
-  private val vatAgentClientLookupServiceUrl: String = sc.getString(Keys.vatAgentClientLookupServiceUrl)
-  override val vatAgentClientLookupServicePath: String =
-    vatAgentClientLookupServiceUrl + sc.getString(Keys.vatAgentClientLookupServicePath)
   override val vatSubscriptionHost: String = sc.baseUrl(Keys.vatSubscription)
 
   override val manageVatSubscriptionServiceUrl: String = sc.getString(Keys.manageVatSubscriptionServiceUrl)
   override val manageVatSubscriptionServicePath: String =
     manageVatSubscriptionServiceUrl + sc.getString(Keys.manageVatSubscriptionServicePath)
+
+  private val vatAgentClientLookupServiceUrl: String = sc.getString(Keys.vatAgentClientLookupServiceUrl)
+  override val vatAgentClientLookupServicePath: String = vatAgentClientLookupServiceUrl + sc.getString(Keys.vatAgentClientLookupServicePath)
+  override val vatAgentClientLookupUnauthorisedForClient: String =
+    vatAgentClientLookupServiceUrl +
+      sc.getString(Keys.vatAgentClientLookupUnauthorisedForClient) +
+      s"?redirectUrl=${ContinueUrl(manageVatSubscriptionServicePath).encodedUrl}"
 
   override lazy val timeoutPeriod: Int = sc.getInt(Keys.timeoutPeriod)
   override lazy val timeoutCountdown: Int = sc.getInt(Keys.timeoutCountdown)

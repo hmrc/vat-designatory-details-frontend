@@ -32,7 +32,7 @@ import controllers.predicates.inflight.{InFlightPredicate, InFlightPredicateComp
 import models.User
 import play.api.mvc.Result
 import views.html.errors.{InFlightChangeView, NotSignedUpView, SessionTimeoutView}
-import views.html.errors.agent.{NotAuthorisedForClientView, UnauthorisedAgentView}
+import views.html.errors.agent.UnauthorisedAgentView
 
 import scala.concurrent.Future
 
@@ -46,7 +46,6 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
 
   val sessionTimeoutView: SessionTimeoutView = inject[SessionTimeoutView]
   val inFlightChangeView: InFlightChangeView = inject[InFlightChangeView]
-  val notAuthorisedForClientView: NotAuthorisedForClientView = inject[NotAuthorisedForClientView]
   val unauthorisedAgentView: UnauthorisedAgentView = inject[UnauthorisedAgentView]
   val notSignedUpView: NotSignedUpView = inject[NotSignedUpView]
 
@@ -66,7 +65,6 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
       mockErrorHandler,
       mcc,
       sessionTimeoutView,
-      notAuthorisedForClientView,
       mockConfig,
       ec,
       messagesApi
