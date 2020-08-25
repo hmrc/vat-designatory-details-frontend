@@ -25,14 +25,14 @@ import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 import scala.concurrent.Future
 
 @Singleton
-class WhitelistFilter @Inject()(val appConfig: AppConfig, implicit val mat: Materializer) extends AkamaiWhitelistFilter {
+class AllowListFilter @Inject()(val appConfig: AppConfig, implicit val mat: Materializer) extends AkamaiWhitelistFilter {
 
-  override lazy val whitelist: Seq[String] = appConfig.whitelistedIps
+  override lazy val whitelist: Seq[String] = appConfig.allowListedIps
   override lazy val destination: Call = Call("GET", appConfig.shutterPage)
-  override lazy val excludedPaths: Seq[Call] = appConfig.whitelistExcludedPaths
+  override lazy val excludedPaths: Seq[Call] = appConfig.allowListExcludedPaths
 
   override def apply(requestFunc: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
-    if(appConfig.whitelistEnabled) {
+    if(appConfig.allowListEnabled) {
       super.apply(requestFunc)(requestHeader)
     } else {
       requestFunc(requestHeader)
