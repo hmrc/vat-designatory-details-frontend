@@ -22,19 +22,19 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results.Ok
-import play.api.mvc.{Action, Call, DefaultActionBuilder}
+import play.api.mvc.{Call, DefaultActionBuilder}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration}
 
-class WhitelistFilterSpec @Inject()(action: DefaultActionBuilder) extends PlaySpec with GuiceOneServerPerSuite {
+class AllowListFilterSpec @Inject()(action: DefaultActionBuilder) extends PlaySpec with GuiceOneServerPerSuite {
 
   lazy val mockAppConfig = new MockAppConfig(app.configuration)
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder()
       .configure(Configuration(
-        "whitelist.enabled" -> true
+        "allowList.enabled" -> true
       ))
       .routes({
         case ("GET", "/new-trading-name") => action {
@@ -46,9 +46,9 @@ class WhitelistFilterSpec @Inject()(action: DefaultActionBuilder) extends PlaySp
       })
       .build()
 
-  "WhitelistFilter" when {
+  "AllowListFilter" when {
 
-    "supplied with a non-whitelisted IP" should {
+    "supplied with a non-allow-listed IP" should {
 
       lazy val fakeRequest = FakeRequest("GET", "/new-trading-name").withHeaders(
         "True-Client-IP" -> "127.0.0.2"
@@ -67,7 +67,7 @@ class WhitelistFilterSpec @Inject()(action: DefaultActionBuilder) extends PlaySp
       }
     }
 
-    "supplied with a whitelisted IP" should {
+    "supplied with an allow-listed IP" should {
 
       lazy val fakeRequest = FakeRequest("GET", "/new-trading-name").withHeaders(
         "True-Client-IP" -> "127.0.0.1"

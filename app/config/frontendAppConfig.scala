@@ -37,9 +37,9 @@ trait AppConfig {
   val unauthorisedSignOutUrl: String
   def routeToSwitchLanguage: String => Call
   def languageMap: Map[String, Lang]
-  val whitelistEnabled: Boolean
-  val whitelistedIps: Seq[String]
-  val whitelistExcludedPaths: Seq[Call]
+  val allowListEnabled: Boolean
+  val allowListedIps: Seq[String]
+  val allowListExcludedPaths: Seq[Call]
   val shutterPage: String
   val signInUrl: String
   val signInContinueUrl: String
@@ -93,14 +93,14 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
     "cymraeg" -> Lang("cy")
   )
 
-  private def whitelistConfig(key: String): Seq[String] = Some(new String(Base64.getDecoder
+  private def allowListConfig(key: String): Seq[String] = Some(new String(Base64.getDecoder
     .decode(sc.getString(key)), "UTF-8"))
     .map(_.split(",")).getOrElse(Array.empty).toSeq
 
-  override lazy val whitelistEnabled: Boolean = sc.getBoolean(Keys.whitelistEnabled)
-  override lazy val whitelistedIps: Seq[String] = whitelistConfig(Keys.whitelistedIps)
-  override lazy val whitelistExcludedPaths: Seq[Call] = whitelistConfig(Keys.whitelistExcludedPaths).map(path => Call("GET", path))
-  override lazy val shutterPage: String = sc.getString(Keys.whitelistShutterPage)
+  override lazy val allowListEnabled: Boolean = sc.getBoolean(Keys.allowListEnabled)
+  override lazy val allowListedIps: Seq[String] = allowListConfig(Keys.allowListedIps)
+  override lazy val allowListExcludedPaths: Seq[Call] = allowListConfig(Keys.allowListExcludedPaths).map(path => Call("GET", path))
+  override lazy val shutterPage: String = sc.getString(Keys.allowListShutterPage)
 
   override lazy val govUkCommercialSoftware: String = sc.getString(Keys.govUkCommercialSoftware)
 
