@@ -15,6 +15,7 @@
  */
 
 import play.core.PlayVersion
+import play.sbt.routes.RoutesKeys
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
@@ -22,12 +23,12 @@ import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
 
 val appName = "vat-designatory-details-frontend"
 
-val bootstrapPlayVersion       = "1.3.0"
-val govTemplateVersion         = "5.52.0-play-26"
-val playPartialsVersion        = "6.9.0-play-26"
+val bootstrapPlayVersion       = "1.14.0"
+val govTemplateVersion         = "5.55.0-play-26"
+val playPartialsVersion        = "6.11.0-play-26"
 val authClientVersion          = "2.33.0-play-26"
-val playUiVersion              = "8.8.0-play-26"
-val playLanguageVersion        = "3.4.0"
+val playUiVersion              = "8.11.0-play-26"
+val playLanguageVersion        = "4.3.0-play-26"
 val playWhiteListFilterVersion = "3.1.0-play-26"
 val scalaTestPlusVersion       = "3.1.2"
 val hmrcTestVersion            = "3.9.0-play-26"
@@ -37,12 +38,14 @@ val jsoupVersion               = "1.12.1"
 val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.23.2"
-val playJsonJodaVersion        = "2.7.4"
+val playJsonJodaVersion        = "2.9.0"
 val libphonenumberVersion      = "8.10.16"
+val bootstrapFrontendVersion   = "2.24.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
+RoutesKeys.routesImport := Seq.empty
 
 lazy val coverageSettings: Seq[Setting[_]] = {
   import scoverage.ScoverageKeys
@@ -72,7 +75,7 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 
 val compile = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-play-26" % bootstrapPlayVersion,
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapFrontendVersion,
   "uk.gov.hmrc" %% "govuk-template" % govTemplateVersion,
   "uk.gov.hmrc" %% "play-language" % "4.2.0-play-26",
   "uk.gov.hmrc" %% "play-ui" % playUiVersion,
@@ -97,11 +100,9 @@ def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {
   test =>
-    Group(
-      test.name,
-      Seq(test),
-      SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name, "-Dlogger.resource=logback-test.xml")))
-    )
+    Group(test.name, Seq(test), SubProcess(
+      ForkOptions().withRunJVMOptions(Vector("-Dtest.name=" + test.name, "-Dlogger.resource=logback-test.xml"))
+    ))
 }
 
 lazy val microservice = Project(appName, file("."))
@@ -115,7 +116,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     Keys.fork in Test := true,
-    scalaVersion := "2.11.11",
+    scalaVersion := "2.12.11",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)

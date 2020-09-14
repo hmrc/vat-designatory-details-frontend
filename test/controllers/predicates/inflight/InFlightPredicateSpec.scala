@@ -21,7 +21,6 @@ import common.SessionKeys.inFlightTradingNameChangeKey
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import mocks.MockAuth
 import models.User
-import models.customerInformation.PendingChanges
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any

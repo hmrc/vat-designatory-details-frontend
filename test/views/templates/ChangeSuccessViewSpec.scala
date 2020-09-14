@@ -44,7 +44,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
     "an individual is performing the action" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, None, None)
-      lazy val view = injectedView(viewModel)(request, messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -73,7 +73,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
       "the agent has an email address registered" should {
         val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"))
-        lazy val view = injectedView(viewModel)(request, messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -101,7 +101,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
       "the agent doesn't have an email address registered" should {
         val viewModel = ChangeSuccessViewModel(exampleTitle, None, Some("TheBusiness"))
-        lazy val view = injectedView(viewModel)(request, messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -129,7 +129,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
       "the client's business name isn't retrieved" should {
         val viewModel = ChangeSuccessViewModel(exampleTitle, None, None)
-        lazy val view = injectedView(viewModel)(request, messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
