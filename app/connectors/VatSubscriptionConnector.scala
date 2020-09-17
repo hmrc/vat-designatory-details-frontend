@@ -22,7 +22,7 @@ import javax.inject.{Inject, Singleton}
 import models.User
 import models.customerInformation.{CustomerInformation, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import utils.LoggerUtil.{logDebug, logWarn}
 
 import scala.concurrent.{ExecutionContext, Future}

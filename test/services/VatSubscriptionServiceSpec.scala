@@ -18,7 +18,6 @@ package services
 
 import assets.CustomerInfoConstants._
 import mocks.MockVatSubscriptionConnector
-import models.customerInformation._
 import utils.TestUtil
 import models.User
 import play.api.mvc.AnyContentAsEmpty

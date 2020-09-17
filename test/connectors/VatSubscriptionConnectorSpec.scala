@@ -17,7 +17,7 @@
 package connectors
 
 import controllers.ControllerBaseSpec
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 class VatSubscriptionConnectorSpec extends ControllerBaseSpec {
 

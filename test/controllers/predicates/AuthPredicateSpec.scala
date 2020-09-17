@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class AuthPredicateSpec extends MockAuth with MaterializerSupport {
 
   val authPredicate: Action[AnyContent] = mockAuthPredicate.async {
-    implicit request => Future.successful(Ok("test"))
+    Future.successful(Ok("test"))
   }
 
   "The AuthPredicateSpec" when {

@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import play.api.Configuration
-import uk.gov.hmrc.play.binders.ContinueUrl
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
@@ -82,7 +82,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   private lazy val signInBaseUrl: String = sc.getString(Keys.signInBaseUrl)
   private lazy val signInOrigin = sc.getString("appName")
   override lazy val signInUrl: String = s"$signInBaseUrl?continue=$signInContinueUrl&origin=$signInOrigin"
-  override lazy val signInContinueUrl: String = ContinueUrl(manageVatSubscriptionServicePath).encodedUrl
+  override lazy val signInContinueUrl: String = SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl
   override def feedbackSignOutUrl(identifier: String): String =
     s"$governmentGatewayHost/gg/sign-out?continue=${feedbackSurveyUrl(identifier)}"
   override lazy val unauthorisedSignOutUrl: String = s"$governmentGatewayHost/gg/sign-out?continue=$signInContinueUrl"
@@ -117,7 +117,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val vatAgentClientLookupUnauthorisedForClient: String =
     vatAgentClientLookupServiceUrl +
       sc.getString(Keys.vatAgentClientLookupUnauthorisedForClient) +
-      s"?redirectUrl=${ContinueUrl(manageVatSubscriptionServicePath).encodedUrl}"
+      s"?redirectUrl=${SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl}"
 
   override lazy val timeoutPeriod: Int = sc.getInt(Keys.timeoutPeriod)
   override lazy val timeoutCountdown: Int = sc.getInt(Keys.timeoutCountdown)
@@ -125,7 +125,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val contactHmrcUrl: String = sc.getString(Keys.contactHmrc)
 
   override def feedbackUrl(redirect: String): String = s"$contactFrontendService/contact/beta-feedback?service=$contactFormServiceIdentifier" +
-    s"&backUrl=${ContinueUrl(host + redirect).encodedUrl}"
+    s"&backUrl=${SafeRedirectUrl(host + redirect).encodedUrl}"
 
   override val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendServiceUrl) + sc.getString(ConfigKeys.vatSummaryAccessibilityUrl)
 

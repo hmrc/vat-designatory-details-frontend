@@ -18,9 +18,9 @@ package connectors.httpParsers
 
 import models.errors.ErrorModel
 import models.customerInformation.CustomerInformation
-import play.api.http.Status.{OK, INTERNAL_SERVER_ERROR}
+import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import utils.LoggerUtil.{logDebug, logWarn}
+import utils.LoggerUtil.logWarn
 
 object GetCustomerInfoHttpParser {
 
