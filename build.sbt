@@ -30,15 +30,15 @@ val authClientVersion          = "2.33.0-play-26"
 val playUiVersion              = "8.11.0-play-26"
 val playLanguageVersion        = "4.3.0-play-26"
 val playWhiteListFilterVersion = "3.1.0-play-26"
-val scalaTestPlusVersion       = "3.1.2"
+val scalaTestPlusVersion       = "3.1.3"
 val hmrcTestVersion            = "3.9.0-play-26"
-val scalatestVersion           = "3.0.8"
+val scalatestVersion           = "3.0.9"
 val pegdownVersion             = "1.6.0"
-val jsoupVersion               = "1.12.1"
+val jsoupVersion               = "1.12.2"
 val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.23.2"
-val playJsonJodaVersion        = "2.9.0"
+val playJsonJodaVersion        = "2.9.1"
 val libphonenumberVersion      = "8.10.16"
 val bootstrapFrontendVersion   = "2.24.0"
 
@@ -77,7 +77,7 @@ val compile = Seq(
   ws,
   "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapFrontendVersion,
   "uk.gov.hmrc" %% "govuk-template" % govTemplateVersion,
-  "uk.gov.hmrc" %% "play-language" % "4.2.0-play-26",
+  "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
   "uk.gov.hmrc" %% "play-ui" % playUiVersion,
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
   "uk.gov.hmrc" %% "auth-client" % authClientVersion,
@@ -116,7 +116,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     Keys.fork in Test := true,
-    scalaVersion := "2.12.11",
+    scalaVersion := "2.12.12",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
