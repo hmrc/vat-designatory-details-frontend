@@ -53,4 +53,6 @@ object ConfigKeys {
 
   val vatSummaryFrontendServiceUrl: String = "vat-summary-frontend.url"
   val vatSummaryAccessibilityUrl: String = "vat-summary-frontend.accessibilityUrl"
+
+  val trackingConsentUrl: String = "tracking-consent-frontend.url"
 }

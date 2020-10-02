@@ -57,6 +57,7 @@ trait AppConfig {
   val contactHmrcUrl: String
   def feedbackUrl(redirect: String): String
   val accessibilityLinkUrl: String
+  val trackingConsentUrl: String
 }
 
 @Singleton
@@ -129,4 +130,5 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
 
   override val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendServiceUrl) + sc.getString(ConfigKeys.vatSummaryAccessibilityUrl)
 
+  val trackingConsentUrl: String = sc.getString(Keys.trackingConsentUrl)
 }
