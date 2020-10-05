@@ -94,6 +94,10 @@
 @afterHeader = {}
 
 @scriptElement = {
+    <!--[if !IE]>-->
+    <script type="text/javascript" src="@appConfig.trackingConsentUrl"></script>
+    <!--<![endif]-->
+
   <script type="text/javascript" src='@routes.Assets.at("javascript/vddfe-v1.js")'></script>
   <script>
       @if(showSignOut) {

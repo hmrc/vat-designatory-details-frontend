@@ -62,4 +62,6 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
 
   override val accessibilityLinkUrl: String = "/vat-through-software/accessibility-statement"
   override val vatAgentClientLookupUnauthorisedForClient: String = "vatAgentClientLookupUnauthorisedForClient"
+
+  override val trackingConsentUrl: String ="/tracking"
 }
