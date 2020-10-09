@@ -26,13 +26,13 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
   val injectedView: ConfirmRemoveTradingNameView = inject[ConfirmRemoveTradingNameView]
 
   object Selectors {
-    val heading = ".heading-large"
-    val backLink = "#content > article > a"
-    val continueButton = ".button"
-    val cancelLink = ".content__body > p:nth-child(3) > a:nth-child(1)"
+    val heading = ".govuk-heading-l"
+    val backLink = ".govuk-back-link"
+    val continueButton = ".govuk-button"
+    val cancelLink = "p > a"
   }
 
-  "The Confirm trading name view" when {
+  "The Confirm remove trading name view" when {
 
     "the user is a principle entity" should {
 

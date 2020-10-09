@@ -14,44 +14,71 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html.helpers.{FormWithCSRF, ErrorSummary, Input}
 @import config.AppConfig
-@import forms.TradingNameForm._
+@import forms.TradingNameForm.maxLength
 
-@this(mainTemplate: MainTemplate, form: FormWithCSRF, errorSummary: ErrorSummary, input: Input)
+@this(mainTemplate: MainTemplate,
+      govukInput: GovukInput,
+      govukButton: GovukButton,
+      govukBackLink: GovukBackLink,
+      govukErrorSummary: GovukErrorSummary,
+      form: FormWithCSRF
+      )
 
-@(tradingNameForm: Form[String], currentTradingName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(tradingNameForm: Form[String],
+  currentTradingName: String)(implicit request: Request[_],
+                                       messages: Messages,
+                                       appConfig: AppConfig)
 
-    @mainTemplate(if(tradingNameForm.errors.nonEmpty) messages("common.error.prefixTitle", messages("captureTradingName.title")) else messages("captureTradingName.title")) {
+@mainTemplate(
+  pageTitle = if(tradingNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
+    messages("captureTradingName.title")) else messages("captureTradingName.title")
+) {
 
-        <a class="link-back" href="@appConfig.manageVatSubscriptionServicePath">@messages("base.back")</a>
+  @govukBackLink(BackLink(
+    href = appConfig.manageVatSubscriptionServicePath,
+    content = Text(messages("base.back"))
+  ))
 
-        @errorSummary(messages("common.error.heading"), tradingNameForm, forceDivToAppear = false)
+  @if(tradingNameForm.hasErrors) {
+    @govukErrorSummary(ErrorSummary(
+      title = Text(messages("common.error.heading")),
+      errorList = tradingNameForm.errors.map { error =>
+        ErrorLink(
+          href = Some(s"#${tradingNameForm("trading-name").id}"),
+          content = Text(messages(error.message))
+        )
+      }
+    ))
+  }
 
-        <h1 class="heading-large">@messages("captureTradingName.title")</h1>
+  @form(action = controllers.tradingName.routes.CaptureTradingNameController.submit) {
 
-        @form(action = controllers.tradingName.routes.CaptureTradingNameController.submit) {
-            <div class="form-group">
-            @input(
-                tradingNameForm("trading-name"),
-                '_divClass -> "form-label",
-                '_labelId -> "label-trading-name",
-                '_hintId -> "label-trading-name-hint",
-                '_label -> messages("captureTradingName.title"),
-                '_labelTextClass -> "visuallyhidden",
-                '_inputClass -> "input--fullwidth",
-                '_maxlength -> (maxLength + 1)
-            )
-            </div>
+    @govukInput(Input(
+      id = tradingNameForm("trading-name").id,
+      name = "trading-name",
+      label = Label(
+        isPageHeading = true,
+        classes = "govuk-label--l",
+        content = Text(messages("captureTradingName.title"))),
+      value = tradingNameForm.value,
+      classes = "govuk-input--width-20",
+      attributes = Map("maxlength" -> (maxLength + 1).toString),
+      errorMessage = tradingNameForm("trading-name").error.map( error =>
+        ErrorMessage(content = Text(messages(error.message)))
+      )
+    ))
 
-            @if(currentTradingName != ""){
-              <p><a id="remove-trading-name" href='@controllers.tradingName.routes.ConfirmRemoveTradingNameController.show().url'>
-                @messages("captureTradingName.removeTradingName.linkText")
-              </a></p>
-            }
-
-            <div class="form-group">
-                <button class="button" type="submit">@messages("common.continue")</button>
-            </div>
-        }
+    @if(currentTradingName != "") {
+      <p><a id="remove-trading-name"
+            class="govuk-link"
+            href='@controllers.tradingName.routes.ConfirmRemoveTradingNameController.show().url'>
+        @messages("captureTradingName.removeTradingName.linkText")
+      </a></p>
     }
+
+    @govukButton(Button(
+      content = Text(messages("common.continue"))
+    ))
+  }
+}

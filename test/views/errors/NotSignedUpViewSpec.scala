@@ -27,9 +27,9 @@ class NotSignedUpViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val heading = "#content h1"
-    val instructions = "#content article p"
-    val signUpLink = "#content > article > p> a"
-    val signUpButton = "#content .button"
+    val instructions = "#content p"
+    val signUpLink = "#content > p > a"
+    val signUpButton = "#content .govuk-button"
   }
 
   "Rendering the unauthorised page" should {
@@ -55,7 +55,7 @@ class NotSignedUpViewSpec extends ViewBaseSpec {
 
     "have a sign out button which allows the user to sign out" in {
       element(Selectors.signUpButton).attr("href") shouldBe
-        controllers.routes.SignOutController.signOut(feedbackOnSignOut = false).url
+        controllers.routes.SignOutController.signOut(feedbackOnSignOut=false).url
     }
   }
 }

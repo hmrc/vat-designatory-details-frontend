@@ -30,7 +30,7 @@ class AccordionHelperSpec extends ViewBaseSpec {
   val testHtml: Html = Html("test html")
 
   val injectedView: AccordionHelper = inject[AccordionHelper]
-  lazy val view: Html = injectedView(testLabel, testFeature, testPageName, testHtml)
+  lazy val view: Html = injectedView(testLabel, testHtml)
 
   lazy implicit val doc: Document = Jsoup.parse(view.body)
 

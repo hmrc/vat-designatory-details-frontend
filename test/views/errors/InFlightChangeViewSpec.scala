@@ -27,9 +27,9 @@ class InFlightChangeViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val heading = "h1"
-    val paragraphOne = "article > p:nth-child(3)"
-    val paragraphTwo = "article > p:nth-child(4)"
-    val backLink = ".link-back"
+    val paragraphOne = "p:nth-child(3)"
+    val paragraphTwo = "p:nth-child(4)"
+    val backLink = ".govuk-back-link"
 
     def listItem(num: Int): String = s"#content > article > ul > li:nth-child($num)"
   }

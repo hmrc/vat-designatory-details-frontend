@@ -27,7 +27,7 @@ class NotFoundViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val heading = "#content h1"
-    val instructions = "#content > p:nth-of-type(2)"
+    val instructions = "#content > p"
   }
 
   "Rendering the not found page" should {

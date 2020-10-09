@@ -52,7 +52,7 @@ class GetCustomerInfoHttpParserSpec extends UnitSpec {
         )
         val response = HttpResponse(Status.NOT_FOUND, Some(notFoundJson))
         val result = customerInfoResult(response)
-        result shouldBe Left(ErrorModel(Status.NOT_FOUND, Json.prettyPrint(notFoundJson)))
+        result shouldBe Left(ErrorModel(Status.NOT_FOUND, Json.stringify(notFoundJson)))
       }
     }
   }

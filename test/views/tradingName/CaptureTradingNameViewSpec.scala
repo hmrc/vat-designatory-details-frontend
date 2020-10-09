@@ -29,12 +29,14 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val pageHeading = "#content h1"
-    val backLink = "#content > article > a"
+    val backLink = ".govuk-back-link"
     val hintText = "#label-trading-name-hint"
     val form = "form"
     val tradingNameField = "#trading-name"
-    val continueButton = "button"
-    val errorSummary = "#error-summary-heading"
+    val continueButton = ".govuk-button"
+    val errorSummary = "#trading-name-error"
+    val errorSummaryTitle = "#error-summary-title"
+    val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val tradingNameFormGroup = "#content > article > form > div:nth-child(1)"
     val removeTradingName = "#remove-trading-name"
   }
@@ -102,6 +104,29 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
 
           "not show the remove trading name link" in {
             elementExtinct(Selectors.removeTradingName)
+          }
+        }
+      }
+
+      "the form has errors" should {
+
+        lazy val view: Html = injectedView(tradingNameForm(testTradingName)
+          .bind(Map("trading-name" -> testTradingName)), "")(user, messages, mockConfig)
+
+        implicit lazy val document: Document = Jsoup.parse(view.body)
+
+        "have the correct title" in {
+          document.title shouldBe "Error: What is the trading name? - Business tax account - GOV.UK"
+        }
+
+        "display the error summary" which {
+
+          "has the correct text" in {
+            elementText(Selectors.errorSummaryTitle) shouldBe "There is a problem"
+          }
+
+          "has the correct link" in {
+            element(Selectors.errorSummaryLink).attr("href") shouldBe "#trading-name"
           }
         }
       }
