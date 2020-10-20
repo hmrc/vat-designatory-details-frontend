@@ -67,3 +67,9 @@ changeSuccess.helpOne.paper.agent = We’ll send a confirmation letter to the ag
 changeSuccess.helpTwo = Make sure your contact details are up to date.
 
 inFlightChange.title = You already have a change pending
+
+footerLinks.cookies = Cookies
+footerLinks.accessibility = Accessibility
+footerLinks.privacyPolicy = Privacy policy
+footerLinks.termsAndConditions = Terms and conditions
+footerLinks.help = Help using GOV.UK

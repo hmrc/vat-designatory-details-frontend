@@ -36,7 +36,7 @@ class GetCustomerInfoHttpParserSpec extends UnitSpec {
       "valid JSON is returned" should {
 
         "return a CustomerInformation model" in {
-          val response = HttpResponse(Status.OK, Some(fullCustomerInfoJson))
+          val response = HttpResponse(Status.OK, fullCustomerInfoJson.toString)
           val result = customerInfoResult(response)
           result shouldBe Right(fullCustomerInfoModel)
         }
@@ -50,9 +50,9 @@ class GetCustomerInfoHttpParserSpec extends UnitSpec {
           "code" -> "NOT_FOUND",
           "reason" -> "The requested information could not be found."
         )
-        val response = HttpResponse(Status.NOT_FOUND, Some(notFoundJson))
+        val response = HttpResponse(Status.NOT_FOUND, notFoundJson.toString)
         val result = customerInfoResult(response)
-        result shouldBe Left(ErrorModel(Status.NOT_FOUND, Json.prettyPrint(notFoundJson)))
+        result shouldBe Left(ErrorModel(Status.NOT_FOUND, Json.stringify(notFoundJson)))
       }
     }
   }

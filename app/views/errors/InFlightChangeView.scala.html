@@ -14,17 +14,21 @@
  * limitations under the License.
  *@
 
-@this(mainTemplate: MainTemplate)
+@this(mainTemplate: MainTemplate,
+      govukBackLink: GovukBackLink)
 
 @(changeType: String)(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@mainTemplate(title = messages("inFlightChange.title")) {
+@mainTemplate(pageTitle = messages("inFlightChange.title")) {
 
-  <a class="link-back" href="@appConfig.manageVatSubscriptionServicePath">@messages("base.back")</a>
+  @govukBackLink(BackLink(
+    href = appConfig.manageVatSubscriptionServicePath,
+    content = Text(messages("base.back"))
+  ))
 
-  <h1 class="heading-large">@messages("inFlightChange.title")</h1>
-  <p>@messages("inFlightChange.recentlyRequested", messages(s"inFlightChange.$changeType"))</p>
-  <p>@messages("inFlightChange.changePending")</p>
+  <h1 class="govuk-heading-l">@messages("inFlightChange.title")</h1>
+  <p class="govuk-body">@messages("inFlightChange.recentlyRequested", messages(s"inFlightChange.$changeType"))</p>
+  <p class="govuk-body">@messages("inFlightChange.changePending")</p>
   <ul class="list list-bullet">
     <li>@messages("inFlightChange.ppob")</li>
     <li>@messages("inFlightChange.emailAddress")</li>

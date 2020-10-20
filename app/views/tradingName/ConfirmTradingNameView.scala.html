@@ -16,20 +16,30 @@
 
 @import config.AppConfig
 
-@this(mainTemplate: MainTemplate)
+@this(mainTemplate: MainTemplate,
+      govukBackLink: GovukBackLink,
+      govukButton: GovukButton)
 
 @(tradingName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@mainTemplate(title = messages("confirmTradingName.title")) {
+@mainTemplate(pageTitle = messages("confirmTradingName.title")) {
 
- <a class="link-back" href="@controllers.tradingName.routes.CaptureTradingNameController.show().url">@messages("base.back")</a>
+  @govukBackLink(BackLink(
+    href = controllers.tradingName.routes.CaptureTradingNameController.show().url,
+    content = Text(messages("base.back"))
+  ))
 
- <h1 class="heading-large">@messages("confirmTradingName.heading")</h1>
+  <h1 class="govuk-heading-l">@messages("confirmTradingName.heading")</h1>
 
- <p>@messages("confirmTradingName.p1", tradingName)</p>
+  <p class="govuk-body">@messages("confirmTradingName.p1", tradingName)</p>
 
- <p><a href="@controllers.tradingName.routes.CaptureTradingNameController.show().url">@messages("confirmTradingName.change")</a></p>
+  <p><a class="govuk-link"
+       href="@controllers.tradingName.routes.CaptureTradingNameController.show().url">
+      @messages("confirmTradingName.change")
+    </a></p>
 
- <a href='@controllers.tradingName.routes.ConfirmTradingNameController.updateTradingName().url' role="button" tabindex="0" class="button">
-  @messages("base.confirmAndContinue")</a>
+  @govukButton(Button(
+    href = Some(controllers.tradingName.routes.ConfirmTradingNameController.updateTradingName().url),
+    content = Text(messages("base.confirmAndContinue"))
+  ))
 }

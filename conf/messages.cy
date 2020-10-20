@@ -67,3 +67,9 @@ changeSuccess.helpOne.paper.agent = Byddwn yn anfon llythyr o gadarnhad i gyfeir
 changeSuccess.helpTwo = Sicrhewch fod eich manylion cyswllt wedi’u diweddaru.
 
 inFlightChange.title = Mae gennych newid ar y gweill yn barod
+
+footerLinks.cookies = Cwcis
+footerLinks.accessibility = Hygyrchedd
+footerLinks.privacyPolicy = Polisi preifatrwydd
+footerLinks.termsAndConditions = Telerau ac Amodau
+footerLinks.help = Help wrth ddefnyddio GOV.UK

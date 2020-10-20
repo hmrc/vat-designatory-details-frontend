@@ -27,10 +27,10 @@ class ConfirmTradingNameViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val heading = "h1"
-    val backLink = "#content > article > a"
-    val continueButton = ".button"
-    val editLink = "#content > article > p:nth-child(4) > a"
-    val newTradingName = "#content > article > p"
+    val backLink = ".govuk-back-link"
+    val continueButton = ".govuk-button"
+    val editLink = "#content > p:nth-child(4) > a"
+    val newTradingName = "#content > p"
   }
 
   "The Confirm trading name view" when {

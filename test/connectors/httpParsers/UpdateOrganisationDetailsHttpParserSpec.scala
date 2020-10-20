@@ -31,13 +31,13 @@ class UpdateOrganisationDetailsHttpParserSpec extends UnitSpec {
   "read" when {
     "the response status is OK" should {
       "return a updateTradingNameSuccess when the response Json can be parsed" in {
-        val httpResponse = HttpResponse(Status.OK, Some(Json.obj("formBundle" -> s"$formBundle")))
+        val httpResponse = HttpResponse(Status.OK, Json.obj("formBundle" -> s"$formBundle").toString)
 
         read("", "", httpResponse) shouldBe Right(updateTradingNameSuccess)
       }
 
       "return the expected Left Error Model when the response Json cannot be parsed" in {
-        val httpResponse = HttpResponse(Status.OK, Some(Json.obj("notExpectedKey" -> s"$formBundle")))
+        val httpResponse = HttpResponse(Status.OK, Json.obj("notExpectedKey" -> s"$formBundle").toString)
 
         read("", "", httpResponse) shouldBe Left(invalidJsonError)
       }
@@ -46,7 +46,7 @@ class UpdateOrganisationDetailsHttpParserSpec extends UnitSpec {
     "the response status is INTERNAL_SERVER_ERROR" should {
       "return the expected Left Error Model" in {
         val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = INTERNAL_SERVER_ERROR
+          INTERNAL_SERVER_ERROR, ""
         )
         read("", "", httpResponse) shouldBe Left(ErrorModel(INTERNAL_SERVER_ERROR, httpResponse.body))
       }

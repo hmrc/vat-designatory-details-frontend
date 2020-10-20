@@ -64,4 +64,9 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val vatAgentClientLookupUnauthorisedForClient: String = "vatAgentClientLookupUnauthorisedForClient"
 
   override val trackingConsentUrl: String ="/tracking"
+
+  override val footerCookiesUrl: String = "/cookies"
+  override val footerPrivacyUrl: String = "/privacy"
+  override val footerTermsConditionsUrl: String = "/terms"
+  override val footerHelpUrl: String = "/help"
 }

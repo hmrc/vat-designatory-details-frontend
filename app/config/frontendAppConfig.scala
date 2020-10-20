@@ -58,6 +58,10 @@ trait AppConfig {
   def feedbackUrl(redirect: String): String
   val accessibilityLinkUrl: String
   val trackingConsentUrl: String
+  val footerCookiesUrl: String
+  val footerPrivacyUrl: String
+  val footerTermsConditionsUrl: String
+  val footerHelpUrl: String
 }
 
 @Singleton
@@ -131,4 +135,9 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendServiceUrl) + sc.getString(ConfigKeys.vatSummaryAccessibilityUrl)
 
   val trackingConsentUrl: String = sc.getString(Keys.trackingConsentUrl)
+
+  override val footerPrivacyUrl: String = sc.getString(ConfigKeys.footerPrivacyUrl)
+  override val footerTermsConditionsUrl: String = sc.getString(ConfigKeys.footerTermsConditionsUrl)
+  override val footerHelpUrl: String = sc.getString(ConfigKeys.footerHelpUrl)
+  override val footerCookiesUrl: String = sc.getString(ConfigKeys.footerCookiesUrl)
 }

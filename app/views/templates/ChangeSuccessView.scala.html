@@ -15,34 +15,42 @@
  *@
 
 @import models.viewModels.ChangeSuccessViewModel
+@import views.html.templates.UpdateClient
 
-@this(mainTemplate: MainTemplate, updateClient: UpdateClient)
+@this(mainTemplate: MainTemplate,
+      updateClient: UpdateClient,
+      govukButton: GovukButton)
 
 @(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
-@mainTemplate(title = messages(model.pageTitle)) {
+@mainTemplate(pageTitle = messages(model.pageTitle)) {
 
-<div class="govuk-box-highlight">
-  <h1 class="heading-xlarge">@messages(model.pageTitle)</h1>
-</div>
+  <div class="govuk-box-highlight">
+    <h1 class="govuk-heading-xl">@messages(model.pageTitle)</h1>
+  </div>
 
-<h2 class="heading-medium">@messages("common.whatHappensNext")</h2>
+  <h2 class="govuk-heading-m">@messages("common.whatHappensNext")</h2>
 
-@if(user.isAgent) {
+  @if(user.isAgent) {
 
-  @model.agentEmail match {
-    case Some(email) => {<p>@messages("changeSuccess.helpOne.digital.agent", email)</p>}
-    case _ => {<p>@messages("changeSuccess.helpOne.paper.agent")</p>}
+    @model.agentEmail match {
+      case Some(email) => {<p class="govuk-body">@messages("changeSuccess.helpOne.digital.agent", email)</p>}
+      case _ => {<p class="govuk-body">@messages("changeSuccess.helpOne.paper.agent")</p>}
+    }
+
+    @updateClient(model.businessName)
+
+    <p class="govuk-body"><a class="govuk-link"
+          href="@appConfig.vatAgentClientLookupServicePath">
+        @messages("common.changeClient")
+    </a></p>
+
+  } else {
+    <p class="govuk-body">@messages("changeSuccess.helpTwo")</p>
   }
 
-  @updateClient(model.businessName)
-
-  <p><a href="@appConfig.vatAgentClientLookupServicePath">@messages("common.changeClient")</a></p>
-
-} else {
-
-  <p>@messages("changeSuccess.helpTwo")</p>
-}
-
-<a href="@appConfig.manageVatSubscriptionServicePath" class="button" role="button">@messages("base.finish")</a>
+  @govukButton(Button(
+    href = Some(appConfig.manageVatSubscriptionServicePath),
+    content = Text(messages("base.finish"))
+  ))
 }

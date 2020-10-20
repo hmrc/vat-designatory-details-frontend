@@ -55,4 +55,9 @@ object ConfigKeys {
   val vatSummaryAccessibilityUrl: String = "vat-summary-frontend.accessibilityUrl"
 
   val trackingConsentUrl: String = "tracking-consent-frontend.url"
+
+  val footerCookiesUrl: String = "mdtp.cookies"
+  val footerPrivacyUrl: String = "mdtp.privacyPolicy"
+  val footerTermsConditionsUrl: String = "mdtp.termsAndConditions"
+  val footerHelpUrl: String = "govuk.helpUsingGovuk"
 }
