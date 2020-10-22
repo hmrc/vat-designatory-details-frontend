@@ -30,7 +30,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
   object Selectors {
     val pageHeading = "#content h1"
     val backLink = ".govuk-back-link"
-    val hintText = "#label-trading-name-hint"
+    val hintText = "#trading-name-hint"
     val form = "form"
     val tradingNameField = "#trading-name"
     val continueButton = ".govuk-button"
@@ -70,6 +70,10 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
 
           "have the correct page heading" in {
             elementText(Selectors.pageHeading) shouldBe "What is the trading name?"
+          }
+
+          "have the correct hint text" in {
+            elementText(Selectors.hintText) shouldBe "Trading names cannot be longer than 160 characters"
           }
 
           "have the trading name form with the correct form action" in {
