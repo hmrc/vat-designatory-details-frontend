@@ -116,6 +116,7 @@ TwirlKeys.templateImports ++= Seq(
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(PlayKeys.playDefaultPort := 9165)
   .settings(coverageSettings: _*)
   .settings(playSettings: _*)
