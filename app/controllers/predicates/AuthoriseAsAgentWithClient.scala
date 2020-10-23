@@ -34,8 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthoriseAsAgentWithClient @Inject()(enrolmentsAuthService: EnrolmentsAuthService,
                                            val errorHandler: ErrorHandler,
                                            mcc: MessagesControllerComponents,
-                                           sessionTimeoutView: SessionTimeoutView,
-                                           implicit val appConfig: AppConfig,
+                                           sessionTimeoutView: SessionTimeoutView)
+                                          (implicit val appConfig: AppConfig,
                                            override implicit val executionContext: ExecutionContext,
                                            override val messagesApi: MessagesApi)
 

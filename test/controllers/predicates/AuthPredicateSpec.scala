@@ -42,13 +42,8 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
           authPredicate(agent)
         }
 
-        "return Internal Server Error (500)" in {
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-        }
-
-        "render the Technical Difficulties page" in {
-          messages(Jsoup.parse(bodyOf(result)).title) shouldBe
-            "There is a problem with the service - Your client’s VAT details - GOV.UK"
+        "return OK (200)" in {
+          status(result) shouldBe Status.OK
         }
       }
       "the Agent does NOT have an Active HMRC-AS-AGENT enrolment" should {
