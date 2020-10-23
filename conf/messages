@@ -41,7 +41,8 @@ unauthorised.agent.instructions2 = set up an agent services account
 
 captureTradingName.title = What is the trading name?
 captureTradingName.removeTradingName.linkText = Remove trading name
-captureTradingName.error.exceedsMaxLength = Enter a maximum of 132 characters
+captureTradingName.para = Trading names cannot be longer than 160 characters
+captureTradingName.error.exceedsMaxLength = Enter a maximum of 160 characters
 captureTradingName.error.empty = Enter a trading name
 captureTradingName.error.notChanged = Enter a new trading name
 
