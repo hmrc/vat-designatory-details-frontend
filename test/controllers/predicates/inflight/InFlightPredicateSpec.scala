@@ -44,8 +44,8 @@ class InFlightPredicateSpec extends MockAuth {
     "/redirect-location"
   )
 
-  def userWithSession(inflightTradingNameValue: String): User[AnyContentAsEmpty.type] =
-    User[AnyContentAsEmpty.type]("999943620")(request.withSession(inFlightTradingNameChangeKey -> inflightTradingNameValue))
+  def inflightRequest(value: String): User[AnyContentAsEmpty.type] =
+    User("999999999")(request.withSession(inFlightTradingNameChangeKey -> value))
 
   val userWithoutSession: User[AnyContentAsEmpty.type] = User("999999999")(FakeRequest())
 
@@ -55,7 +55,7 @@ class InFlightPredicateSpec extends MockAuth {
 
       "the inflight indicator is set to a change value" should {
 
-        lazy val result = await(inflightTradingNamePredicate.refine(userWithSession("tradingName"))).left.get
+        lazy val result = await(inflightTradingNamePredicate.refine(inflightRequest("true"))).left.get
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return 409" in {
@@ -74,10 +74,10 @@ class InFlightPredicateSpec extends MockAuth {
 
       "the inflight indicator is set to 'false'" should {
 
-        lazy val result = await(inflightTradingNamePredicate.refine(userWithSession("false")))
+        lazy val result = await(inflightTradingNamePredicate.refine(inflightRequest("false")))
 
         "allow the request to pass through the predicate" in {
-          result shouldBe Right(userWithSession("false"))
+          result shouldBe Right(inflightRequest("false"))
         }
 
         "not call the VatSubscriptionService" in {
@@ -101,8 +101,8 @@ class InFlightPredicateSpec extends MockAuth {
           status(result) shouldBe Status.CONFLICT
         }
 
-        "add the inflight indicator 'tradingName' to session" in {
-          session(result).get(inFlightTradingNameChangeKey) shouldBe Some("tradingName")
+        "add the inflight indicator 'true' to session" in {
+          session(result).get(inFlightTradingNameChangeKey) shouldBe Some("true")
         }
 
         "show the 'change pending' error page" in {

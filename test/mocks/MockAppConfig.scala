@@ -39,7 +39,6 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val signInContinueUrl = ""
   override val govUkCommercialSoftware: String = "https://www.gov.uk/guidance/use-software-to-submit-your-vat-returns"
   override val vatAgentClientLookupServicePath: String = ""
-  override val manageVatSubscriptionServiceUrl: String = ""
   override val manageVatSubscriptionServicePath: String = "mockManageVatOverviewUrl"
 
   override def routeToSwitchLanguage: String => Call =

@@ -19,7 +19,6 @@ package controllers.predicates.inflight
 import common.SessionKeys.inFlightTradingNameChangeKey
 import config.AppConfig
 import models.User
-import models.customerInformation.CustomerInformation
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.{Conflict, Redirect}
@@ -43,8 +42,8 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
 
     req.session.get(inFlightTradingNameChangeKey) match {
       case Some("false") => Future.successful(Right(req))
-      case Some(change) => Future.successful(Left(Conflict(inFlightComps.inFlightChangeView(change))))
-      case None => getCustomerInfoCall(req.vrn)
+      case Some("true") => Future.successful(Left(Conflict(inFlightComps.inFlightChangeView())))
+      case _ => getCustomerInfoCall(req.vrn)
     }
   }
 
@@ -54,7 +53,7 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
       case Right(customerInfo) =>
         customerInfo.pendingChanges match {
           case Some(changes) if changes.tradingName.isDefined =>
-            comparePendingAndCurrent(customerInfo)
+            Left(Conflict(inFlightComps.inFlightChangeView()).addingToSession(inFlightTradingNameChangeKey -> "true"))
           case _ =>
             logDebug("[InFlightPredicate][getCustomerInfoCall] - There are no in-flight changes. " +
               "Redirecting user to the start of the journey.")
@@ -65,19 +64,4 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
           s"The call to the GetCustomerInfo API failed. Error: ${error.message}")
         Left(inFlightComps.errorHandler.showInternalServerError)
     }
-
-  private def comparePendingAndCurrent[A](customerInfo: CustomerInformation)
-                                         (implicit user: User[A]): Either[Result, User[A]] = {
-
-    def logWarnPending(changeType: String): Unit = logWarn("[InFlightPredicate][comparePendingAndCurrent] - " +
-      s"There is an in-flight $changeType change. Rendering graceful error page.")
-
-    if(!customerInfo.sameTradingName) {
-      logWarnPending("trading name")
-      Left(Conflict(inFlightComps.inFlightChangeView("trading name"))
-        .addingToSession(inFlightTradingNameChangeKey -> "tradingName"))
-    } else {
-      Right(user)
-    }
-  }
 }

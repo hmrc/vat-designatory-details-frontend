@@ -38,7 +38,7 @@ class InFlightChangeViewSpec extends ViewBaseSpec {
 
     "the pending change is trading name" should {
 
-      lazy val view = injectedView("tradingName")
+      lazy val view = injectedView()
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct title" in {
