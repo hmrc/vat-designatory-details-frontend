@@ -81,7 +81,7 @@ class CaptureTradingNameController @Inject()(val vatSubscriptionService: VatSubs
           Future.successful(BadRequest(captureTradingNameView(errorForm, validation)))
         },
         tradingName     => {
-          Future.successful(Redirect(routes.ConfirmTradingNameController.show())
+          Future.successful(Redirect(routes.CheckYourAnswersController.show())
             .addingToSession(SessionKeys.prepopulationTradingNameKey -> tradingName))
         }
       )

@@ -198,7 +198,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
           "redirect to the confirm trading name view" in {
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.ConfirmTradingNameController.show().url)
+            redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
           }
 
           "add the new trading name to the session" in {

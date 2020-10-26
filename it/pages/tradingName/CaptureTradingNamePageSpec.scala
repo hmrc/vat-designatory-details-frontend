@@ -87,7 +87,7 @@ class CaptureTradingNamePageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.SEE_OTHER),
-            redirectURI(controllers.tradingName.routes.ConfirmTradingNameController.show().url)
+            redirectURI(controllers.tradingName.routes.CheckYourAnswersController.show().url)
           )
         }
 

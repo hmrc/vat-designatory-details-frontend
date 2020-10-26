@@ -54,7 +54,7 @@ class ConfirmRemoveTradingNameController @Inject()(val errorHandler: ErrorHandle
 
     extractSessionTradingName(user) match {
       case Some(_) =>
-        Future.successful(Redirect(routes.ConfirmTradingNameController.updateTradingName())
+        Future.successful(Redirect(routes.CheckYourAnswersController.updateTradingName())
           .addingToSession(prepopulationTradingNameKey -> ""))
       case _ =>
         Future.successful(Redirect(routes.CaptureTradingNameController.show()))

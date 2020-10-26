@@ -20,42 +20,42 @@ import audit.AuditingService
 import audit.models.ChangedTradingNameAuditModel
 import common.SessionKeys._
 import config.{AppConfig, ErrorHandler}
-import controllers.predicates.AuthPredicateComponents
 import controllers.BaseController
+import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import models.errors.ErrorModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatSubscriptionService
 import utils.LoggerUtil.logWarn
-import views.html.tradingName.ConfirmTradingNameView
+import views.html.tradingName.CheckYourAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmTradingNameController @Inject()(val errorHandler: ErrorHandler,
-                                         val vatSubscriptionService: VatSubscriptionService,
-                                         confirmTradingNameView: ConfirmTradingNameView,
-                                         auditService: AuditingService)
-                                        (implicit val appConfig: AppConfig,
-                                         mcc: MessagesControllerComponents,
-                                         authComps: AuthPredicateComponents,
-                                         inFlightComps: InFlightPredicateComponents) extends BaseController {
+class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView,
+                                            vatSubscriptionService: VatSubscriptionService,
+                                            auditService: AuditingService,
+                                            errorHandler: ErrorHandler)(
+                                            implicit val authComps: AuthPredicateComponents,
+                                            mcc: MessagesControllerComponents,
+                                            inFlightComps: InFlightPredicateComponents,
+                                            appConfig: AppConfig
+                                           ) extends BaseController {
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
   def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
-
-    user.session.get(prepopulationTradingNameKey).filter(_.nonEmpty) match {
+    user.session.get(prepopulationTradingNameKey) match {
       case Some(tradingName) =>
-        Ok(confirmTradingNameView(tradingName))
+        Ok(checkYourAnswersView(tradingName))
       case _ =>
         Redirect(routes.CaptureTradingNameController.show())
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
-
+  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async {
+    implicit user =>
     user.session.get(prepopulationTradingNameKey) match {
       case Some(tradingName) =>
         vatSubscriptionService.updateTradingName(user.vrn, tradingName) map {
@@ -68,17 +68,16 @@ class ConfirmTradingNameController @Inject()(val errorHandler: ErrorHandler,
                 user.isAgent,
                 user.arn
               ),
-              Some(controllers.tradingName.routes.ConfirmTradingNameController.updateTradingName().url)
+              Some(routes.CheckYourAnswersController.updateTradingName().url)
             )
             Redirect(controllers.routes.ChangeSuccessController.tradingName())
               .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "tradingName")
               .removingFromSession(validationTradingNameKey)
-
           case Left(ErrorModel(CONFLICT, _)) =>
-            logWarn("[ConfirmTradingNameController][updateTradingName] - There is a contact details update request " +
-              "already in progress. Redirecting user to manage-vat overview page.")
+            logWarn("[ConfirmTradingNameController][updateTradingName] - There is a contact details" +
+              " update request already in progress. Redirecting user to manage vat overview page.")
             Redirect(appConfig.manageVatSubscriptionServicePath)
-              .addingToSession(inFlightTradingNameChangeKey -> "tradingName")
+            .addingToSession(inFlightTradingNameChangeKey -> "tradingName")
 
           case Left(_) =>
             errorHandler.showInternalServerError

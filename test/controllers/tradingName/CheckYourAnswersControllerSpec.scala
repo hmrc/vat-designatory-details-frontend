@@ -16,38 +16,36 @@
 
 package controllers.tradingName
 
-import assets.BaseTestConstants._
+import assets.BaseTestConstants.{internalServerErrorTitle, vrn}
 import controllers.ControllerBaseSpec
 import models.customerInformation.UpdateOrganisationDetailsSuccess
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
+import play.api.test.Helpers._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.verify
-import play.api.http.Status
-import play.api.http.Status.{CONFLICT, INTERNAL_SERVER_ERROR}
-import play.api.test.Helpers._
-import views.html.tradingName.ConfirmTradingNameView
+import views.html.tradingName.CheckYourAnswersView
 
 import scala.concurrent.Future
 
-class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
+class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
-  val controller = new ConfirmTradingNameController(
-    mockErrorHandler,
+  val controller = new CheckYourAnswersController(
+    inject[CheckYourAnswersView],
     mockVatSubscriptionService,
-    inject[ConfirmTradingNameView],
-    mockAuditingService
+    mockAuditingService,
+    mockErrorHandler
   )
 
-  "Calling the show action in ConfirmTradingNameController" when {
+  "Calling the show action in CheckYourAnswersController" when {
 
     "there is a trading name in session" should {
 
-      "show the Confirm TradingName page" in {
+      "show the Check your answer page" in {
         mockIndividualAuthorised()
         val result = controller.show(requestWithTradingName)
 
-        status(result) shouldBe Status.OK
+        status(result) shouldBe OK
       }
     }
 
@@ -59,7 +57,7 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
       }
 
       "return 303" in {
-        status(result) shouldBe Status.SEE_OTHER
+        status(result) shouldBe SEE_OTHER
       }
 
       "redirect the user to enter a new trading name" in {
@@ -73,13 +71,12 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
         mockIndividualWithoutEnrolment()
         val result = controller.show(requestWithTradingName)
 
-        status(result) shouldBe Status.FORBIDDEN
+        status(result) shouldBe FORBIDDEN
       }
     }
-
   }
 
-  "Calling the updateTradingName() action in ConfirmTradingNameController" when {
+  "Calling updateTradingName() in CheckYourAnswersController" when {
 
     "there is a trading name in session" when {
 
@@ -92,7 +89,7 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
         }
 
         "return 303" in {
-          status(result) shouldBe Status.SEE_OTHER
+          status(result) shouldBe SEE_OTHER
         }
 
         "audit the trading name change event" in {
@@ -109,15 +106,16 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
         lazy val result = {
           mockIndividualAuthorised()
           mockUpdateTradingName(vrn, testTradingName)(
-            Future(Left(ErrorModel(CONFLICT, "The back end has indicated there is an update already in progress"))))
+            Future(Left(ErrorModel(CONFLICT, "The back end has indicated there is an update already in progress")))
+          )
           controller.updateTradingName()(requestWithTradingName)
         }
 
         "return 303" in {
-          status(result) shouldBe Status.SEE_OTHER
+          status(result) shouldBe SEE_OTHER
         }
 
-        "redirect the user to the manage-vat overview page" in {
+        "redirect the user to the manage vat overview page" in {
           redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
         }
       }
@@ -127,12 +125,13 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
         lazy val result = {
           mockIndividualAuthorised()
           mockUpdateTradingName(vrn, testTradingName)(
-            Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "Couldn't verify TradingName"))))
+            Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "Couldn't verify TradingName")))
+          )
           controller.updateTradingName()(requestWithTradingName)
         }
 
         "return 500" in {
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+          status(result) shouldBe INTERNAL_SERVER_ERROR
         }
 
         "show the internal server error page" in {
@@ -149,7 +148,7 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
       }
 
       "return 303" in {
-        status(result) shouldBe Status.SEE_OTHER
+        status(result) shouldBe SEE_OTHER
       }
 
       "redirect the user to the capture trading name page" in {
@@ -163,7 +162,7 @@ class ConfirmTradingNameControllerSpec extends ControllerBaseSpec  {
         mockIndividualWithoutEnrolment()
         val result = controller.updateTradingName()(requestWithTradingName)
 
-        status(result) shouldBe Status.FORBIDDEN
+        status(result) shouldBe FORBIDDEN
       }
     }
   }

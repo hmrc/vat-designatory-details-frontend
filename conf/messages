@@ -46,10 +46,10 @@ captureTradingName.error.exceedsMaxLength = Enter a maximum of 160 characters
 captureTradingName.error.empty = Enter a trading name
 captureTradingName.error.notChanged = Enter a new trading name
 
-confirmTradingName.title = Confirm the trading name
-confirmTradingName.heading = Confirm the trading name
-confirmTradingName.p1 = The new trading name is {0}
-confirmTradingName.change = Change trading name
+checkYourAnswers.heading = Check your answer
+checkYourAnswers.tradingName = Trading name
+checkYourAnswers.change = Change
+checkYourAnswers.confirm = Confirm and continue
 
 confirmTradingNameRemove.title = Confirm you want to remove the trading name
 confirmTradingNameRemove.heading = Confirm you want to remove the trading name: {0}

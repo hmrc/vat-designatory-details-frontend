@@ -8,8 +8,8 @@ GET         /new-trading-name                      controllers.tradingName.Captu
 POST        /new-trading-name                      controllers.tradingName.CaptureTradingNameController.submit
 
 # confirm trading name
-GET         /confirm-new-trading-name              controllers.tradingName.ConfirmTradingNameController.show
-GET         /update-trading-name                   controllers.tradingName.ConfirmTradingNameController.updateTradingName
+GET         /confirm-new-trading-name              controllers.tradingName.CheckYourAnswersController.show
+GET         /update-trading-name                   controllers.tradingName.CheckYourAnswersController.updateTradingName
 
 # tradingName change successful
 GET         /trading-name-confirmation             controllers.ChangeSuccessController.tradingName
