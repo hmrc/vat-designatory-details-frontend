@@ -64,10 +64,7 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
       mockEnrolmentsAuthService,
       mockErrorHandler,
       mcc,
-      sessionTimeoutView,
-      mockConfig,
-      ec,
-      messagesApi
+      sessionTimeoutView
     )
 
   implicit val mockAuthPredicateComponents: AuthPredicateComponents = new AuthPredicateComponents(

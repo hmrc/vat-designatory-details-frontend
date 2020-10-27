@@ -66,10 +66,10 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
           ))
         }
 
-        "return 500" in {
+        "return 200" in {
           mockAgentAuthorised()
           mockGetCustomerInfo("1111111111")(Future.successful(Right(fullCustomerInfoModel)))
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+          status(result) shouldBe Status.OK
         }
       }
     }

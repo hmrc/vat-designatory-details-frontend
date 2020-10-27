@@ -60,17 +60,19 @@ class AuthPredicate(authComps: AuthPredicateComponents)
     }
   }
 
-  private[AuthPredicate] def checkAgentEnrolment[A](enrolments: Enrolments, block: User[A] => Future[Result])(implicit request: Request[A]) =
+  private[AuthPredicate] def checkAgentEnrolment[A](enrolments: Enrolments, block: User[A] => Future[Result])
+                                                   (implicit request: Request[A]) =
     if (enrolments.enrolments.exists(_.key == EnrolmentKeys.agentEnrolmentId)) {
       logDebug("[AuthPredicate][checkAgentEnrolment] - Authenticating as agent")
-      Future.successful(authComps.errorHandler.showInternalServerError)
+      authComps.authenticateAsAgentWithClient.invokeBlock(request, block)
     } else {
       logDebug(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment. Enrolments: $enrolments")
       logWarn(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment.")
       Future.successful(Forbidden(authComps.unauthorisedAgentView()))
     }
 
-  private[AuthPredicate] def checkVatEnrolment[A](enrolments: Enrolments, block: User[A] => Future[Result])(implicit request: Request[A]) =
+  private[AuthPredicate] def checkVatEnrolment[A](enrolments: Enrolments, block: User[A] => Future[Result])
+                                                 (implicit request: Request[A]) =
     if (enrolments.enrolments.exists(_.key == EnrolmentKeys.vatEnrolmentId)) {
       logDebug("[AuthPredicate][checkVatEnrolment] - Authenticated as principle")
       block(User(enrolments))
