@@ -22,7 +22,6 @@ import config.{ConfigKeys => Keys}
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.Lang
 import play.api.mvc.Call
-import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -47,7 +46,6 @@ trait AppConfig {
   val vatAgentClientLookupServicePath: String
   val vatAgentClientLookupUnauthorisedForClient: String
   val vatSubscriptionHost: String
-  val manageVatSubscriptionServiceUrl: String
   val manageVatSubscriptionServicePath: String
   val feedbackFormPartialUrl: String
   val contactFrontendService: String
@@ -65,7 +63,7 @@ trait AppConfig {
 }
 
 @Singleton
-class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConfig) extends AppConfig {
+class FrontendAppConfig @Inject()(sc: ServicesConfig) extends AppConfig {
 
   override lazy val appName: String = sc.getString("appName")
 
@@ -113,7 +111,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
 
   override val vatSubscriptionHost: String = sc.baseUrl(Keys.vatSubscription)
 
-  override val manageVatSubscriptionServiceUrl: String = sc.getString(Keys.manageVatSubscriptionServiceUrl)
+  private val manageVatSubscriptionServiceUrl: String = sc.getString(Keys.manageVatSubscriptionServiceUrl)
   override val manageVatSubscriptionServicePath: String =
     manageVatSubscriptionServiceUrl + sc.getString(Keys.manageVatSubscriptionServicePath)
 

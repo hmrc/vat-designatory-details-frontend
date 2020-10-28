@@ -22,7 +22,7 @@ case class PendingChanges(tradingName: Option[String])
 
 object PendingChanges {
 
-  private val organisationDetailsPath = JsPath \ "organisationDetails" \ "tradingName"
+  private val organisationDetailsPath = JsPath \ "tradingName"
 
   implicit val reads: Reads[PendingChanges] =
     organisationDetailsPath.readNullable[String].map(PendingChanges.apply)

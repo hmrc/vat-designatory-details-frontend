@@ -26,15 +26,15 @@ object CustomerInfoConstants {
   val organisationDetailsJsonMin: JsObject = Json.obj()
 
   val pendingTradingNameJson: JsObject = Json.obj(
-    "organisationDetails" -> Json.obj("tradingName" -> "New trading name")
+    "tradingName" -> "New trading name"
   )
 
   val pendingTradingNameModel: PendingChanges = PendingChanges(Some("New trading name"))
 
-  val minCustomerInfoModel = CustomerInformation(None, None, None, None, None)
+  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None)
   val minCustomerInfoJson: JsObject = Json.obj()
 
-  val fullCustomerInfoModel = CustomerInformation(
+  val fullCustomerInfoModel: CustomerInformation = CustomerInformation(
     pendingChanges = Some(pendingTradingNameModel),
     firstName = Some("Pepsi"),
     lastName = Some("Mac"),
@@ -56,13 +56,15 @@ object CustomerInfoConstants {
     )
   )
 
-  val updateOrganisationDetailsModel = UpdateOrganisationDetails("PepsiMac", Some("myAgentEmail@email.com"))
-  val updateOrganisationDetailsModelMin = UpdateOrganisationDetails("PepsiMac", None)
+  val updateOrganisationDetailsModel: UpdateOrganisationDetails =
+    UpdateOrganisationDetails("PepsiMac", Some("myAgentEmail@email.com"))
+  val updateOrganisationDetailsModelMin: UpdateOrganisationDetails =
+    UpdateOrganisationDetails("PepsiMac", None)
 
   val updateOrganisationDetailsJson: JsObject = Json.obj(
     "tradingName" -> "PepsiMac", "transactorOrCapacitorEmail" -> "myAgentEmail@email.com"
   )
   val updateOrganisationDetailsJsonMin: JsObject = Json.obj("tradingName" -> "PepsiMac")
 
-  val invalidJsonError = ErrorModel(Status.INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON.")
+  val invalidJsonError: ErrorModel = ErrorModel(Status.INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON.")
 }
