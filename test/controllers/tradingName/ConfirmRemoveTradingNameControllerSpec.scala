@@ -82,7 +82,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
       }
 
       "redirect to the updateTradingName() action in ConfirmTradingNameController" in {
-        redirectLocation(result) shouldBe Some(routes.ConfirmTradingNameController.updateTradingName().url)
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.updateTradingName().url)
       }
 
       "add a blank value to the prepopulation session key" in {

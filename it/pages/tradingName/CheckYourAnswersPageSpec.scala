@@ -21,12 +21,12 @@ import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
 
-class ConfirmTradingNamePageSpec extends BasePageISpec {
+class CheckYourAnswersPageSpec extends BasePageISpec {
 
   val path = "/confirm-new-trading-name"
   val newTradingName = "New Trading Name"
 
-  "Calling the Confirm trading name (.show) route" when {
+  "Calling the Check your answers (.show) route" when {
 
     def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
 
@@ -42,7 +42,7 @@ class ConfirmTradingNamePageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.OK),
-            pageTitle(generateDocumentTitle("confirmTradingName.title"))
+            pageTitle(generateDocumentTitle("checkYourAnswers.heading"))
           )
         }
       }

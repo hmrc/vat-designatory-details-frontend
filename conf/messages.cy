@@ -45,10 +45,10 @@ captureTradingName.error.exceedsMaxLength = ???
 captureTradingName.error.empty = ???
 captureTradingName.error.notChanged = ???
 
-confirmTradingName.title = ???
-confirmTradingName.heading = ???
-confirmTradingName.p1 = ???
-confirmTradingName.change = ???
+checkYourAnswers.heading = Gwirio’ch ateb
+checkYourAnswers.tradingName = Enw masnachu
+checkYourAnswers.change = Newid
+checkYourAnswers.confirm = Cadarnhau ac yn eich blaen
 
 confirmTradingNameRemove.title = ???
 confirmTradingNameRemove.heading = ???
