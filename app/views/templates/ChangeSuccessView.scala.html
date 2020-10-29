@@ -25,9 +25,11 @@
 
 @mainTemplate(pageTitle = messages(model.pageTitle)) {
 
-  <div class="govuk-box-highlight">
-    <h1 class="govuk-heading-xl">@messages(model.pageTitle)</h1>
-  </div>
+<div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
+        @messages(model.pageTitle)
+    </h1>
+</div>
 
   <h2 class="govuk-heading-m">@messages("common.whatHappensNext")</h2>
 

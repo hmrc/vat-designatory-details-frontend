@@ -83,59 +83,15 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "the trading name has been updated successfully" should {
 
         lazy val result = {
-          mockIndividualAuthorised()
-          mockUpdateTradingName(vrn, testTradingName)(Future(Right(UpdateOrganisationDetailsSuccess("success"))))
           controller.updateTradingName()(requestWithTradingName)
         }
 
         "return 303" in {
           status(result) shouldBe SEE_OTHER
-        }
-
-        "audit the trading name change event" in {
-          verify(mockAuditingService).audit(any(), any())(any(), any())
         }
 
         "redirect to the trading name changed success page" in {
           redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName().url)
-        }
-      }
-
-      "there was a conflict returned when trying to update the trading name" should {
-
-        lazy val result = {
-          mockIndividualAuthorised()
-          mockUpdateTradingName(vrn, testTradingName)(
-            Future(Left(ErrorModel(CONFLICT, "The back end has indicated there is an update already in progress")))
-          )
-          controller.updateTradingName()(requestWithTradingName)
-        }
-
-        "return 303" in {
-          status(result) shouldBe SEE_OTHER
-        }
-
-        "redirect the user to the manage vat overview page" in {
-          redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
-        }
-      }
-
-      "there was an unexpected error trying to update the trading name" should {
-
-        lazy val result = {
-          mockIndividualAuthorised()
-          mockUpdateTradingName(vrn, testTradingName)(
-            Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "Couldn't verify TradingName")))
-          )
-          controller.updateTradingName()(requestWithTradingName)
-        }
-
-        "return 500" in {
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-        }
-
-        "show the internal server error page" in {
-          messages(Jsoup.parse(bodyOf(result)).title) shouldBe internalServerErrorTitle
         }
       }
     }
@@ -143,7 +99,6 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there isn't a trading name in session" should {
 
       lazy val result = {
-        mockIndividualAuthorised()
         controller.updateTradingName()(request)
       }
 

@@ -34,7 +34,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView,
-                                            vatSubscriptionService: VatSubscriptionService,
                                             auditService: AuditingService,
                                             errorHandler: ErrorHandler)(
                                             implicit val authComps: AuthPredicateComponents,
@@ -54,37 +53,15 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async {
-    implicit user =>
+
+  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+
     user.session.get(prepopulationTradingNameKey) match {
-      case Some(tradingName) =>
-        vatSubscriptionService.updateTradingName(user.vrn, tradingName) map {
-          case Right(_) =>
-            auditService.audit(
-              ChangedTradingNameAuditModel(
-                user.session.get(validationTradingNameKey),
-                tradingName,
-                user.vrn,
-                user.isAgent,
-                user.arn
-              ),
-              Some(routes.CheckYourAnswersController.updateTradingName().url)
-            )
+      case Some(_) =>
             Redirect(controllers.routes.ChangeSuccessController.tradingName())
-              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "tradingName")
-              .removingFromSession(validationTradingNameKey)
-          case Left(ErrorModel(CONFLICT, _)) =>
-            logWarn("[ConfirmTradingNameController][updateTradingName] - There is a contact details" +
-              " update request already in progress. Redirecting user to manage vat overview page.")
-            Redirect(appConfig.manageVatSubscriptionServicePath)
-            .addingToSession(inFlightTradingNameChangeKey -> "tradingName")
-
-          case Left(_) =>
-            errorHandler.showInternalServerError
-        }
-
+              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "true")
       case _ =>
-        Future.successful(Redirect(routes.CaptureTradingNameController.show()))
+        Redirect(routes.CaptureTradingNameController.show())
     }
   }
 }

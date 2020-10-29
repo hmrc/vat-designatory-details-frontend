@@ -23,6 +23,7 @@ import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import models.User
 import models.viewModels.ChangeSuccessViewModel
+import play.api.Logger
 import play.api.mvc._
 import services.VatSubscriptionService
 import views.html.templates.ChangeSuccessView
@@ -40,41 +41,36 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
   implicit val ec: ExecutionContext = mcc.executionContext
 
   def tradingName: Action[AnyContent] = authPredicate.async { implicit user =>
-    sessionGuard(tradingNameChangeSuccessful, prepopulationTradingNameKey)
+    sessionGuard(tradingNameChangeSuccessful, prepopulationTradingNameKey, validationTradingNameKey)
   }
 
-  private[controllers] def sessionGuard(changeKey: String, prePopKey: String)(implicit user: User[_]): Future[Result] =
-    user.session.get(prePopKey) match {
-      case Some(value) if user.session.get(changeKey).exists(_.equals("true")) =>
-        renderView(changeKey, isRemoval = value == "")
+  private[controllers] def sessionGuard(changeKey: String, prePopKey: String, validationKey: String)(implicit user: User[_]): Future[Result] =
+  (user.session.get(changeKey), user.session.get(validationKey), user.session.get(prePopKey)) match {
+      case (Some("true"), Some(validationValue), Some(prePopValue)) =>
+        renderView(isRemoval = prePopValue == "", isAddition = validationValue == "")
       case _ =>
-        val redirectLocation: Call = changeKey match {
-          case `tradingNameChangeSuccessful` => controllers.tradingName.routes.CaptureTradingNameController.show()
-        }
-        Future.successful(Redirect(redirectLocation))
+        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show()))
     }
 
-  private[controllers] def renderView(changeKey: String, isRemoval: Boolean)(implicit user: User[_]): Future[Result] =
+  private[controllers] def renderView(isRemoval: Boolean, isAddition: Boolean)(implicit user: User[_]): Future[Result] =
     for {
       entityName <- if (user.isAgent) {getClientEntityName}
       else {Future.successful(None)}
     } yield {
-      val viewModel =
-        constructViewModel(entityName, user.session.get(verifiedAgentEmail), changeKey, isRemoval)
-      Ok(changeSuccessView(viewModel))
-    }
-
-  private[controllers] def constructViewModel(entityName: Option[String],
-                                              agentEmail: Option[String],
-                                              changeKey: String,
-                                              isRemoval: Boolean): ChangeSuccessViewModel = {
-    val titleMessageKey: String = getTitleMessageKey(changeKey, isRemoval)
-    ChangeSuccessViewModel(titleMessageKey, agentEmail, entityName)
-  }
-
-  private[controllers] def getTitleMessageKey(changeKey: String, isRemoval: Boolean): String =
-    changeKey match {
-      case `tradingNameChangeSuccessful` => "tradingNameChangeSuccess.title" + (if(isRemoval) ".remove" else ".change")
+      val titleMessageKey: Option[String] = (isAddition, isRemoval) match {
+        case (true, false) => Some("tradingNameChangeSuccess.title.add")
+        case (false, true) => Some("tradingNameChangeSuccess.title.remove")
+        case (false, false) => Some("tradingNameChangeSuccess.title.change")
+        case _ => None
+      }
+      titleMessageKey.fold{
+        Logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank." +
+          "Rendering InternalServerError")
+        authComps.errorHandler.showInternalServerError
+      } {title =>
+        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName)
+        Ok(changeSuccessView(viewModel))
+      }
     }
 
   private[controllers] def getClientEntityName(implicit user: User[_]): Future[Option[String]] =

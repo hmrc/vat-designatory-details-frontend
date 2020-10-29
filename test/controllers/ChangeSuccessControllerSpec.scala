@@ -21,6 +21,7 @@ import assets.CustomerInfoConstants.fullCustomerInfoModel
 import common.SessionKeys._
 import models.User
 import models.errors.ErrorModel
+import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify}
 import play.api.http.Status
@@ -44,17 +45,13 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the user is a principal entity" should {
         lazy val result: Future[Result] = {
           controller.tradingName(request.withSession(
-            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName
+            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
           ))
         }
 
         "return 200" in {
           mockIndividualAuthorised()
           status(result) shouldBe Status.OK
-        }
-
-        "not call the VatSubscription service" in {
-          verify(mockVatSubscriptionService, times(0)).getCustomerInfo(any())(any(), any())
         }
       }
 
@@ -85,19 +82,6 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "redirect the user to the capture trading name controller" in {
         redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
       }
-    }
-  }
-
-  "The .getTitleMessageKey function should return the appropriate message key" when {
-
-    "the trading name has been changed" in {
-      val result = controller.getTitleMessageKey(tradingNameChangeSuccessful, isRemoval = false)
-      result shouldBe "tradingNameChangeSuccess.title.change"
-    }
-
-    "the trading name has been removed" in {
-      val result = controller.getTitleMessageKey(tradingNameChangeSuccessful, isRemoval = true)
-      result shouldBe "tradingNameChangeSuccess.title.remove"
     }
   }
 
@@ -143,6 +127,67 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
           await(result) shouldBe None
         }
       }
+    }
+  }
+
+  "the renderView function" when {
+
+    "the user is adding a trading name" should {
+
+      lazy val result = controller.renderView(false, true)(user)
+
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return 200" in {
+        status(result) shouldBe Status.OK
+      }
+
+      "has the correct message key for the title" in {
+        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.add"
+      }
+
+    }
+
+    "the user is removing a trading name" should {
+
+      lazy val result = controller.renderView(true, false)(user)
+
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return 200" in {
+        status(result) shouldBe Status.OK
+      }
+
+      "has the correct message key for the title" in {
+        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.remove"
+      }
+
+    }
+
+    "the user is updating a trading name" should {
+
+      lazy val result = controller.renderView(false, false)(user)
+
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return 200" in {
+        status(result) shouldBe Status.OK
+      }
+
+      "has the correct message key for the title" in {
+        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.change"
+      }
+
+    }
+
+    "the isRemoval and isAddition parameters ae both true" should {
+
+      lazy val result = controller.renderView(true, true)(user)
+
+      "return 500" in {
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      }
+
     }
   }
 }

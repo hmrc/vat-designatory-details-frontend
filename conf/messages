@@ -56,6 +56,7 @@ confirmTradingNameRemove.heading = Confirm you want to remove the trading name: 
 
 tradingNameChangeSuccess.title.change = Request to change trading name received
 tradingNameChangeSuccess.title.remove = Request to remove trading name received
+tradingNameChangeSuccess.title.add = You have asked to add a trading name
 
 sessionTimeout.title = Your session has timed out
 sessionTimeout.helpOne = To manage your VAT account, you will have to
