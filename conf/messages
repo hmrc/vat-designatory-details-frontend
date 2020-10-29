@@ -63,10 +63,13 @@ sessionTimeout.helpOne = To manage your VAT account, you will have to
 sessionTimeout.helpTwo = sign in
 sessionTimeout.helpThree = using your Government Gateway ID.
 
-changeSuccess.helpOne.paper = We’ll send a letter to your principal place of business with an update within 15 working days.
-changeSuccess.helpOne.digital.agent = We’ll send an email to {0} within 2 working days telling you whether or not the request has been accepted.
+changeSuccess.helpOne.paper = We’ll send a letter to your principal place of business within 15 working days, telling you whether we can accept the trading name.
+changeSuccess.helpOne.digital = We’ll send you an email within 2 working days, telling you whether we can accept the trading name.
+changeSuccess.helpTwo.digital = You can also check your secure messages for an update.
 changeSuccess.helpOne.paper.agent = We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days.
-changeSuccess.helpTwo = Make sure your contact details are up to date.
+changeSuccess.viewBusinessDetails = View your business details
+changeSuccess.viewBusinessDetails.agent = View your client’s business details
+
 
 inFlightChange.title = You already have a change pending
 

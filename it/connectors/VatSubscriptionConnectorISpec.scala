@@ -17,6 +17,7 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.ContactPreference
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import helpers.IntegrationBaseSpec
 import models.User
@@ -48,7 +49,8 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
     firstName = Some("Dave"),
     lastName = Some("Taylor"),
     organisationName = Some("D Taylor's Cars"),
-    tradingName = Some("DT Autos")
+    tradingName = Some("DT Autos"),
+    contactPreference = None
   )
 
   "Calling getCustomerInfo" when {

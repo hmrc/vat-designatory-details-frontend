@@ -17,6 +17,7 @@
 package views.templates
 
 import assets.BaseTestConstants
+import common.ContactPreference
 import models.User
 import models.viewModels.ChangeSuccessViewModel
 import org.jsoup.Jsoup
@@ -33,7 +34,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
     val pageHeading = "h1"
     val secondaryHeading = "h2"
     val paragraphOne = "#content p:nth-of-type(1)"
-    val paragraph = "#content p:nth-of-type(1)"
+    val paragraphTwo = "#content p:nth-of-type(2)"
     val button = ".govuk-button"
   }
 
@@ -43,110 +44,114 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an individual is performing the action" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, None, None)
-      lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111"))
+      "the contact preference is digital" when {
 
-      lazy implicit val document: Document = Jsoup.parse(view.body)
+        val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, Some(ContactPreference.digital))
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111"))
 
-      "have the page title provided by the model" in {
-        elementText(Selectors.title) shouldBe s"$exampleTitle - Business tax account - GOV.UK"
+        lazy implicit val document: Document = Jsoup.parse(view.body)
+
+        "have the page title provided by the model" in {
+          elementText(Selectors.title) shouldBe s"$exampleTitle - Business tax account - GOV.UK"
+        }
+
+        "have the heading provided by the model" in {
+          elementText(Selectors.pageHeading) shouldBe exampleTitle
+        }
+
+        "have the correct second heading" in {
+          elementText(Selectors.secondaryHeading) shouldBe "What happens next"
+        }
+
+        "have a finish button with the correct text" in {
+          elementText(Selectors.button) shouldBe "View your business details"
+        }
+
+        "have a finish button which navigates to the Change of Circs overview page" in {
+          element(Selectors.button).select("a").attr("href") shouldBe mockConfig.manageVatSubscriptionServicePath
+        }
+
+        "have the correct first paragraph" in {
+          elementText(Selectors.paragraphOne) shouldBe "We’ll send you an email within 2 working days, telling you whether we can accept the trading name."
+        }
+
+        "have the correct second paragraph" in {
+          elementText(Selectors.paragraphTwo) shouldBe "You can also check your secure messages for an update."
+        }
       }
 
-      "have the heading provided by the model" in {
-        elementText(Selectors.pageHeading) shouldBe exampleTitle
-      }
+      "the contact preference is paper" when {
+        val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, Some(ContactPreference.paper))
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111"))
 
-      "have a finish button with the correct text" in {
-        elementText(Selectors.button) shouldBe "Finish"
-      }
+        lazy implicit val document: Document = Jsoup.parse(view.body)
 
-      "have a finish button which navigates to the Change of Circs overview page" in {
-        element(Selectors.button).select("a").attr("href") shouldBe mockConfig.manageVatSubscriptionServicePath
-      }
-
-      "have the correct paragraph" in {
-        elementText(Selectors.paragraph) shouldBe "Make sure your contact details are up to date."
+        "have the correct first paragraph" in {
+          elementText(Selectors.paragraphOne) shouldBe "We’ll send a letter to your principal place of business " +
+            "within 15 working days, telling you whether we can accept the trading name."
+        }
       }
     }
 
     "an agent is performing the action" when {
 
-      "the agent has an email address registered" should {
-        val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"))
-        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+      "the agent has an email address registered" when {
 
-        lazy implicit val document: Document = Jsoup.parse(view.body)
+        "the contact preference is digital" should {
 
-        "have the page title provided by the model" in {
-          elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
-        }
+          val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
+          lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
-        "have the heading provided by the model" in {
-          elementText(Selectors.pageHeading) shouldBe exampleTitle
-        }
+          lazy implicit val document: Document = Jsoup.parse(view.body)
 
-        "have a finish button with the correct text" in {
-          elementText(Selectors.button) shouldBe "Finish"
-        }
+          "have the page title provided by the model" in {
+            elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
+          }
 
-        "have a finish button which navigates to the Change of Circs overview page" in {
-          element(Selectors.button).select("a").attr("href") shouldBe mockConfig.manageVatSubscriptionServicePath
-        }
+          "have a finish button with the correct text" in {
+            elementText(Selectors.button) shouldBe "View your client’s business details"
+          }
 
-        "have the correct first paragraph" in {
-          elementText(Selectors.paragraphOne) shouldBe "We’ll send an email to agent@example.com within 2" +
-            " working days telling you whether or not the request has been accepted."
+          "have the correct first paragraph" in {
+            elementText(Selectors.paragraphOne) shouldBe "We’ll send you an email within 2" +
+              " working days, telling you whether we can accept the trading name."
+          }
+
+          "have the correct second paragraph" in {
+            elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact TheBusiness with an update."
+          }
         }
       }
 
       "the agent doesn't have an email address registered" should {
-        val viewModel = ChangeSuccessViewModel(exampleTitle, None, Some("TheBusiness"))
+        val viewModel = ChangeSuccessViewModel(exampleTitle, None, Some("TheBusiness"), None)
         lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
         lazy implicit val document: Document = Jsoup.parse(view.body)
-
-        "have the page title provided by the model" in {
-          elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
-        }
-
-        "have the heading provided by the model" in {
-          elementText(Selectors.pageHeading) shouldBe exampleTitle
-        }
-
-        "have a finish button with the correct text" in {
-          elementText(Selectors.button) shouldBe "Finish"
-        }
-
-        "have a finish button which navigates to the Change of Circs overview page" in {
-          element(Selectors.button).select("a").attr("href") shouldBe mockConfig.manageVatSubscriptionServicePath
-        }
 
         "have the correct first paragraph" in {
           elementText(Selectors.paragraphOne) shouldBe
             "We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days."
         }
+
+        "have the correct second paragraph" in {
+          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact TheBusiness with an update."
+        }
       }
 
       "the client's business name isn't retrieved" should {
-        val viewModel = ChangeSuccessViewModel(exampleTitle, None, None)
+        val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
         lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
-        "have the page title provided by the model" in {
-          elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
+        "have the correct first paragraph" in {
+          elementText(Selectors.paragraphOne) shouldBe
+            "We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days."
         }
 
-        "have the heading provided by the model" in {
-          elementText(Selectors.pageHeading) shouldBe exampleTitle
-        }
-
-        "have a finish button with the correct text" in {
-          elementText(Selectors.button) shouldBe "Finish"
-        }
-
-        "have a finish button which navigates to the Change of Circs overview page" in {
-          element(Selectors.button).select("a").attr("href") shouldBe mockConfig.manageVatSubscriptionServicePath
+        "have the correct second paragraph" in {
+          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact your client with an update."
         }
 
       }

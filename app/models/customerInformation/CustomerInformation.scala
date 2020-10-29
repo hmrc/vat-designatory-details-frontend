@@ -23,7 +23,8 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
                                firstName: Option[String],
                                lastName: Option[String],
                                organisationName: Option[String],
-                               tradingName: Option[String]) {
+                               tradingName: Option[String],
+                               contactPreference: Option[String]) {
 
   val pendingTradingName: Option[String] = pendingChanges.flatMap(_.tradingName)
 
@@ -44,12 +45,14 @@ object CustomerInformation {
   private val lastNamePath = JsPath \ "customerDetails" \ "lastName"
   private val organisationNamePath = JsPath \ "customerDetails" \ "organisationName"
   private val tradingNamePath = JsPath \ "customerDetails" \ "tradingName"
+  private val contactPreferencePath = JsPath \ "commsPreference"
 
   implicit val reads: Reads[CustomerInformation] = (
     pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
     firstNamePath.readNullable[String].orElse(Reads.pure(None)) and
     lastNamePath.readNullable[String].orElse(Reads.pure(None)) and
     organisationNamePath.readNullable[String].orElse(Reads.pure(None)) and
-    tradingNamePath.readNullable[String].orElse(Reads.pure(None))
+    tradingNamePath.readNullable[String].orElse(Reads.pure(None)) and
+    contactPreferencePath.readNullable[String].orElse(Reads.pure(None))
   )(CustomerInformation.apply _)
 }

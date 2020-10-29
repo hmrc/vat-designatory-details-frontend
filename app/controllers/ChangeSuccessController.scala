@@ -53,31 +53,23 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
     }
 
   private[controllers] def renderView(isRemoval: Boolean, isAddition: Boolean)(implicit user: User[_]): Future[Result] =
-    for {
-      entityName <- if (user.isAgent) {getClientEntityName}
-      else {Future.successful(None)}
-    } yield {
+
+    vatSubscriptionService.getCustomerInfo(user.vrn).map { vatSubscriptionResponse =>
       val titleMessageKey: Option[String] = (isAddition, isRemoval) match {
         case (true, false) => Some("tradingNameChangeSuccess.title.add")
         case (false, true) => Some("tradingNameChangeSuccess.title.remove")
         case (false, false) => Some("tradingNameChangeSuccess.title.change")
         case _ => None
       }
-      titleMessageKey.fold{
+      val entityName = vatSubscriptionResponse.fold(_ => None, details => details.entityName)
+      val contactPreference = vatSubscriptionResponse.fold(_ => None, details => details.contactPreference)
+      titleMessageKey.fold {
         Logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank." +
           "Rendering InternalServerError")
         authComps.errorHandler.showInternalServerError
-      } {title =>
-        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName)
+      } { title =>
+        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference)
         Ok(changeSuccessView(viewModel))
-      }
-    }
-
-  private[controllers] def getClientEntityName(implicit user: User[_]): Future[Option[String]] =
-    user.session.get(mtdVatAgentClientName) match {
-      case Some(entityName) => Future.successful(Some(entityName))
-      case None => vatSubscriptionService.getCustomerInfo(user.vrn).map { result =>
-        result.fold(_ => None, details => details.entityName)
       }
     }
 }
