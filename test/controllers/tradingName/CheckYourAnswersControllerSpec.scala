@@ -32,7 +32,6 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
   val controller = new CheckYourAnswersController(
     inject[CheckYourAnswersView],
-    mockVatSubscriptionService,
     mockAuditingService,
     mockErrorHandler
   )
