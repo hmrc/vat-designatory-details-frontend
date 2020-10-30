@@ -16,13 +16,10 @@
 
 package controllers
 
-import assets.BaseTestConstants._
 import assets.CustomerInfoConstants.fullCustomerInfoModel
 import common.SessionKeys._
-import models.User
 import models.errors.ErrorModel
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{times, verify}
+import org.jsoup.Jsoup
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.test.Helpers._
@@ -39,36 +36,45 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   "Calling the tradingName action" when {
 
-    "both expected session keys are populated" when {
+    "all three expected session keys are populated" when {
 
       "the user is a principal entity" should {
         lazy val result: Future[Result] = {
+          mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
           controller.tradingName(request.withSession(
-            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName
+            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
           ))
         }
 
         "return 200" in {
-          mockIndividualAuthorised()
           status(result) shouldBe Status.OK
-        }
-
-        "not call the VatSubscription service" in {
-          verify(mockVatSubscriptionService, times(0)).getCustomerInfo(any())(any(), any())
         }
       }
 
       "the user is an agent" should {
         lazy val result: Future[Result] = {
+          mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
           controller.tradingName(request.withSession(
-            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName,
-            clientVrn -> "1111111111"
+            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test",
+            clientVrn -> "111111111"
           ))
         }
 
         "return 200" in {
           mockAgentAuthorised()
-          mockGetCustomerInfo("1111111111")(Future.successful(Right(fullCustomerInfoModel)))
+          status(result) shouldBe Status.OK
+        }
+      }
+
+      "the call to CustomerInfo returns an error" should {
+        lazy val result: Future[Result] = {
+          mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
+          controller.tradingName(request.withSession(
+            tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
+          ))
+        }
+
+        "return 200" in {
           status(result) shouldBe Status.OK
         }
       }
@@ -88,61 +94,76 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
     }
   }
 
-  "The .getTitleMessageKey function should return the appropriate message key" when {
+  "the renderView function" when {
 
-    "the trading name has been changed" in {
-      val result = controller.getTitleMessageKey(tradingNameChangeSuccessful, isRemoval = false)
-      result shouldBe "tradingNameChangeSuccess.title.change"
+    "the user is adding a trading name" should {
+
+      lazy val result = {
+        mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+        controller.renderView(false, true)(user)
+      }
+
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return 200" in {
+        status(result) shouldBe Status.OK
+      }
+
+      "has the correct message key for the title" in {
+        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.add"
+      }
+
     }
 
-    "the trading name has been removed" in {
-      val result = controller.getTitleMessageKey(tradingNameChangeSuccessful, isRemoval = true)
-      result shouldBe "tradingNameChangeSuccess.title.remove"
-    }
-  }
+    "the user is removing a trading name" should {
 
-  "The .getClientEntityName function" when {
-
-    "there is an entity name in session" should {
-
-      lazy val result = controller.getClientEntityName(User(vrn, arn = Some(arn))(request.withSession(
-        mtdVatAgentClientName -> "Jorip Biscuit Co"
-      )))
-
-      "return the entity name" in {
-        await(result) shouldBe Some("Jorip Biscuit Co")
+      lazy val result = {
+        mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+        controller.renderView(true, false)(user)
       }
 
-      "not call the VatSubscription service" in {
-        verify(mockVatSubscriptionService, times(0)).getCustomerInfo(any())(any(), any())
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return 200" in {
+        status(result) shouldBe Status.OK
       }
+
+      "has the correct message key for the title" in {
+        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.remove"
+      }
+
     }
 
-    "there is not an entity name in session" when {
+    "the user is updating a trading name" should {
 
-      "the call to VatSubscription is successful" should {
-
-        "return the entity name" in {
-          val result = {
-            mockGetCustomerInfo(vrn)(Future.successful(Right(fullCustomerInfoModel)))
-            controller.getClientEntityName(User(vrn, arn = Some(arn))(request))
-          }
-
-          await(result) shouldBe Some("PepsiMac")
-        }
+      lazy val result = {
+        mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+        controller.renderView(false, false)(user)
       }
 
-      "the call to VatSubscription is unsuccessful" should {
+      lazy val document = Jsoup.parse(bodyOf(result))
 
-        "return None" in {
-          val result = {
-            mockGetCustomerInfo(vrn)(Future.successful(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "Error"))))
-            controller.getClientEntityName(User(vrn, arn = Some(arn))(request))
-          }
-
-          await(result) shouldBe None
-        }
+      "return 200" in {
+        status(result) shouldBe Status.OK
       }
+
+      "has the correct message key for the title" in {
+        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.change"
+      }
+
+    }
+
+    "the isRemoval and isAddition parameters are both true" should {
+
+      lazy val result = {
+        mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+        controller.renderView(true, true)(user)
+      }
+
+      "return 500" in {
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      }
+
     }
   }
 }

@@ -16,27 +16,19 @@
 
 package controllers.tradingName
 
-import audit.AuditingService
-import audit.models.ChangedTradingNameAuditModel
 import common.SessionKeys._
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
-import models.errors.ErrorModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.VatSubscriptionService
-import utils.LoggerUtil.logWarn
 import views.html.tradingName.CheckYourAnswersView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView,
-                                            vatSubscriptionService: VatSubscriptionService,
-                                            auditService: AuditingService,
-                                            errorHandler: ErrorHandler)(
+class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView)(
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
                                             inFlightComps: InFlightPredicateComponents,
@@ -54,37 +46,15 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async {
-    implicit user =>
+
+  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+
     user.session.get(prepopulationTradingNameKey) match {
-      case Some(tradingName) =>
-        vatSubscriptionService.updateTradingName(user.vrn, tradingName) map {
-          case Right(_) =>
-            auditService.audit(
-              ChangedTradingNameAuditModel(
-                user.session.get(validationTradingNameKey),
-                tradingName,
-                user.vrn,
-                user.isAgent,
-                user.arn
-              ),
-              Some(routes.CheckYourAnswersController.updateTradingName().url)
-            )
+      case Some(_) =>
             Redirect(controllers.routes.ChangeSuccessController.tradingName())
-              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "tradingName")
-              .removingFromSession(validationTradingNameKey)
-          case Left(ErrorModel(CONFLICT, _)) =>
-            logWarn("[ConfirmTradingNameController][updateTradingName] - There is a contact details" +
-              " update request already in progress. Redirecting user to manage vat overview page.")
-            Redirect(appConfig.manageVatSubscriptionServicePath)
-            .addingToSession(inFlightTradingNameChangeKey -> "tradingName")
-
-          case Left(_) =>
-            errorHandler.showInternalServerError
-        }
-
+              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "true")
       case _ =>
-        Future.successful(Redirect(routes.CaptureTradingNameController.show()))
+        Redirect(routes.CaptureTradingNameController.show())
     }
   }
 }

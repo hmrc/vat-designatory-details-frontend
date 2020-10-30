@@ -16,7 +16,7 @@
 
 package pages.tradingName
 
-import common.SessionKeys.{prepopulationTradingNameKey, tradingNameChangeSuccessful}
+import common.SessionKeys.{prepopulationTradingNameKey, tradingNameChangeSuccessful, validationTradingNameKey}
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
@@ -25,10 +25,12 @@ class TradingNameChangeSuccessPageSpec extends BasePageISpec {
 
   val path = "/trading-name-confirmation"
   val newTradingName = "New Trading Name"
+  val oldTradingName = "Old Trading Name"
 
   "Calling the trading name change success (.show) route" when {
 
-    def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName, tradingNameChangeSuccessful -> "true"))
+    def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName,
+      validationTradingNameKey -> oldTradingName, tradingNameChangeSuccessful -> "true"))
 
     "the user is a authenticated" when {
 

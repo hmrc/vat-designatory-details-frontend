@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package models.viewModels
+package common
 
-case class ChangeSuccessViewModel(pageTitle: String,
-                                  agentEmail: Option[String],
-                                  businessName: Option[String],
-                                  contactPreference: Option[String])
+object ContactPreference {
+
+  val digital = "DIGITAL"
+  val paper = "PAPER"
+
+}

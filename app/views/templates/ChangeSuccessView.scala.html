@@ -15,6 +15,7 @@
  *@
 
 @import models.viewModels.ChangeSuccessViewModel
+@import common.ContactPreference
 @import views.html.templates.UpdateClient
 
 @this(mainTemplate: MainTemplate,
@@ -23,34 +24,46 @@
 
 @(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
+@buttonMessageKey = @{s"changeSuccess.viewBusinessDetails${if(user.isAgent){".agent"}else{""}}"}
+
 @mainTemplate(pageTitle = messages(model.pageTitle)) {
 
-  <div class="govuk-box-highlight">
-    <h1 class="govuk-heading-xl">@messages(model.pageTitle)</h1>
-  </div>
+<div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
+        @messages(model.pageTitle)
+    </h1>
+</div>
 
   <h2 class="govuk-heading-m">@messages("common.whatHappensNext")</h2>
 
   @if(user.isAgent) {
 
     @model.agentEmail match {
-      case Some(email) => {<p class="govuk-body">@messages("changeSuccess.helpOne.digital.agent", email)</p>}
+      case Some(email) => {<p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>}
       case _ => {<p class="govuk-body">@messages("changeSuccess.helpOne.paper.agent")</p>}
     }
 
     @updateClient(model.businessName)
 
-    <p class="govuk-body"><a class="govuk-link"
-          href="@appConfig.vatAgentClientLookupServicePath">
-        @messages("common.changeClient")
-    </a></p>
-
   } else {
-    <p class="govuk-body">@messages("changeSuccess.helpTwo")</p>
+    @model.contactPreference match {
+
+        case Some(ContactPreference.digital) => {
+        <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
+        <p class="govuk-body">@messages("changeSuccess.helpTwo.digital")</p>
+        }
+        case Some(ContactPreference.paper) => {
+        <p class="govuk-body">@messages("changeSuccess.helpOne.paper")</p>
+        }
+        case _ => {
+        <p class="govuk-body">@messages("common.helpOne.apiFailure")</p>
+        }
+    }
+
   }
 
   @govukButton(Button(
     href = Some(appConfig.manageVatSubscriptionServicePath),
-    content = Text(messages("base.finish"))
+    content = Text(messages(buttonMessageKey))
   ))
 }
