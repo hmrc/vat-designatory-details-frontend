@@ -16,14 +16,10 @@
 
 package controllers
 
-import assets.BaseTestConstants._
 import assets.CustomerInfoConstants.fullCustomerInfoModel
 import common.SessionKeys._
-import models.User
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{times, verify}
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.test.Helpers._

@@ -16,26 +16,19 @@
 
 package controllers.tradingName
 
-import audit.AuditingService
-import audit.models.ChangedTradingNameAuditModel
 import common.SessionKeys._
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
-import models.errors.ErrorModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.VatSubscriptionService
-import utils.LoggerUtil.logWarn
 import views.html.tradingName.CheckYourAnswersView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView,
-                                            auditService: AuditingService,
-                                            errorHandler: ErrorHandler)(
+class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView)(
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
                                             inFlightComps: InFlightPredicateComponents,

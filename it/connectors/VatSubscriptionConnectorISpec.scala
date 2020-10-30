@@ -50,7 +50,7 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
     lastName = Some("Taylor"),
     organisationName = Some("D Taylor's Cars"),
     tradingName = Some("DT Autos"),
-    contactPreference = None
+    contactPreference = Some(ContactPreference.digital)
   )
 
   "Calling getCustomerInfo" when {

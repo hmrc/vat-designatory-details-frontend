@@ -91,35 +91,43 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
             "within 15 working days, telling you whether we can accept the trading name."
         }
       }
+
+      "the user has no contact preference" when {
+        val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111"))
+
+        lazy implicit val document: Document = Jsoup.parse(view.body)
+
+        "have the correct first paragraph" in {
+          elementText(Selectors.paragraphOne) shouldBe "We will send you an update within 15 working days."
+        }
+      }
     }
 
     "an agent is performing the action" when {
 
       "the agent has an email address registered" when {
 
-        "the contact preference is digital" should {
+        val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
+        lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
-          val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-          lazy val view = injectedView(viewModel)(messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+        lazy implicit val document: Document = Jsoup.parse(view.body)
 
-          lazy implicit val document: Document = Jsoup.parse(view.body)
+        "have the page title provided by the model" in {
+          elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
+        }
 
-          "have the page title provided by the model" in {
-            elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
-          }
+        "have a finish button with the correct text" in {
+          elementText(Selectors.button) shouldBe "View your client’s business details"
+        }
 
-          "have a finish button with the correct text" in {
-            elementText(Selectors.button) shouldBe "View your client’s business details"
-          }
+        "have the correct first paragraph" in {
+          elementText(Selectors.paragraphOne) shouldBe "We’ll send you an email within 2" +
+            " working days, telling you whether we can accept the trading name."
+        }
 
-          "have the correct first paragraph" in {
-            elementText(Selectors.paragraphOne) shouldBe "We’ll send you an email within 2" +
-              " working days, telling you whether we can accept the trading name."
-          }
-
-          "have the correct second paragraph" in {
-            elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact TheBusiness with an update."
-          }
+        "have the correct second paragraph" in {
+          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact TheBusiness with an update."
         }
       }
 

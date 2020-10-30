@@ -16,24 +16,15 @@
 
 package controllers.tradingName
 
-import assets.BaseTestConstants.{internalServerErrorTitle, vrn}
 import controllers.ControllerBaseSpec
-import models.customerInformation.UpdateOrganisationDetailsSuccess
-import models.errors.ErrorModel
-import org.jsoup.Jsoup
 import play.api.test.Helpers._
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.verify
 import views.html.tradingName.CheckYourAnswersView
 
-import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
   val controller = new CheckYourAnswersController(
-    inject[CheckYourAnswersView],
-    mockAuditingService,
-    mockErrorHandler
+    inject[CheckYourAnswersView]
   )
 
   "Calling the show action in CheckYourAnswersController" when {
