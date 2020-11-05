@@ -44,7 +44,7 @@ class ChangedTradingNameAuditModelSpec extends UnitSpec {
       val model = ChangedTradingNameAuditModel(Some(testValidationTradingName), testPrepopTradingName, vrn, isAgent = true, Some(arn))
       val expectedJson: JsValue = Json.obj(
         "isAgent" -> true,
-        "arn" -> arn,
+        "agentReferenceNumber" -> arn,
         "vrn" -> vrn,
         "currentTradingName" -> testValidationTradingName,
         "requestedTradingName" -> testPrepopTradingName

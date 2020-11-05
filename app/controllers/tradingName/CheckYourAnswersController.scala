@@ -16,6 +16,8 @@
 
 package controllers.tradingName
 
+import audit.AuditingService
+import audit.models.ChangedTradingNameAuditModel
 import common.SessionKeys._
 import config.AppConfig
 import controllers.BaseController
@@ -32,7 +34,8 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
                                             inFlightComps: InFlightPredicateComponents,
-                                            appConfig: AppConfig
+                                            appConfig: AppConfig,
+                                            auditingService: AuditingService
                                            ) extends BaseController {
 
   implicit val ec: ExecutionContext = mcc.executionContext
@@ -49,10 +52,24 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
 
   def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
 
+    val currentTradingName: Option[String] = user.session.get(validationTradingNameKey) match {
+      case Some("") => None
+      case Some(name) => Some(name)
+      case _ => None
+    }
+
     user.session.get(prepopulationTradingNameKey) match {
-      case Some(_) =>
-            Redirect(controllers.routes.ChangeSuccessController.tradingName())
-              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "true")
+      case Some(prepopTradingName) =>
+        auditingService.audit(ChangedTradingNameAuditModel(
+          currentTradingName,
+          prepopTradingName,
+          user.vrn,
+          user.isAgent,
+          user.arn),
+          Some(routes.CheckYourAnswersController.updateTradingName().url)
+        )
+        Redirect(controllers.routes.ChangeSuccessController.tradingName())
+          .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "true")
       case _ =>
         Redirect(routes.CaptureTradingNameController.show())
     }

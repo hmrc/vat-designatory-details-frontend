@@ -16,12 +16,15 @@
 
 package controllers.tradingName
 
+import audit.AuditingService
 import controllers.ControllerBaseSpec
 import play.api.test.Helpers._
 import views.html.tradingName.CheckYourAnswersView
 
 
 class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
+
+  implicit val auditingService: AuditingService = inject[AuditingService]
 
   val controller = new CheckYourAnswersController(
     inject[CheckYourAnswersView]

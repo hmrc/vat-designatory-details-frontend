@@ -49,9 +49,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
       mockVatSubscriptionService,
       mockErrorHandler,
       inject[AuditingService],
-      inject[CaptureTradingNameView],
-      inject[NotFoundView]
-    )
+      inject[CaptureTradingNameView])
   }
 
   "Calling the show action" when {

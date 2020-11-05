@@ -26,21 +26,19 @@ import forms.TradingNameForm.tradingNameForm
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import services.VatSubscriptionService
-import views.html.errors.NotFoundView
 import views.html.tradingName.CaptureTradingNameView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CaptureTradingNameController @Inject()(val vatSubscriptionService: VatSubscriptionService,
-                                         val errorHandler: ErrorHandler,
-                                         val auditService: AuditingService,
-                                         captureTradingNameView: CaptureTradingNameView,
-                                         notFoundView: NotFoundView)
-                                        (implicit val appConfig: AppConfig,
-                                         mcc: MessagesControllerComponents,
-                                         authComps: AuthPredicateComponents,
-                                         inFlightComps: InFlightPredicateComponents) extends BaseController {
+                                             val errorHandler: ErrorHandler,
+                                             val auditService: AuditingService,
+                                             captureTradingNameView: CaptureTradingNameView)
+                                            (implicit val appConfig: AppConfig,
+                                             mcc: MessagesControllerComponents,
+                                             authComps: AuthPredicateComponents,
+                                             inFlightComps: InFlightPredicateComponents) extends BaseController {
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
@@ -80,7 +78,7 @@ class CaptureTradingNameController @Inject()(val vatSubscriptionService: VatSubs
         errorForm => {
           Future.successful(BadRequest(captureTradingNameView(errorForm, validation)))
         },
-        tradingName     => {
+        tradingName => {
           Future.successful(Redirect(routes.CheckYourAnswersController.show())
             .addingToSession(SessionKeys.prepopulationTradingNameKey -> tradingName))
         }
