@@ -17,7 +17,7 @@
 package controllers.tradingName
 
 import audit.AuditingService
-import common.SessionKeys
+import common.SessionKeys.{prepopulationTradingNameKey, validationTradingNameKey}
 import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
@@ -25,14 +25,12 @@ import controllers.predicates.inflight.InFlightPredicateComponents
 import forms.TradingNameForm.tradingNameForm
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
-import services.VatSubscriptionService
 import views.html.tradingName.CaptureTradingNameView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
-class CaptureTradingNameController @Inject()(val vatSubscriptionService: VatSubscriptionService,
-                                             val errorHandler: ErrorHandler,
+class CaptureTradingNameController @Inject()(val errorHandler: ErrorHandler,
                                              val auditService: AuditingService,
                                              captureTradingNameView: CaptureTradingNameView)
                                             (implicit val appConfig: AppConfig,
@@ -40,38 +38,19 @@ class CaptureTradingNameController @Inject()(val vatSubscriptionService: VatSubs
                                              authComps: AuthPredicateComponents,
                                              inFlightComps: InFlightPredicateComponents) extends BaseController {
 
-  implicit val ec: ExecutionContext = mcc.executionContext
-
-  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
-      val validationTradingName: Future[Option[String]] = user.session.get(SessionKeys.validationTradingNameKey) match {
-        case Some(tradingName) => Future.successful(Some(tradingName))
-        case _ =>
-          vatSubscriptionService.getCustomerInfo(user.vrn) map {
-            case Right(details) => Some(details.tradingName.getOrElse(""))
-            case _ => None
-          }
-      }
-
-      val prepopulationTradingName: Future[String] = validationTradingName map { validation =>
-        user.session.get(SessionKeys.prepopulationTradingNameKey)
-          .getOrElse(validation.getOrElse(""))
-      }
-
-      for {
-        validation <- validationTradingName
-        prepopulation <- prepopulationTradingName
-      } yield {
-        validation match {
-          case Some(valTradingName) =>
-            Ok(captureTradingNameView(tradingNameForm(valTradingName).fill(prepopulation), valTradingName))
-              .addingToSession(SessionKeys.validationTradingNameKey -> valTradingName)
-          case _ => errorHandler.showInternalServerError
-        }
-      }
+  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+    user.session.get(validationTradingNameKey) match {
+      case Some(validationTradingName) =>
+        val prepopulationTradingName = user.session.get(prepopulationTradingNameKey).getOrElse(validationTradingName)
+        Ok(captureTradingNameView(
+          tradingNameForm(validationTradingName).fill(prepopulationTradingName), validationTradingName)
+        )
+      case _ => Redirect(routes.WhatToDoController.show())
+    }
   }
 
   def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
-    val validationTradingName: Option[String] = user.session.get(SessionKeys.validationTradingNameKey)
+    val validationTradingName: Option[String] = user.session.get(validationTradingNameKey)
 
     validationTradingName match {
       case Some(validation) => tradingNameForm(validation).bindFromRequest.fold(
@@ -80,7 +59,7 @@ class CaptureTradingNameController @Inject()(val vatSubscriptionService: VatSubs
         },
         tradingName => {
           Future.successful(Redirect(routes.CheckYourAnswersController.show())
-            .addingToSession(SessionKeys.prepopulationTradingNameKey -> tradingName))
+            .addingToSession(prepopulationTradingNameKey -> tradingName))
         }
       )
       case None => Future.successful(errorHandler.showInternalServerError)

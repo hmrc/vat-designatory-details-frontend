@@ -16,66 +16,67 @@
 
 @import config.AppConfig
 @import forms.WhatToDoForm._
-@import templates.RadioHelper
 
 @this(mainTemplate: MainTemplate,
-        govukInput: GovukInput,
-        radioHelper: RadioHelper,
-        govukRadios: GovukRadios,
-        govukButton: GovukButton,
-        govukBackLink: GovukBackLink,
-        govukErrorSummary: GovukErrorSummary,
-        form: FormWithCSRF
-)
+      govukInput: GovukInput,
+      govukRadios: GovukRadios,
+      govukButton: GovukButton,
+      govukBackLink: GovukBackLink,
+      govukErrorSummary: GovukErrorSummary,
+      form: FormWithCSRF)
 
-@(whatToDoForm: Form[ChangeRemove])(implicit request: Request[_],
-        messages: Messages,
-        appConfig: AppConfig)
+@(whatToDoForm: Form[ChangeRemove])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@mainTemplate(
-    pageTitle = if(whatToDoForm.errors.nonEmpty) messages("common.error.prefixTitle",
-        messages("whatToDo.title")) else messages("whatToDo.title")
-) {
+@mainTemplate(pageTitle = if(whatToDoForm.hasErrors) messages("common.error.prefixTitle",
+                            messages("whatToDo.title")) else messages("whatToDo.title")) {
 
-    @govukBackLink(BackLink(
-        href = appConfig.manageVatSubscriptionServicePath,
-        content = Text(messages("base.back"))
+  @govukBackLink(BackLink(
+    href = appConfig.manageVatSubscriptionServicePath,
+    content = Text(messages("base.back"))
+  ))
+
+  @if(whatToDoForm.hasErrors) {
+    @govukErrorSummary(ErrorSummary(
+      title = Text(messages("common.error.heading")),
+      errorList = whatToDoForm.errors.map { error =>
+        ErrorLink(
+          href = Some(s"#${whatToDoForm("change").id}"),
+          content = Text(messages(error.message))
+        )
+      }
+    ))
+  }
+
+  @form(action = controllers.tradingName.routes.WhatToDoController.submit) {
+
+    @govukRadios(Radios(
+      name = changeRemove,
+      fieldset = Some(Fieldset(
+        legend = Some(Legend(
+          content = Text(messages("whatToDo.title")),
+          isPageHeading = true,
+          classes = "govuk-fieldset__legend--l"
+        ))
+      )),
+      items = Seq(
+        RadioItem(
+          content = Text(messages("whatToDo.change")),
+          id = Some(change),
+          value = Some(change),
+          checked = whatToDoForm(changeRemove).value.contains(change)),
+        RadioItem(
+          content = Text(messages("whatToDo.remove")),
+          id = Some(remove),
+          value = Some(remove),
+          checked = whatToDoForm(changeRemove).value.contains(remove))
+      ),
+      errorMessage = whatToDoForm(changeRemove).error.map(err =>
+        ErrorMessage(content = Text(messages(err.message, err.args:_*)))
+      )
     ))
 
-    @if(whatToDoForm.hasErrors) {
-        @govukErrorSummary(ErrorSummary(
-            title = Text(messages("common.error.heading")),
-            errorList = whatToDoForm.errors.map { error =>
-                ErrorLink(
-                    href = Some(s"#${whatToDoForm("change").id}"),
-                    content = Text(messages(error.message))
-                )
-            }
-        ))
-    }
-
-    @form(action = controllers.tradingName.routes.WhatToDoController.submit) {
-
-        @radioHelper(
-            form = whatToDoForm,
-            legend = messages("whatToDo.title"),
-            items = Seq(
-                RadioItem(
-                    content = Text(messages("whatToDo.change")),
-                    id = Some(change),
-                    value = Some(change),
-                    checked = whatToDoForm("value").value.contains(change)),
-                RadioItem(
-                    content = Text(messages("whatToDo.remove")),
-                    id = Some(remove),
-                    value = Some(remove),
-                    checked = whatToDoForm("value").value.contains(remove))
-            )
-        )
-
-        @govukButton(Button(
-            content = Text(messages("common.continue"))
-        ))
-    }
-
+    @govukButton(Button(
+      content = Text(messages("common.continue"))
+    ))
+  }
 }

@@ -29,13 +29,13 @@ object WhatToDoForm {
 
   val remove: String = "remove"
 
-  def formatter(whatToDoError: String, configValue: String = ""): Formatter[ChangeRemove] = new Formatter[ChangeRemove] {
+  def formatter: Formatter[ChangeRemove] = new Formatter[ChangeRemove] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], ChangeRemove] = {
       data.get(key) match {
         case Some(`change`) => Right(Change)
         case Some(`remove`) => Right(Remove)
-        case _ => Left(Seq(FormError(key, whatToDoError, Seq(configValue))))
+        case _ => Left(Seq(FormError(key, "whatToDo.error")))
       }
     }
 
@@ -49,9 +49,9 @@ object WhatToDoForm {
     }
   }
 
-  def whatToDoForm(whatToDoError: String, configValue: String = ""): Form[ChangeRemove] = Form(
+  val whatToDoForm: Form[ChangeRemove] = Form(
     single(
-      changeRemove -> of(formatter(whatToDoError,configValue))
+      changeRemove -> of(formatter)
     )
   )
 }

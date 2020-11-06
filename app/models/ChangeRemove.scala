@@ -16,28 +16,8 @@
 
 package models
 
-import play.api.libs.json._
-
 sealed trait ChangeRemove {
   val value: Boolean
-}
-
-object ChangeRemove {
-
-  val id = "isChange"
-
-  implicit val writes: Writes[ChangeRemove] = Writes {
-    isChange => Json.obj(id -> isChange.value)
-  }
-
-  implicit val reads: Reads[ChangeRemove] = for {
-    status <- (__ \ id).read[Boolean].map {
-      case true => Change
-      case _ => Remove
-    }
-  } yield status
-
-  implicit val format: Format[ChangeRemove] = Format(reads, writes)
 }
 
 object Change extends ChangeRemove {

@@ -30,6 +30,9 @@ trait BasePageISpec extends IntegrationBaseSpec {
   def formatInflightChange: Option[String] => Map[String, String] =
     _.fold(Map.empty[String, String])(x => Map(SessionKeys.inFlightTradingNameChangeKey -> x))
 
+  def formatValidationTradingName: Option[String] => Map[String, String] =
+    _.fold(Map.empty[String, String])(x => Map(SessionKeys.validationTradingNameKey -> x))
+
   def httpPostAuthenticationTests(path: String, sessionVrn: Option[String] = None)(formData: Map[String, Seq[String]]): Unit =
     authenticationTests(path, post(path, formatSessionVrn(sessionVrn))(formData))
 
