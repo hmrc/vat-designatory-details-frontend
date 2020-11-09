@@ -46,6 +46,11 @@ captureTradingName.error.exceedsMaxLength = Enter a maximum of 160 characters
 captureTradingName.error.empty = Enter a trading name
 captureTradingName.error.notChanged = Enter a new trading name
 
+whatToDo.title = What do you want to do with the current trading name?
+whatToDo.change = I want to change it to something else
+whatToDo.remove = I want to remove it
+whatToDo.error = Select an answer
+
 checkYourAnswers.heading = Check your answer
 checkYourAnswers.tradingName = Trading name
 checkYourAnswers.change = Change
