@@ -19,17 +19,17 @@ import play.sbt.routes.RoutesKeys
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
-import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
+import uk.gov.hmrc.SbtAutoBuildPlugin
 
 val appName = "vat-designatory-details-frontend"
 
 val govUkFrontendVersion       = "0.51.0-play-26"
 val hmrcUkFrontendVersion      = "0.20.0-play-26"
 val bootstrapPlayVersion       = "1.16.0"
-val govTemplateVersion         = "5.57.0-play-26"
-val playPartialsVersion        = "6.11.0-play-26"
+val govTemplateVersion         = "5.58.0-play-26"
+val playPartialsVersion        = "7.0.0-play-26"
 val authClientVersion          = "3.2.0-play-26"
-val playUiVersion              = "8.12.0-play-26"
+val playUiVersion              = "8.14.0-play-26"
 val playLanguageVersion        = "4.4.0-play-26"
 val playWhiteListFilterVersion = "3.4.0-play-26"
 val scalaTestPlusVersion       = "3.1.3"
@@ -41,7 +41,7 @@ val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.23.2"
 val playJsonJodaVersion        = "2.9.1"
-val bootstrapFrontendVersion   = "2.25.0"
+val bootstrapFrontendVersion   = "3.0.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -115,7 +115,7 @@ TwirlKeys.templateImports ++= Seq(
 )
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(PlayKeys.playDefaultPort := 9165)
   .settings(coverageSettings: _*)

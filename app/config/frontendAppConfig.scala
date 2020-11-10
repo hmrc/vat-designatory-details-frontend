@@ -55,7 +55,7 @@ trait AppConfig {
   val contactHmrcUrl: String
   def feedbackUrl(redirect: String): String
   val accessibilityLinkUrl: String
-  val trackingConsentUrl: String
+  val gtmContainer: String
   val footerCookiesUrl: String
   val footerPrivacyUrl: String
   val footerTermsConditionsUrl: String
@@ -132,7 +132,7 @@ class FrontendAppConfig @Inject()(sc: ServicesConfig) extends AppConfig {
 
   override val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendServiceUrl) + sc.getString(ConfigKeys.vatSummaryAccessibilityUrl)
 
-  val trackingConsentUrl: String = sc.getString(Keys.trackingConsentUrl)
+  override val gtmContainer: String = sc.getString(Keys.gtmContainer)
 
   override val footerPrivacyUrl: String = sc.getString(ConfigKeys.footerPrivacyUrl)
   override val footerTermsConditionsUrl: String = sc.getString(ConfigKeys.footerTermsConditionsUrl)
