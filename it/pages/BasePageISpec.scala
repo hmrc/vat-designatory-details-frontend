@@ -39,8 +39,12 @@ trait BasePageISpec extends IntegrationBaseSpec {
   def httpGetAuthenticationTests(path: String, sessionVrn: Option[String] = None): Unit =
     authenticationTests(path, get(path, formatSessionVrn(sessionVrn)))
 
-  def generateDocumentTitle(message: String, isAgent: Option[Boolean] = Some(false)): String =
-    messages("base.pageTitle", messages(message),
+  def generateDocumentTitle(message: String, messageArg: Option[String] = None, isAgent: Option[Boolean] = Some(false)): String =
+    messages("base.pageTitle",
+      messageArg match {
+        case Some(arg) => messages(message, arg)
+        case None => messages(message)
+      },
       isAgent match {
         case Some(agent) =>
           if (agent) messages("common.agentService") else messages("common.clientService")

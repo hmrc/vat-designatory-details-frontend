@@ -15,28 +15,71 @@
  *@
 
 @import config.AppConfig
+@import forms.YesNoForm._
 
 @this(mainTemplate: MainTemplate,
       govukBackLink: GovukBackLink,
-      govukButton: GovukButton)
+      govukRadios: GovukRadios,
+      govukErrorSummary: GovukErrorSummary,
+      govukButton: GovukButton,
+      formWithCSRF: FormWithCSRF)
 
-@(tradingName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[YesNo], tradingName: String)(implicit messages: Messages, appConfig: AppConfig, request: Request[_])
 
-@mainTemplate(pageTitle = messages("confirmTradingNameRemove.title")) {
+@mainTemplate(pageTitle =
+        if (form.errors.nonEmpty) messages("common.error.prefixTitle", messages("confirmRemove.title", tradingName))
+        else messages("confirmRemove.title", tradingName)) {
 
   @govukBackLink(BackLink(
     href = controllers.tradingName.routes.CaptureTradingNameController.show().url,
     content = Text(messages("base.back"))
   ))
 
-  <h1 class="govuk-heading-l">@messages("confirmTradingNameRemove.heading", tradingName)</h1>
+  @if(form.hasErrors) {
+    @govukErrorSummary(ErrorSummary(
+      title = Text(messages("common.error.heading")),
+      errorList = form.errors.map { error =>
+        ErrorLink(
+          href = Some(s"#${form("yes_no-yes").id}"),
+          content = Text(messages(error.message))
+        )
+      }
+    ))
+  }
 
-  <p><a class="govuk-link" href="@appConfig.manageVatSubscriptionServicePath">
-    @messages("common.cancel")
-  </a></p>
+  @formWithCSRF(action = controllers.tradingName.routes.ConfirmRemoveTradingNameController.submit) {
 
-  @govukButton(Button(
-    href = Some(controllers.tradingName.routes.ConfirmRemoveTradingNameController.removeTradingName().url),
-    content = Text(messages("base.confirmAndContinue"))
-  ))
+    @govukRadios(Radios(
+      fieldset = Some(Fieldset(
+        legend = Some(Legend(
+          content = Text(messages("confirmRemove.title", tradingName)),
+          isPageHeading = true,
+          classes = "govuk-fieldset__legend--l"
+        ))
+      )),
+      idPrefix = Some(form(yesNo).id),
+      name = yesNo,
+      items = Seq(
+        RadioItem(
+          id = Some(s"$yesNo-$yes"),
+          content = Text(messages("common.yes")),
+          value = Some(yes)
+        ),
+        RadioItem(
+          id = Some(s"$yesNo-$no"),
+          content = Text(messages("common.no")),
+          value = Some(no)
+        )
+      ),
+      classes = "govuk-radios--inline govuk-!-padding-top-3",
+      errorMessage = form(yesNo).error.map { error =>
+        ErrorMessage(content = Text(messages(error.message)))
+      }
+    ))
+
+    @govukButton(Button(
+      value = Some("submit"),
+      content = Text(messages("base.confirmAndContinue"))
+    ))
+  }
 }

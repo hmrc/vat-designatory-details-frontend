@@ -22,6 +22,8 @@ common.agent.updateClient1 = Byddwn hefyd yn cysylltu ag
 common.agent.updateClient2 = gyda diweddariad.
 common.agent.yourClient = eich cleient
 common.cancel = Canslo
+common.yes = Iawn
+common.no = Na
 
 standardError.title = Mae problem gyda’r gwasanaeth 
 standardError.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
@@ -50,8 +52,8 @@ checkYourAnswers.tradingName = Enw masnachu
 checkYourAnswers.change = Newid
 checkYourAnswers.confirm = Cadarnhau ac yn eich blaen
 
-confirmTradingNameRemove.title = ???
-confirmTradingNameRemove.heading = ???
+confirmRemove.title = A ydych am i ni dynnu {0} fel yr enw masnachu?
+confirmRemove.error = Dewiswch ‘Iawn’ os ydych am i ni dynnu’r enw masnachu presennol
 
 tradingNameChangeSuccess.title.change = ???
 tradingNameChangeSuccess.title.remove = ???

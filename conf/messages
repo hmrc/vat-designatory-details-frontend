@@ -22,6 +22,8 @@ common.agent.updateClient1 = We’ll also contact
 common.agent.updateClient2 = with an update.
 common.agent.yourClient = your client
 common.cancel = Cancel
+common.yes = Yes
+common.no = No
 
 standardError.title = There is a problem with the service
 standardError.heading = Sorry, there is a problem with the service
@@ -56,8 +58,8 @@ checkYourAnswers.tradingName = Trading name
 checkYourAnswers.change = Change
 checkYourAnswers.confirm = Confirm and continue
 
-confirmTradingNameRemove.title = Confirm you want to remove the trading name
-confirmTradingNameRemove.heading = Confirm you want to remove the trading name: {0}
+confirmRemove.title = Do you want us to remove {0} as the trading name?
+confirmRemove.error = Select yes if you want us to remove the current trading name
 
 tradingNameChangeSuccess.title.change = Request to change trading name received
 tradingNameChangeSuccess.title.remove = Request to remove trading name received
@@ -74,7 +76,6 @@ changeSuccess.helpTwo.digital = You can also check your secure messages for an u
 changeSuccess.helpOne.paper.agent = We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days.
 changeSuccess.viewBusinessDetails = View your business details
 changeSuccess.viewBusinessDetails.agent = View your client’s business details
-
 
 inFlightChange.title = You already have a change pending
 

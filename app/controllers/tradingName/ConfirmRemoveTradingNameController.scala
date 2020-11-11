@@ -17,50 +17,50 @@
 package controllers.tradingName
 
 import common.SessionKeys.{prepopulationTradingNameKey, validationTradingNameKey}
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
-import javax.inject.{Inject, Singleton}
-import models.User
+import forms.YesNoForm
+import javax.inject.Inject
+import models.{No, Yes, YesNo}
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.VatSubscriptionService
 import views.html.tradingName.ConfirmRemoveTradingNameView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-@Singleton
-class ConfirmRemoveTradingNameController @Inject()(val errorHandler: ErrorHandler,
-                                               val vatSubscriptionService: VatSubscriptionService,
-                                               confirmRemoveTradingName: ConfirmRemoveTradingNameView)
-                                              (implicit val appConfig: AppConfig,
-                                               mcc: MessagesControllerComponents,
-                                               authComps: AuthPredicateComponents,
-                                               inFlightComps: InFlightPredicateComponents) extends BaseController {
+class ConfirmRemoveTradingNameController @Inject()(confirmRemoveTradingNameView: ConfirmRemoveTradingNameView)
+                                                  (implicit val appConfig: AppConfig,
+                                             mcc: MessagesControllerComponents,
+                                             authComps: AuthPredicateComponents,
+                                             inFlightComps: InFlightPredicateComponents) extends BaseController {
 
-  implicit val ec: ExecutionContext = mcc.executionContext
+  val yesNoForm: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error")
 
   def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
-
-    extractSessionTradingName(user) match {
+    user.session.get(validationTradingNameKey) match {
       case Some(tradingName) =>
-        Future.successful(Ok(confirmRemoveTradingName(tradingName)))
-      case _ =>
-        Future.successful(Redirect(routes.CaptureTradingNameController.show()))
-      }
-  }
-
-  def removeTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
-
-    extractSessionTradingName(user) match {
-      case Some(_) =>
-        Future.successful(Redirect(routes.CheckYourAnswersController.updateTradingName())
-          .addingToSession(prepopulationTradingNameKey -> ""))
-      case _ =>
-        Future.successful(Redirect(routes.CaptureTradingNameController.show()))
+        Future.successful(Ok(confirmRemoveTradingNameView(yesNoForm, tradingName)))
+      case None =>
+        Future.successful(Redirect(routes.CaptureTradingNameController.show().url))
     }
   }
 
-  private[controllers] def extractSessionTradingName(user: User[AnyContent]): Option[String] =
-    user.session.get(validationTradingNameKey).filter(_.nonEmpty)
+  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+    user.session.get(validationTradingNameKey) match {
+      case Some(tradingName) =>
+        yesNoForm.bindFromRequest.fold(
+          errorForm => {
+            BadRequest(confirmRemoveTradingNameView(errorForm, tradingName))
+          },
+          {
+            case Yes => Redirect(routes.CheckYourAnswersController.updateTradingName())
+              .addingToSession(prepopulationTradingNameKey -> "")
+            case No => Redirect(appConfig.manageVatSubscriptionServicePath)
+          }
+        )
+      case None => authComps.errorHandler.showInternalServerError
+    }
+  }
 }
