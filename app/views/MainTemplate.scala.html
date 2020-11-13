@@ -19,6 +19,7 @@
 @import views.utils.ServiceNameUtil
 @import views.components.FooterLinks
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.header.Header
+@import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
 @this(govukLayout: GovukLayout,
       govukHeader: GovukHeader,
@@ -26,7 +27,8 @@
       hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
       hmrcLanguageSelect: HmrcLanguageSelect,
       hmrcTimeoutDialog: HmrcTimeoutDialog,
-      footerLinks: FooterLinks
+      footerLinks: FooterLinks,
+      trackingConsentSnippet: TrackingConsentSnippet
       )
 
 @(pageTitle: String,
@@ -76,6 +78,7 @@
 }
 
 @head = {
+  @trackingConsentSnippet(nonce = None)
   <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/application.css")' media="all">
 
   @if(showSignOut) {
