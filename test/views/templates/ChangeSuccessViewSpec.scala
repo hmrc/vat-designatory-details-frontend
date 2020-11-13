@@ -177,12 +177,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
         "have the correct first paragraph" in {
           elementText(Selectors.paragraphOne) shouldBe
-            "We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days, " +
-              "telling you whether we can accept the trading name."
-        }
-
-        "have the correct second paragraph" in {
-          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact TheBusiness with an update."
+            "We’ll update TheBusiness telling them we have added the trading name."
         }
       }
 
@@ -194,12 +189,7 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
         "have the correct first paragraph" in {
           elementText(Selectors.paragraphOne) shouldBe
-            "We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days, " +
-              "telling you whether we can accept the trading name."
-        }
-
-        "have the correct second paragraph" in {
-          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact your client with an update."
+            "We’ll update your client telling them we have added the trading name."
         }
       }
     }
@@ -235,16 +225,11 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
         "have the correct first paragraph" in {
           elementText(Selectors.paragraphOne) shouldBe
-            "We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days, " +
-              "to confirm that the trading name has been removed from your client’s VAT account."
+            "We’ll update TheBusiness telling them we have removed the trading name."
         }
 
         "have the correct second paragraph" in {
-          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact TheBusiness with an update."
-        }
-
-        "have the correct third paragraph" in {
-          elementText(Selectors.paragraphThree) shouldBe "A trading name will no longer be listed on the VAT certificate."
+          elementText(Selectors.paragraphTwo) shouldBe "A trading name will no longer be listed on the VAT certificate."
         }
       }
 
@@ -256,16 +241,11 @@ class ChangeSuccessViewSpec extends ViewBaseSpec {
 
         "have the correct first paragraph" in {
           elementText(Selectors.paragraphOne) shouldBe
-            "We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days, " +
-              "to confirm that the trading name has been removed from your client’s VAT account."
+            "We’ll update your client telling them we have removed the trading name."
         }
 
         "have the correct second paragraph" in {
-          elementText(Selectors.paragraphTwo) shouldBe "We’ll also contact your client with an update."
-        }
-
-        "have the correct third paragraph" in {
-          elementText(Selectors.paragraphThree) shouldBe "A trading name will no longer be listed on the VAT certificate."
+          elementText(Selectors.paragraphTwo) shouldBe "A trading name will no longer be listed on the VAT certificate."
         }
       }
     }
