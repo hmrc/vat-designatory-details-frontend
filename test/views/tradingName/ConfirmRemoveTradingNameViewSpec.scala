@@ -77,7 +77,7 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
 
         "should have the correct href" in {
           element(Selectors.backLink).attr("href") shouldBe
-            controllers.tradingName.routes.CaptureTradingNameController.show().url
+            controllers.tradingName.routes.WhatToDoController.show().url
         }
       }
 
@@ -87,28 +87,12 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
     }
 
     "there are errors" should {
-      val form: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error").bind(Map("yes_no" -> ""))
+      val form: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error").bind(Map(YesNoForm.yesNo -> ""))
       lazy val view = injectedView(form, testTradingName)(messages, mockConfig, user)
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct document title" in {
         document.title shouldBe ConfirmRemoveMessages.errorTitle(testTradingName)
-      }
-
-      "have the correct heading" in {
-        elementText(Selectors.heading) shouldBe ConfirmRemoveMessages.heading(testTradingName)
-      }
-
-      "have the correct continue button text" in {
-        elementText(Selectors.continueButton) shouldBe ConfirmRemoveMessages.confirm
-      }
-
-      "display the Yes option" in {
-        elementText(Selectors.yesOption) shouldBe ConfirmRemoveMessages.yes
-      }
-
-      "display the No option" in {
-        elementText(Selectors.noOption) shouldBe ConfirmRemoveMessages.no
       }
 
       "display an error summary" which {
@@ -131,8 +115,6 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
       "display the correct error message" in {
         elementText(Selectors.errorMessage) shouldBe ConfirmRemoveMessages.errorText
       }
-
     }
   }
-
 }

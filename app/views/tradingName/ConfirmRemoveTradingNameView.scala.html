@@ -31,7 +31,7 @@
         else messages("confirmRemove.title", tradingName)) {
 
   @govukBackLink(BackLink(
-    href = controllers.tradingName.routes.CaptureTradingNameController.show().url,
+    href = controllers.tradingName.routes.WhatToDoController.show().url,
     content = Text(messages("base.back"))
   ))
 
@@ -71,7 +71,7 @@
           value = Some(no)
         )
       ),
-      classes = "govuk-radios--inline govuk-!-padding-top-3",
+      classes = "govuk-radios--inline",
       errorMessage = form(yesNo).error.map { error =>
         ErrorMessage(content = Text(messages(error.message)))
       }

@@ -32,17 +32,17 @@ import scala.concurrent.Future
 
 class ConfirmRemoveTradingNameController @Inject()(confirmRemoveTradingNameView: ConfirmRemoveTradingNameView)
                                                   (implicit val appConfig: AppConfig,
-                                             mcc: MessagesControllerComponents,
-                                             authComps: AuthPredicateComponents,
-                                             inFlightComps: InFlightPredicateComponents) extends BaseController {
+                                                   mcc: MessagesControllerComponents,
+                                                   authComps: AuthPredicateComponents,
+                                                   inFlightComps: InFlightPredicateComponents) extends BaseController {
 
   val yesNoForm: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error")
 
   def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     user.session.get(validationTradingNameKey) match {
-      case Some(tradingName) =>
+      case Some(tradingName) if tradingName.nonEmpty =>
         Future.successful(Ok(confirmRemoveTradingNameView(yesNoForm, tradingName)))
-      case None =>
+      case _ =>
         Future.successful(Redirect(routes.CaptureTradingNameController.show().url))
     }
   }

@@ -44,7 +44,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
   "Calling the show action" when {
 
-    "there is a validation trading name in session" should {
+    "there is a validation trading name in session that is not empty ('remove' journey)" should {
 
       lazy val result = target().show(request.withSession(validationTradingNameKey -> "ABC Trading"))
 
@@ -56,10 +56,23 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
       }
+    }
 
+    "there is a validation trading name in session that is empty ('add' journey)" should {
+
+      lazy val result = target().show(request.withSession(validationTradingNameKey -> ""))
+
+      "return 303" in {
+        status(result) shouldBe SEE_OTHER
+      }
+
+      "redirect to the capture trading name page" in {
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+      }
     }
 
     "there is not a validation trading name in session" should {
+
       lazy val result = target().show(request)
 
       "return 303" in {
