@@ -17,9 +17,11 @@
 @import models.viewModels.ChangeSuccessViewModel
 @import common.ContactPreference
 @import views.html.templates.UpdateClient
+@import views.html.templates.AgentPaperUpdateClient
 
 @this(mainTemplate: MainTemplate,
       updateClient: UpdateClient,
+      agentPaperUpdateClient: AgentPaperUpdateClient,
       govukButton: GovukButton)
 
 @(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
@@ -40,14 +42,17 @@
   @if(user.isAgent) {
 
     @model.agentEmail match {
-      case Some(email) if(model.isRemoval)=> {<p class="govuk-body">@messages("removeSuccess.helpOne.digital.agent")</p>}
-      case _ if(model.isRemoval) => {<p class="govuk-body">@messages("removeSuccess.helpOne.paper.agent")</p>}
-      case Some(email) => {<p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>}
-      case _ => {<p class="govuk-body">@messages("changeSuccess.helpOne.paper.agent")</p>}
+      case Some(email) if(model.isRemoval) => {
+        <p class="govuk-body">@messages("removeSuccess.helpOne.digital.agent")</p>
+        @updateClient(model.businessName)
+      }
+      case _ if(model.isRemoval) => {@agentPaperUpdateClient(model.businessName, true)}
+      case Some(email) => {
+        <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
+        @updateClient(model.businessName)
+      }
+      case _ => {@agentPaperUpdateClient(model.businessName, false)}
     }
-
-    @updateClient(model.businessName)
-
 
   } else {
     @model.contactPreference  match {
