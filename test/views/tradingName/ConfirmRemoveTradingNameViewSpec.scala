@@ -16,76 +16,104 @@
 
 package views.tradingName
 
+import forms.YesNoForm
+import models.YesNo
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.data.Form
 import views.ViewBaseSpec
 import views.html.tradingName.ConfirmRemoveTradingNameView
+import assets.ConfirmRemoveMessages
 
 class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
 
   val injectedView: ConfirmRemoveTradingNameView = inject[ConfirmRemoveTradingNameView]
 
   object Selectors {
-    val heading = ".govuk-heading-l"
-    val backLink = ".govuk-back-link"
+    val heading = ".govuk-fieldset__legend"
     val continueButton = ".govuk-button"
-    val cancelLink = "p > a"
+    val yesOption = "div.govuk-radios__item:nth-child(1)"
+    val noOption = "div.govuk-radios__item:nth-child(2)"
+    val error = ".govuk-error-message"
+    val errorHeading = "#error-summary-title"
+    val errorLink = ".govuk-list > li > a"
+    val errorMessage = "#yes_no-error"
+    val backLink = ".govuk-back-link"
   }
 
-  "The Confirm remove trading name view" when {
+  "The confirm remove trading name view with no errors" when {
 
-    "the user is a principle entity" should {
+    "there are no form errors" should {
 
-      lazy val view = injectedView(testTradingName)(user, messages, mockConfig)
+      val form: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error")
+      lazy val view = injectedView(form, testTradingName)(messages, mockConfig, user)
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct document title" in {
-        document.title shouldBe "Confirm you want to remove the trading name - Business tax account - GOV.UK"
+        document.title shouldBe ConfirmRemoveMessages.title(testTradingName)
       }
 
       "have the correct heading" in {
-        elementText(Selectors.heading) shouldBe s"Confirm you want to remove the trading name: $testTradingName"
+        elementText(Selectors.heading) shouldBe ConfirmRemoveMessages.heading(testTradingName)
       }
 
-      "have a back link" which {
+      "have the correct continue button text" in {
+        elementText(Selectors.continueButton) shouldBe ConfirmRemoveMessages.confirm
+      }
+
+      "display the Yes option" in {
+        elementText(Selectors.yesOption) shouldBe ConfirmRemoveMessages.yes
+      }
+
+      "display the No option" in {
+        elementText(Selectors.noOption) shouldBe ConfirmRemoveMessages.no
+      }
+
+      "have the correct back link" which {
 
         "should have the correct text" in {
-          elementText(Selectors.backLink) shouldBe "Back"
+          elementText(Selectors.backLink) shouldBe ConfirmRemoveMessages.back
         }
 
-        "should have the correct back link" in {
-          element(Selectors.backLink).attr("href") shouldBe controllers.tradingName.routes
-            .CaptureTradingNameController.show().url
-        }
-      }
-
-      "have a cancel link" which {
-
-        "has the correct text" in {
-          elementText(Selectors.cancelLink) shouldBe "Cancel"
-        }
-
-        "has the correct link" in {
-          element(Selectors.cancelLink).attr("href") shouldBe "mockManageVatOverviewUrl"
+        "should have the correct href" in {
+          element(Selectors.backLink).attr("href") shouldBe
+            controllers.tradingName.routes.WhatToDoController.show().url
         }
       }
 
-      "have a continue button" which {
-
-        "has the correct text" in {
-          elementText(Selectors.continueButton) shouldBe "Confirm and continue"
-        }
+      "not display an error" in {
+        document.select(Selectors.error).isEmpty shouldBe true
       }
     }
-    "the user is an agent" should {
 
-      "there are no errors in the form" should {
-        val view = injectedView(testTradingName)(agent, messages, mockConfig)
-        implicit val document: Document = Jsoup.parse(view.body)
+    "there are errors" should {
+      val form: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error").bind(Map(YesNoForm.yesNo -> ""))
+      lazy val view = injectedView(form, testTradingName)(messages, mockConfig, user)
+      lazy implicit val document: Document = Jsoup.parse(view.body)
 
-        "have the correct title" in {
-          document.title shouldBe "Confirm you want to remove the trading name - Your client’s VAT details - GOV.UK"
+      "have the correct document title" in {
+        document.title shouldBe ConfirmRemoveMessages.errorTitle(testTradingName)
+      }
+
+      "display an error summary" which {
+
+        "has the correct title text" in {
+          elementText(Selectors.errorHeading) shouldBe ConfirmRemoveMessages.errorHeading
         }
+
+        "has an error link" which {
+
+          "has the correct text" in {
+            elementText(Selectors.errorLink) shouldBe ConfirmRemoveMessages.errorLinkText
+          }
+          "has a link to the error" in {
+            element(Selectors.errorLink).attr("href") shouldBe "#yes_no-yes"
+          }
+        }
+      }
+
+      "display the correct error message" in {
+        elementText(Selectors.errorMessage) shouldBe ConfirmRemoveMessages.errorText
       }
     }
   }

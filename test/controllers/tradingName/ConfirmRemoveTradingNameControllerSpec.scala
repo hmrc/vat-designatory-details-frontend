@@ -16,102 +16,137 @@
 
 package controllers.tradingName
 
-import common.SessionKeys
+import assets.CustomerInfoConstants.fullCustomerInfoModel
+import common.SessionKeys.validationTradingNameKey
+import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import controllers.ControllerBaseSpec
-import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
+import forms.YesNoForm
+import forms.YesNoForm.{yes, yesNo}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 import views.html.tradingName.ConfirmRemoveTradingNameView
 
-class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec  {
+import scala.concurrent.{ExecutionContext, Future}
 
-  lazy val controller = new ConfirmRemoveTradingNameController(
-    mockErrorHandler,
-    mockVatSubscriptionService,
-    inject[ConfirmRemoveTradingNameView]
-  )
+class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
-  lazy val requestWithValidationTradingNameKey: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(SessionKeys.validationTradingNameKey -> testTradingName)
+  def setup(result: GetCustomerInfoResponse): Any = {
+    when(mockVatSubscriptionService.getCustomerInfo(any[String])(any[HeaderCarrier], any[ExecutionContext]))
+      .thenReturn(Future.successful(result))
+  }
 
-  "Calling .show in ConfirmRemoveTradingNameController" when {
+  def target(result: GetCustomerInfoResponse = Right(fullCustomerInfoModel)): ConfirmRemoveTradingNameController = {
+    setup(result)
+    new ConfirmRemoveTradingNameController(inject[ConfirmRemoveTradingNameView])
+  }
 
-    "there is a trading name in session" should {
+  "Calling the show action" when {
+
+    "there is a validation trading name in session that is not empty ('remove' journey)" should {
+
+      lazy val result = target().show(request.withSession(validationTradingNameKey -> "ABC Trading"))
 
       "return 200" in {
-        val result = controller.show(requestWithValidationTradingNameKey)
-        status(result) shouldBe Status.OK
+        status(result) shouldBe OK
+      }
+
+      "return HTML" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
 
-    "there is no trading name in session" should {
+    "there is a validation trading name in session that is empty ('add' journey)" should {
 
-      lazy val result = controller.show(request)
+      lazy val result = target().show(request.withSession(validationTradingNameKey -> ""))
 
       "return 303" in {
-        status(result) shouldBe Status.SEE_OTHER
+        status(result) shouldBe SEE_OTHER
       }
 
       "redirect to the capture trading name page" in {
-        redirectLocation(result) shouldBe Some(routes.CaptureTradingNameController.show().url)
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
       }
     }
 
-    "the user is not authorised" should {
+    "there is not a validation trading name in session" should {
 
-      "return 403" in {
-        val result = {
-          mockIndividualWithoutEnrolment()
-          controller.show(requestWithValidationTradingNameKey)
-        }
+      lazy val result = target().show(request)
 
-        status(result) shouldBe Status.FORBIDDEN
+      "return 303" in {
+        status(result) shouldBe SEE_OTHER
+      }
+
+      "redirect to the capture trading name page" in {
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
       }
     }
   }
 
-  "Calling .removeTradingName() in ConfirmRemoveTradingNameController" when {
+  "Calling the submit action" when {
 
-    "there is a validation trading name in session" should {
+    "there is a validation trading name in session" when {
 
-      lazy val result = controller.removeTradingName()(requestWithValidationTradingNameKey)
+      "the form is bound as a Yes" should {
 
-      "return 303" in {
-        status(result) shouldBe Status.SEE_OTHER
-      }
+        lazy val result = target().submit(request
+          .withSession(validationTradingNameKey -> "ABC Trading")
+          .withFormUrlEncodedBody(yesNo -> yes))
 
-      "redirect to the updateTradingName() action in ConfirmTradingNameController" in {
-        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.updateTradingName().url)
-      }
-
-      "add a blank value to the prepopulation session key" in {
-        session(result).get(SessionKeys.prepopulationTradingNameKey) shouldBe Some("")
-      }
-    }
-
-    "there is no validation trading name in session" should {
-
-      lazy val result = controller.removeTradingName()(request)
-
-      "return 303" in {
-        status(result) shouldBe Status.SEE_OTHER
-      }
-
-      "redirect to the capture trading name page" in {
-        redirectLocation(result) shouldBe Some(routes.CaptureTradingNameController.show().url)
-      }
-    }
-
-    "the user is not authorised" should {
-
-      "return 403" in {
-        val result = {
-          mockIndividualWithoutEnrolment()
-          controller.removeTradingName()(requestWithValidationTradingNameKey)
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
         }
 
-        status(result) shouldBe Status.FORBIDDEN
+        "redirect to the update trading name method" in {
+          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CheckYourAnswersController.updateTradingName().url)
+        }
+      }
+
+      "the form is bound as a No" should {
+
+        lazy val result = target().submit(request
+          .withSession(validationTradingNameKey -> "ABC Trading")
+          .withFormUrlEncodedBody(yesNo -> YesNoForm.no))
+
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect to the manage VAT page" in {
+          redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
+        }
+      }
+    }
+
+    "the form is bound with errors" should {
+
+      lazy val result = target().submit(request
+        .withSession(validationTradingNameKey -> "ABC Trading")
+        .withFormUrlEncodedBody(yesNo -> ""))
+
+      "return 400" in {
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      "return HTML" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+
+    "there is not a validation trading name in session" should {
+
+      lazy val result = target().submit(request)
+
+      "return 500" in {
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "return HTML" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
   }

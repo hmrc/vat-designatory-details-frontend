@@ -16,7 +16,7 @@ GET         /trading-name-confirmation             controllers.ChangeSuccessCont
 
 # remove trading name
 GET         /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.show
-GET         /update-remove-trading-name            controllers.tradingName.ConfirmRemoveTradingNameController.removeTradingName
+POST        /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.submit
 
 GET         /change-remove-trading-name            controllers.tradingName.WhatToDoController.show
 POST        /change-remove-trading-name            controllers.tradingName.WhatToDoController.submit
