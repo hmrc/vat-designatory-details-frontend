@@ -17,14 +17,17 @@
 @import models.viewModels.ChangeSuccessViewModel
 @import common.ContactPreference
 @import views.html.templates.UpdateClient
+@import views.html.templates.AgentPaperUpdateClient
 
 @this(mainTemplate: MainTemplate,
       updateClient: UpdateClient,
+      agentPaperUpdateClient: AgentPaperUpdateClient,
       govukButton: GovukButton)
 
 @(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
-@buttonMessageKey = @{s"changeSuccess.viewBusinessDetails${if(user.isAgent){".agent"}else{""}}"}
+@messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
+@buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}
 
 @mainTemplate(pageTitle = messages(model.pageTitle)) {
 
@@ -39,15 +42,27 @@
   @if(user.isAgent) {
 
     @model.agentEmail match {
-      case Some(email) => {<p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>}
-      case _ => {<p class="govuk-body">@messages("changeSuccess.helpOne.paper.agent")</p>}
+      case Some(email) if(model.isRemoval) => {
+        <p class="govuk-body">@messages("removeSuccess.helpOne.digital.agent")</p>
+        @updateClient(model.businessName)
+      }
+      case _ if(model.isRemoval) => {@agentPaperUpdateClient(model.businessName, true)}
+      case Some(email) => {
+        <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
+        @updateClient(model.businessName)
+      }
+      case _ => {@agentPaperUpdateClient(model.businessName, false)}
     }
 
-    @updateClient(model.businessName)
-
   } else {
-    @model.contactPreference match {
+    @model.contactPreference  match {
 
+        case Some(ContactPreference.digital) if(model.isRemoval) => {
+        <p class="govuk-body">@messages("removeSuccess.helpOne.digital")</p>
+        }
+        case Some(ContactPreference.paper) if(model.isRemoval) => {
+        <p class="govuk-body">@messages("removeSuccess.helpOne.paper")</p>
+        }
         case Some(ContactPreference.digital) => {
         <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
         <p class="govuk-body">@messages("changeSuccess.helpTwo.digital")</p>
@@ -60,6 +75,10 @@
         }
     }
 
+  }
+
+  @if(model.isRemoval) {
+    <p class="govuk-body">@messages(s"removeSuccess.vatCertificate$messageKeySuffix")</p>
   }
 
   @govukButton(Button(

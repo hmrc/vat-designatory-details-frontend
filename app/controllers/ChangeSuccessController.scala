@@ -68,7 +68,7 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
           "Rendering InternalServerError")
         authComps.errorHandler.showInternalServerError
       } { title =>
-        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference)
+        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference, isRemoval)
         Ok(changeSuccessView(viewModel))
       }
     }

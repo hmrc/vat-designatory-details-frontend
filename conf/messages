@@ -62,7 +62,7 @@ confirmRemove.title = Do you want us to remove {0} as the trading name?
 confirmRemove.error = Select yes if you want us to remove the current trading name
 
 tradingNameChangeSuccess.title.change = Request to change trading name received
-tradingNameChangeSuccess.title.remove = Request to remove trading name received
+tradingNameChangeSuccess.title.remove = You have asked to remove the trading name
 tradingNameChangeSuccess.title.add = You have asked to add a trading name
 
 sessionTimeout.title = Your session has timed out
@@ -73,9 +73,18 @@ sessionTimeout.helpThree = using your Government Gateway ID.
 changeSuccess.helpOne.paper = We’ll send a letter to your principal place of business within 15 working days, telling you whether we can accept the trading name.
 changeSuccess.helpOne.digital = We’ll send you an email within 2 working days, telling you whether we can accept the trading name.
 changeSuccess.helpTwo.digital = You can also check your secure messages for an update.
-changeSuccess.helpOne.paper.agent = We’ll send a confirmation letter to the agency address registered with HMRC within 15 working days.
+changeSuccess.helpOne.paper.agent1 = We’ll update
+changeSuccess.helpOne.paper.agent2 = telling them we have added the trading name.
 changeSuccess.viewBusinessDetails = View your business details
 changeSuccess.viewBusinessDetails.agent = View your client’s business details
+
+removeSuccess.helpOne.digital.agent = We’ll send you an email within 2 working days, to confirm that the trading name has been removed from your client’s VAT account.
+removeSuccess.helpOne.digital = We’ll send you an email within 2 working days, to confirm that the trading name has been removed from your VAT account.
+removeSuccess.helpOne.paper = We’ll send a letter to your principal place of business within 15 working days, to confirm that the trading name has been removed from your VAT account.
+removeSuccess.helpOne.paper.agent1 = We’ll update
+removeSuccess.helpOne.paper.agent2 = telling them we have removed the trading name.
+removeSuccess.vatCertificate.agent = A trading name will no longer be listed on the VAT certificate.
+removeSuccess.vatCertificate = A trading name will no longer be listed on your VAT certificate.
 
 inFlightChange.title = You already have a change pending
 

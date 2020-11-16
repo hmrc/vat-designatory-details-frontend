@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.viewModels
+@this()
 
-case class ChangeSuccessViewModel(pageTitle: String,
-                                  agentEmail: Option[String],
-                                  businessName: Option[String],
-                                  contactPreference: Option[String],
-                                  isRemoval: Boolean)
+@(clientName: Option[String], isRemoval: Boolean)(implicit messages: Messages)
+
+<p class="govuk-body">
+    @if(isRemoval) {
+        @messages("removeSuccess.helpOne.paper.agent1")
+    } else {
+        @messages("changeSuccess.helpOne.paper.agent1")
+    }
+    @clientName.fold(
+    <span>{messages("common.agent.yourClient")}</span>
+    )(
+    entityName => <strong class="bold">{entityName}</strong>
+    )
+    @if(isRemoval) {
+        @messages("removeSuccess.helpOne.paper.agent2")
+    } else {
+        @messages("changeSuccess.helpOne.paper.agent2")
+    }
+</p>
