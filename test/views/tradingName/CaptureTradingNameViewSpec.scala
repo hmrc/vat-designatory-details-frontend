@@ -63,8 +63,8 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
               elementText(Selectors.backLink) shouldBe "Back"
             }
 
-            "should have the correct back link" in {
-              element(Selectors.backLink).attr("href") shouldBe "mockManageVatOverviewUrl"
+            "should have the correct href" in {
+              element(Selectors.backLink).attr("href") shouldBe controllers.tradingName.routes.WhatToDoController.show().url
             }
           }
 
@@ -108,6 +108,10 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
 
           "not show the remove trading name link" in {
             elementExtinct(Selectors.removeTradingName)
+          }
+
+          "have a back link with the correct href" in {
+            element(Selectors.backLink).attr("href") shouldBe "mockManageVatOverviewUrl"
           }
         }
       }
