@@ -22,13 +22,17 @@
       govukButton: GovukButton,
       govukBackLink: GovukBackLink,
       govukErrorSummary: GovukErrorSummary,
-      form: FormWithCSRF
-      )
+      form: FormWithCSRF)
 
 @(tradingNameForm: Form[String],
-  currentTradingName: String)(implicit request: Request[_],
-                                       messages: Messages,
-                                       appConfig: AppConfig)
+  currentTradingName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@dynamicBackLink = @{if(currentTradingName == "") {
+    appConfig.manageVatSubscriptionServicePath
+  } else {
+    controllers.tradingName.routes.WhatToDoController.show().url
+  }
+}
 
 @mainTemplate(
   pageTitle = if(tradingNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
@@ -36,7 +40,7 @@
 ) {
 
   @govukBackLink(BackLink(
-    href = appConfig.manageVatSubscriptionServicePath,
+    href = dynamicBackLink,
     content = Text(messages("base.back"))
   ))
 
