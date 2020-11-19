@@ -86,6 +86,13 @@ removeSuccess.helpOne.paper.agent2 = telling them we have removed the trading na
 removeSuccess.vatCertificate.agent = A trading name will no longer be listed on the VAT certificate.
 removeSuccess.vatCertificate = A trading name will no longer be listed on your VAT certificate.
 
+updateSuccess.helpOne.digital = We’ll send you an email within 2 working days telling you whether we can accept your new trading name. You can also check HMRC secure messages for an update.
+updateSuccess.helpOne.paper =
+updateSuccess.helpOne.digital.agent =
+updateSuccess.helpOne.paper.agent = We’ll contact your client telling them whether we can accept the request to change the trading name.
+updateSuccess.appropriatenessDisclaimer = If your requested name has the potential to mislead or offend the public, we may ask you for more information about the new trading name. HMRC will contact you within 30 days.
+updateSuccess.appropriatenessDisclaimer.agent = If the requested name has the potential to mislead or offend the public, we may ask your client for more information about the new trading name.
+
 inFlightChange.title = You already have a change pending
 
 footerLinks.cookies = Cookies
