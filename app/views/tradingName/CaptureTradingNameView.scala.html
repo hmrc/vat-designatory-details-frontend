@@ -34,9 +34,15 @@
   }
 }
 
+@dynamicTitle = @{if(currentTradingName == "") {
+messages("captureTradingName.title")} else {
+messages("captureNewTradingName.title")}
+}
+
 @mainTemplate(
-  pageTitle = if(tradingNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
-    messages("captureTradingName.title")) else messages("captureTradingName.title")
+  pageTitle =
+    if(tradingNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
+    dynamicTitle) else dynamicTitle
 ) {
 
   @govukBackLink(BackLink(
@@ -64,7 +70,7 @@
       label = Label(
         isPageHeading = true,
         classes = "govuk-label--l",
-        content = Text(messages("captureTradingName.title"))),
+        content = Text(dynamicTitle)),
       value = tradingNameForm.value,
       hint = Some(Hint(
           content = Text(messages("captureTradingName.para"))
@@ -76,13 +82,6 @@
       )
     ))
 
-    @if(currentTradingName != "") {
-      <p><a id="remove-trading-name"
-            class="govuk-link"
-            href='@controllers.tradingName.routes.ConfirmRemoveTradingNameController.show().url'>
-        @messages("captureTradingName.removeTradingName.linkText")
-      </a></p>
-    }
 
     @govukButton(Button(
       content = Text(messages("common.continue"))

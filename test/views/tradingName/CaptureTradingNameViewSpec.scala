@@ -54,7 +54,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
           "have the correct document title" in {
-            document.title shouldBe "What is the trading name? - Business tax account - GOV.UK"
+            document.title shouldBe "What is the new trading name? - Business tax account - GOV.UK"
           }
 
           "have a back link" which {
@@ -69,7 +69,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
           }
 
           "have the correct page heading" in {
-            elementText(Selectors.pageHeading) shouldBe "What is the trading name?"
+            elementText(Selectors.pageHeading) shouldBe "What is the new trading name?"
           }
 
           "have the correct hint text" in {
@@ -87,27 +87,22 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
           "have the continue button" in {
             elementText(Selectors.continueButton) shouldBe "Continue"
           }
-
-          "show the remove trading name link" in {
-            elementText(Selectors.removeTradingName) shouldBe "Remove trading name"
-          }
-
-          "have the correct remove trading name link" in {
-            element(Selectors.removeTradingName).attr("href") shouldBe
-              controllers.tradingName.routes.ConfirmRemoveTradingNameController.show().url
-          }
         }
 
         "the user has no trading name in ETMP" should {
           lazy val view: Html = injectedView(tradingNameForm(testTradingName), "")
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
-          "have the trading name text field with no pre-populated value" in {
-            element(Selectors.tradingNameField).attr("value") shouldBe ""
+          "have the correct document title" in {
+            document.title shouldBe "What is the trading name? - Business tax account - GOV.UK"
           }
 
-          "not show the remove trading name link" in {
-            elementExtinct(Selectors.removeTradingName)
+          "have the correct page heading" in {
+            elementText(Selectors.pageHeading) shouldBe "What is the trading name?"
+          }
+
+          "have the trading name text field with no pre-populated value" in {
+            element(Selectors.tradingNameField).attr("value") shouldBe ""
           }
 
           "have a back link with the correct href" in {
@@ -148,7 +143,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
         implicit val document: Document = Jsoup.parse(view.body)
 
         "have the correct title" in {
-          document.title shouldBe "What is the trading name? - Your client’s VAT details - GOV.UK"
+          document.title shouldBe "What is the new trading name? - Your client’s VAT details - GOV.UK"
         }
       }
     }
