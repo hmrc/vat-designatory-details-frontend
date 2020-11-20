@@ -45,11 +45,12 @@
         @updateClient(model.businessName)
       }
       case _ if(model.isRemoval) => {@agentPaperUpdateClient(model.businessName, true)}
-      case Some(email) => {
+      case Some(email) if(model.isAddition) => {
         <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
         @updateClient(model.businessName)
       }
-      case _ => {@agentPaperUpdateClient(model.businessName, false)}
+      case _ if(model.isAddition) => {@agentPaperUpdateClient(model.businessName, false)}
+      case _ => {<p class="govuk-body">@messages("updateSuccess.helpOne.paper.agent")</p>}
     }
 
   } else {
@@ -61,12 +62,18 @@
         case Some(ContactPreference.paper) if(model.isRemoval) => {
         <p class="govuk-body">@messages("removeSuccess.helpOne.paper")</p>
         }
-        case Some(ContactPreference.digital) => {
+        case Some(ContactPreference.digital) if(model.isAddition) => {
         <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
         <p class="govuk-body">@messages("changeSuccess.helpTwo.digital")</p>
         }
-        case Some(ContactPreference.paper) => {
+        case Some(ContactPreference.paper) if(model.isAddition) => {
         <p class="govuk-body">@messages("changeSuccess.helpOne.paper")</p>
+        }
+        case Some(ContactPreference.digital) => {
+        <p class="govuk-body">@messages("updateSuccess.helpOne.digital")</p>
+        }
+        case Some(ContactPreference.paper) => {
+        <p class="govuk-body">@messages("updateSuccess.helpOne.paper")</p>
         }
         case _ => {
         <p class="govuk-body">@messages("common.helpOne.apiFailure")</p>
@@ -77,6 +84,10 @@
 
   @if(model.isRemoval) {
     <p class="govuk-body">@messages(s"removeSuccess.vatCertificate$messageKeySuffix")</p>
+  }
+
+  @if(!model.isRemoval && !model.isAddition) {
+    <p class="govuk-body">@messages(s"updateSuccess.questionsDisclaimer$messageKeySuffix")</p>
   }
 
   @govukButton(Button(
