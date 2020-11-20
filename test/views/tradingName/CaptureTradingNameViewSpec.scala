@@ -90,7 +90,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
         }
 
         "the user has no trading name in ETMP" should {
-          lazy val view: Html = injectedView(tradingNameForm(testTradingName), "")
+          lazy val view: Html = injectedView(tradingNameForm(testTradingName), "")(user, messages, mockConfig)
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
           "have the correct document title" in {
