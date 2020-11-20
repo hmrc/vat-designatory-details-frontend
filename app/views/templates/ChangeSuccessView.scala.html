@@ -50,6 +50,13 @@
         @updateClient(model.businessName)
       }
       case _ if(model.isAddition) => {@agentPaperUpdateClient(model.businessName, false)}
+      case Some(email) => {
+            <p class="govuk-body">
+            @messages("updateSuccess.helpOne.digital.agent1")
+            <strong class="bold">@email</strong>
+            @messages("updateSuccess.helpOne.digital.agent2")
+            </p>
+      }
       case _ => {<p class="govuk-body">@messages("updateSuccess.helpOne.paper.agent")</p>}
     }
 
