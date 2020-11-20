@@ -43,7 +43,7 @@ class CaptureTradingNamePageSpec extends BasePageISpec {
 
         result should have(
           httpStatus(Status.OK),
-          pageTitle(generateDocumentTitle("captureTradingName.title"))
+          pageTitle(generateDocumentTitle("captureNewTradingName.title"))
         )
       }
     }
