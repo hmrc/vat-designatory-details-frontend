@@ -20,4 +20,5 @@ case class ChangeSuccessViewModel(pageTitle: String,
                                   agentEmail: Option[String],
                                   businessName: Option[String],
                                   contactPreference: Option[String],
-                                  isRemoval: Boolean)
+                                  isRemoval: Boolean,
+                                  isAddition: Boolean)
