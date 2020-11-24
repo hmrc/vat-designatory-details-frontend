@@ -16,6 +16,7 @@
 
 package views.errors
 
+import assets.InFlightViewMessages
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ViewBaseSpec
@@ -24,37 +25,90 @@ import views.html.errors.InFlightChangeView
 class InFlightChangeViewSpec extends ViewBaseSpec {
 
   val injectedView: InFlightChangeView = inject[InFlightChangeView]
+  val viewMessages: InFlightViewMessages.type = assets.InFlightViewMessages
 
   object Selectors {
     val heading = "h1"
     val paragraphOne = "p:nth-child(3)"
     val paragraphTwo = "p:nth-child(4)"
     val backLink = ".govuk-back-link"
+    val accountDetailsBack = "#content > .govuk-link"
 
-    def listItem(num: Int): String = s"#content > article > ul > li:nth-child($num)"
+    def listItem(num: Int): String = s"#content > ul > li:nth-child($num)"
   }
 
   "The Inflight change pending view" when {
 
-    "the pending change is trading name" should {
+    "the pending change is trading name" when {
 
-      lazy val view = injectedView()
-      lazy implicit val document: Document = Jsoup.parse(view.body)
+      "the user is a principal entity" should {
 
-      "have the correct title" in {
-        document.title shouldBe "You already have a change pending - VAT - GOV.UK"
+        lazy val view = injectedView()(user, messages, mockConfig)
+        lazy implicit val document: Document = Jsoup.parse(view.body)
+
+        "have the correct title" in {
+          document.title shouldBe viewMessages.title
+        }
+
+        "have the correct heading" in {
+          elementText(Selectors.heading) shouldBe viewMessages.heading
+        }
+
+        "have the correct first paragraph text" in {
+          elementText(Selectors.paragraphOne) shouldBe viewMessages.para1
+        }
+
+        "have the correct second paragraph text" in {
+          elementText(Selectors.paragraphTwo) shouldBe viewMessages.para2
+        }
+
+        "have the correct text for the back link" in {
+          elementText(Selectors.backLink) shouldBe viewMessages.backLink
+        }
+
+        "have the correct back link location" in {
+          element(Selectors.backLink).attr("href") shouldBe "mockManageVatOverviewUrl"
+        }
+
+        "have a list" which {
+
+          "has the correct first item" in {
+            elementText(Selectors.listItem(1)) shouldBe viewMessages.list1
+          }
+          "has the correct second item" in {
+            elementText(Selectors.listItem(2)) shouldBe viewMessages.list2
+          }
+          "has the correct third item" in {
+            elementText(Selectors.listItem(3)) shouldBe viewMessages.list3
+          }
+
+        }
+
+        "have the correct link back to the account details" which {
+
+          "has the correct URL" in {
+            element(Selectors.accountDetailsBack).attr("href") shouldBe
+              mockConfig.manageVatSubscriptionServicePath
+          }
+
+          "has the correct text" in {
+            elementText(Selectors.accountDetailsBack) shouldBe viewMessages.accountDetailsLinkNonAgent
+          }
+        }
+
       }
 
-      "have the correct heading" in {
-        elementText(Selectors.heading) shouldBe "You already have a change pending"
-      }
+      "the user is an agent" should {
+        lazy val view = injectedView()(agent, messages, mockConfig)
+        lazy implicit val document: Document = Jsoup.parse(view.body)
 
-      "have the correct text for the back link" in {
-        elementText(Selectors.backLink) shouldBe "Back"
-      }
+        "have the correct title" in {
+          document.title shouldBe viewMessages.titleAgent
+        }
 
-      "have the correct back link location" in {
-        element(Selectors.backLink).attr("href") shouldBe "mockManageVatOverviewUrl"
+        "have the correct back to account details link text" in {
+          elementText(Selectors.accountDetailsBack) shouldBe viewMessages.accountDetailsLinkAgent
+        }
       }
     }
   }
