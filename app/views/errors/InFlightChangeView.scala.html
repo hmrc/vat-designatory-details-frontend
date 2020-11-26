@@ -17,7 +17,7 @@
 @this(mainTemplate: MainTemplate,
       govukBackLink: GovukBackLink)
 
-@()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
+@()(implicit user: User[_], messages: Messages, appConfig: config.AppConfig)
 
 @mainTemplate(pageTitle = messages("inFlightChange.title")) {
 
@@ -27,4 +27,27 @@
   ))
 
   <h1 class="govuk-heading-l">@messages("inFlightChange.title")</h1>
+
+  <p class="govuk-body">
+    @messages("inFlightChange.pendingChange")
+    @messages("inFlightChange.pendingChange2")
+  </p>
+
+  <p class="govuk-body">
+    @messages("inFlightChange.confirm")
+    @messages("inFlightChange.confirm2")
+  </p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>@messages("inFlightChange.list1")</li>
+    <li>@messages("inFlightChange.list2")</li>
+    <li>@messages("inFlightChange.list3")</li>
+  </ul>
+
+  <a href="@appConfig.manageVatSubscriptionServicePath" class="govuk-link">
+    @if(user.isAgent) {
+      @messages("inFlightChange.accountDetailsBack.agent")
+    } else {
+      @messages("inFlightChange.accountDetailsBack.nonAgent")
+    }</a>
 }
