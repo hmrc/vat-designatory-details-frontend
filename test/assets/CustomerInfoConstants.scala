@@ -17,6 +17,7 @@
 package assets
 
 import common.ContactPreference
+import models.ChangeIndicators
 import models.customerInformation._
 import models.errors.ErrorModel
 import play.api.http.Status
@@ -31,8 +32,9 @@ object CustomerInfoConstants {
   )
 
   val pendingTradingNameModel: PendingChanges = PendingChanges(Some("New trading name"))
+  val changeIndicatorsModel: ChangeIndicators = ChangeIndicators(true, false, false, false, false, false)
 
-  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None)
+  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None, None)
   val minCustomerInfoJson: JsObject = Json.obj()
 
   val fullCustomerInfoModel: CustomerInformation = CustomerInformation(
@@ -41,7 +43,8 @@ object CustomerInfoConstants {
     lastName = Some("Mac"),
     organisationName = Some("PepsiMac Ltd"),
     tradingName = Some("PepsiMac"),
-    contactPreference = Some(ContactPreference.digital)
+    contactPreference = Some(ContactPreference.digital),
+    changeIndicators = Some(changeIndicatorsModel)
   )
 
   val fullCustomerInfoModelSameTradingName: CustomerInformation = fullCustomerInfoModel.copy(
@@ -56,7 +59,8 @@ object CustomerInfoConstants {
       "organisationName" -> "PepsiMac Ltd",
       "tradingName" -> "PepsiMac"
     ),
-    "commsPreference" -> "DIGITAL"
+    "commsPreference" -> "DIGITAL",
+    "changeIndicators" -> Some(changeIndicatorsModel)
   )
 
   val updateOrganisationDetailsModel: UpdateOrganisationDetails =
