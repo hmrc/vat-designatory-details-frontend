@@ -32,7 +32,7 @@ object CustomerInfoConstants {
   )
 
   val pendingTradingNameModel: PendingChanges = PendingChanges(Some("New trading name"))
-  val changeIndicatorsModel: ChangeIndicators = ChangeIndicators(true, false, false, false, false, false)
+  val changeIndicatorsModel: ChangeIndicators = ChangeIndicators(true)
 
   val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None, None)
   val minCustomerInfoJson: JsObject = Json.obj()

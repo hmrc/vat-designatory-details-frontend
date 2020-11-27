@@ -18,12 +18,7 @@ package models
 
 import play.api.libs.json._
 
-case class ChangeIndicators(organisationDetails: Boolean,
-                            ppob: Boolean,
-                            bankDetails: Boolean,
-                            returnPeriod: Boolean,
-                            deregister: Boolean,
-                            annualAccounting: Boolean)
+case class ChangeIndicators(organisationDetails: Boolean)
 
 object ChangeIndicators {
 

@@ -18,6 +18,7 @@ package stubs
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import helpers.WireMockMethods
+import models.ChangeIndicators
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsObject, Json}
 
@@ -57,6 +58,7 @@ object VatSubscriptionStub extends WireMockMethods {
   }
 
   val currentTradingName = "Current Trading Name"
+  val changeIndicatorsModel: ChangeIndicators = ChangeIndicators(true)
 
   val customerInfoJson: JsObject = Json.obj(
     "customerDetails" -> Json.obj(
@@ -65,7 +67,8 @@ object VatSubscriptionStub extends WireMockMethods {
       "organisationName" -> "D Taylor's Cars",
       "tradingName" -> "DT Autos"
     ),
-    "commsPreference" -> "DIGITAL"
+    "commsPreference" -> "DIGITAL",
+    "changeIndicators" -> Some(changeIndicatorsModel)
   )
 
   val emptyCustomerInfo: JsObject = Json.obj("xxx" -> "xxx")
