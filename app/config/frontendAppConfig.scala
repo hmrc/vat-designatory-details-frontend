@@ -87,8 +87,9 @@ class FrontendAppConfig @Inject()(sc: ServicesConfig) extends AppConfig {
   override lazy val signInUrl: String = s"$signInBaseUrl?continue=$signInContinueUrl&origin=$signInOrigin"
   override lazy val signInContinueUrl: String = SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl
   override def feedbackSignOutUrl(identifier: String): String =
-    s"$governmentGatewayHost/gg/sign-out?continue=${feedbackSurveyUrl(identifier)}"
-  override lazy val unauthorisedSignOutUrl: String = s"$governmentGatewayHost/gg/sign-out?continue=$signInContinueUrl"
+    s"$governmentGatewayHost/bas-gateway/sign-out-without-state?continue=${feedbackSurveyUrl(identifier)}"
+  override lazy val unauthorisedSignOutUrl: String =
+    s"$governmentGatewayHost/bas-gateway/sign-out-without-state?continue=$signInContinueUrl"
 
   override def routeToSwitchLanguage: String => Call = (lang: String) => controllers.routes.LanguageController.switchToLanguage(lang)
   override def languageMap: Map[String, Lang] = Map(
