@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.ContactPreference
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import helpers.IntegrationBaseSpec
-import models.User
+import models.{ChangeIndicators, User}
 import models.customerInformation._
 import models.errors.ErrorModel
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -43,6 +43,7 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
   val testVrn: String = "23456789"
   val testEmail: String = "test@exmaple.com"
   implicit val testUser: models.User[AnyContentAsEmpty.type] = User("999999999")(FakeRequest())
+  val changeIndicators: ChangeIndicators = ChangeIndicators(true)
 
   val testCustomerInfo: CustomerInformation = CustomerInformation(
     pendingChanges = None,
@@ -50,7 +51,8 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
     lastName = Some("Taylor"),
     organisationName = Some("D Taylor's Cars"),
     tradingName = Some("DT Autos"),
-    contactPreference = Some(ContactPreference.digital)
+    contactPreference = Some(ContactPreference.digital),
+    changeIndicators = Some(changeIndicators)
   )
 
   "Calling getCustomerInfo" when {

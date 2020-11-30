@@ -16,6 +16,7 @@
 
 package models.customerInformation
 
+import models.ChangeIndicators
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads}
 
@@ -24,7 +25,8 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
                                lastName: Option[String],
                                organisationName: Option[String],
                                tradingName: Option[String],
-                               contactPreference: Option[String]) {
+                               contactPreference: Option[String],
+                               changeIndicators: Option[ChangeIndicators]) {
 
   val pendingTradingName: Option[String] = pendingChanges.flatMap(_.tradingName)
 
@@ -46,6 +48,7 @@ object CustomerInformation {
   private val organisationNamePath = JsPath \ "customerDetails" \ "organisationName"
   private val tradingNamePath = JsPath \ "customerDetails" \ "tradingName"
   private val contactPreferencePath = JsPath \ "commsPreference"
+  private val changeIndicatorsPath = JsPath \ "changeIndicators"
 
   implicit val reads: Reads[CustomerInformation] = (
     pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
@@ -53,6 +56,7 @@ object CustomerInformation {
     lastNamePath.readNullable[String].orElse(Reads.pure(None)) and
     organisationNamePath.readNullable[String].orElse(Reads.pure(None)) and
     tradingNamePath.readNullable[String].orElse(Reads.pure(None)) and
-    contactPreferencePath.readNullable[String].orElse(Reads.pure(None))
+    contactPreferencePath.readNullable[String].orElse(Reads.pure(None)) and
+    changeIndicatorsPath.readNullable[ChangeIndicators].orElse(Reads.pure(None))
   )(CustomerInformation.apply _)
 }

@@ -51,8 +51,8 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
                                     (implicit hc: HeaderCarrier, request: User[A]): Future[Either[Result, User[A]]] =
     inFlightComps.vatSubscriptionService.getCustomerInfo(vrn).map {
       case Right(customerInfo) =>
-        customerInfo.pendingChanges match {
-          case Some(changes) if changes.tradingName.isDefined =>
+        customerInfo.changeIndicators.map(_.organisationDetails) match {
+          case Some(true) =>
             Left(Conflict(inFlightComps.inFlightChangeView()).addingToSession(inFlightTradingNameChangeKey -> "true"))
           case _ =>
             logDebug("[InFlightPredicate][getCustomerInfoCall] - There are no in-flight changes. " +
