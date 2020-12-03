@@ -100,7 +100,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect to the update trading name method" in {
-          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CheckYourAnswersController.updateTradingName().url)
+          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName().url)
         }
       }
 

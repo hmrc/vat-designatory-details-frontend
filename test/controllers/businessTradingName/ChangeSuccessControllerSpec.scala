@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.businessTradingName
 
 import assets.CustomerInfoConstants.fullCustomerInfoModel
 import common.SessionKeys._
+import controllers.ControllerBaseSpec
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import views.html.templates.ChangeSuccessView
+import views.html.businessTradingName.ChangeSuccessView
 
 import scala.concurrent.Future
 

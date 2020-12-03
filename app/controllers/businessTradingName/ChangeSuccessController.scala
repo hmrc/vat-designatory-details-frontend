@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.businessTradingName
 
 import common.SessionKeys._
 import config.AppConfig
+import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
@@ -26,7 +27,7 @@ import models.viewModels.ChangeSuccessViewModel
 import play.api.Logger
 import play.api.mvc._
 import services.VatSubscriptionService
-import views.html.templates.ChangeSuccessView
+import views.html.businessTradingName.ChangeSuccessView
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package views.tradingName
+package views.businessTradingName
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ViewBaseSpec
-import views.html.tradingName.CheckYourAnswersView
+import views.html.businessTradingName.CheckYourAnswersView
 
 class CheckYourAnswersViewSpec extends ViewBaseSpec {
 

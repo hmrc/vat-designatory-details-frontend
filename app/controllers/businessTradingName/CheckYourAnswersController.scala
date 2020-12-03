@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.tradingName
+package controllers.businessTradingName
 
 import audit.AuditingService
 import audit.models.ChangedTradingNameAuditModel
@@ -25,7 +25,7 @@ import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.tradingName.CheckYourAnswersView
+import views.html.businessTradingName.CheckYourAnswersView
 
 import scala.concurrent.ExecutionContext
 
@@ -45,7 +45,7 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
       case Some(tradingName) =>
         Ok(checkYourAnswersView(tradingName))
       case _ =>
-        Redirect(routes.CaptureTradingNameController.show())
+        Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
     }
   }
 
@@ -68,10 +68,10 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
           user.arn),
           Some(routes.CheckYourAnswersController.updateTradingName().url)
         )
-        Redirect(controllers.routes.ChangeSuccessController.tradingName())
+        Redirect(controllers.businessTradingName.routes.ChangeSuccessController.tradingName())
           .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "true")
       case _ =>
-        Redirect(routes.CaptureTradingNameController.show())
+        Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
     }
   }
 }

@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package pages.tradingName
+package pages.businessTradingName
 
-import common.SessionKeys.prepopulationTradingNameKey
+import common.SessionKeys.{prepopulationTradingNameKey, tradingNameChangeSuccessful, validationTradingNameKey}
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
 
-class CheckYourAnswersPageSpec extends BasePageISpec {
+class ChangeSuccessPageSpec extends BasePageISpec {
 
-  val path = "/confirm-new-trading-name"
+  val path = "/trading-name-confirmation"
   val newTradingName = "New Trading Name"
+  val oldTradingName = "Old Trading Name"
 
-  "Calling the Check your answers (.show) route" when {
+  "Calling the trading name change success (.show) route" when {
 
-    def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
+    def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName,
+      validationTradingNameKey -> oldTradingName, tradingNameChangeSuccessful -> "true"))
 
     "the user is a authenticated" when {
 
-      "there is a new trading name in session" should {
+      "there is a new trading name and change indicator in session" should {
 
         "load successfully" in {
 
@@ -42,7 +44,7 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.OK),
-            pageTitle(generateDocumentTitle("checkYourAnswers.heading"))
+            pageTitle(generateDocumentTitle("tradingNameChangeSuccess.title.change"))
           )
         }
       }

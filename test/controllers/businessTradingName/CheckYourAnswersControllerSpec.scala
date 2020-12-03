@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.tradingName
+package controllers.businessTradingName
 
 import audit.AuditingService
 import controllers.ControllerBaseSpec
 import play.api.test.Helpers._
-import views.html.tradingName.CheckYourAnswersView
+import views.html.businessTradingName.CheckYourAnswersView
 
 
 class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
@@ -84,7 +84,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect to the trading name changed success page" in {
-          redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName().url)
+          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.ChangeSuccessController.tradingName().url)
         }
       }
     }
