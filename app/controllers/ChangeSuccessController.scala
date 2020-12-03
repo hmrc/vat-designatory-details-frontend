@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package controllers.tradingName
+package controllers
 
 import common.SessionKeys._
 import config.AppConfig
-import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
@@ -27,13 +26,13 @@ import models.viewModels.ChangeSuccessViewModel
 import play.api.Logger
 import play.api.mvc._
 import services.VatSubscriptionService
-import views.html.tradingName.ChangeSuccessView
+import views.html.tradingName.TradingNameChangeSuccessView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionService,
-                                        changeSuccessView: ChangeSuccessView)
+                                        changeSuccessView: TradingNameChangeSuccessView)
                                        (implicit val appConfig: AppConfig,
                                         mcc: MessagesControllerComponents,
                                         authComps: AuthPredicateComponents,

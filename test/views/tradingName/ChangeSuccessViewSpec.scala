@@ -23,11 +23,11 @@ import models.viewModels.ChangeSuccessViewModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ViewBaseSpec
-import views.html.tradingName.ChangeSuccessView
+import views.html.tradingName.TradingNameChangeSuccessView
 
 class ChangeSuccessViewSpec extends ViewBaseSpec {
 
-  val injectedView: ChangeSuccessView = inject[ChangeSuccessView]
+  val injectedView: TradingNameChangeSuccessView = inject[TradingNameChangeSuccessView]
 
   object Selectors {
     val title = "title"

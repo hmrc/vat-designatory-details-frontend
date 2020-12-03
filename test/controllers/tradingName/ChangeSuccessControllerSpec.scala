@@ -18,13 +18,13 @@ package controllers.tradingName
 
 import assets.CustomerInfoConstants.fullCustomerInfoModel
 import common.SessionKeys._
-import controllers.ControllerBaseSpec
+import controllers.{ChangeSuccessController, ControllerBaseSpec}
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import views.html.tradingName.ChangeSuccessView
+import views.html.tradingName.TradingNameChangeSuccessView
 
 import scala.concurrent.Future
 
@@ -32,7 +32,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   val controller: ChangeSuccessController = new ChangeSuccessController(
     mockVatSubscriptionService,
-    inject[ChangeSuccessView]
+    inject[TradingNameChangeSuccessView]
   )
 
   "Calling the tradingName action" when {

@@ -68,7 +68,7 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
           user.arn),
           Some(routes.CheckYourAnswersController.updateTradingName().url)
         )
-        Redirect(controllers.tradingName.routes.ChangeSuccessController.tradingName())
+        Redirect(controllers.routes.ChangeSuccessController.tradingName())
           .addingToSession(tradingNameChangeSuccessful -> "true", inFlightTradingNameChangeKey -> "true")
       case _ =>
         Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
