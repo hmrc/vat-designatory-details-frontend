@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.predicates.inflight.{InFlightPredicate, InFlightPredicateComponents}
+import controllers.predicates.inflight.{InFlightPredicateComponents, InFlightPredicate}
 import controllers.predicates.{AuthPredicate, AuthPredicateComponents}
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
@@ -32,6 +32,10 @@ abstract class BaseController(implicit val mcc: MessagesControllerComponents,
   val routePrefix = "/vat-through-software/account/designatory"
 
   val inFlightTradingNamePredicate = new InFlightPredicate(
-    inFlightComps, routePrefix + controllers.tradingName.routes.WhatToDoController.show().url
+    inFlightComps, routePrefix + controllers.tradingName.routes.WhatToDoController.show().url, orgNameJourney = false
   )
+
+  val orgNameAccessPredicate = new InFlightPredicate(
+    inFlightComps, routePrefix + "/TODO", orgNameJourney = true
+  ) // TODO add in reverse route here for first action in journey
 }

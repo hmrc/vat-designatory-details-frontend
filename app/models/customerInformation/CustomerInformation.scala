@@ -26,7 +26,9 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
                                organisationName: Option[String],
                                tradingName: Option[String],
                                contactPreference: Option[String],
-                               changeIndicators: Option[ChangeIndicators]) {
+                               changeIndicators: Option[ChangeIndicators],
+                               nameIsReadOnly: Option[Boolean],
+                               partyType: Option[String]) {
 
   val pendingTradingName: Option[String] = pendingChanges.flatMap(_.tradingName)
 
@@ -38,6 +40,10 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
       case (None, None, None, orgName) => orgName
       case _ => tradingName
     }
+
+  val isValidPartyType: Boolean =
+    Seq("Z1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "50",
+      "51", "52", "53", "54", "55", "58", "59", "60", "61", "62", "63").contains(partyType.getOrElse(""))
 }
 
 object CustomerInformation {
@@ -49,6 +55,8 @@ object CustomerInformation {
   private val tradingNamePath = JsPath \ "customerDetails" \ "tradingName"
   private val contactPreferencePath = JsPath \ "commsPreference"
   private val changeIndicatorsPath = JsPath \ "changeIndicators"
+  private val nameIsReadOnlyPath = JsPath \ "customerDetails" \ "nameIsReadOnly"
+  private val partyTypePath = JsPath \ "partyType"
 
   implicit val reads: Reads[CustomerInformation] = (
     pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
@@ -57,6 +65,8 @@ object CustomerInformation {
     organisationNamePath.readNullable[String].orElse(Reads.pure(None)) and
     tradingNamePath.readNullable[String].orElse(Reads.pure(None)) and
     contactPreferencePath.readNullable[String].orElse(Reads.pure(None)) and
-    changeIndicatorsPath.readNullable[ChangeIndicators].orElse(Reads.pure(None))
+    changeIndicatorsPath.readNullable[ChangeIndicators].orElse(Reads.pure(None)) and
+    nameIsReadOnlyPath.readNullable[Boolean].orElse(Reads.pure(None)) and
+    partyTypePath.readNullable[String].orElse(Reads.pure(None))
   )(CustomerInformation.apply _)
 }

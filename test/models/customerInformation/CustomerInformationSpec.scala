@@ -85,4 +85,15 @@ class CustomerInformationSpec extends UnitSpec {
       }
     }
   }
+
+  ".isValidPartyType" should {
+
+    "return true if the value is in the list of valid types" in {
+      fullCustomerInfoModel.isValidPartyType shouldBe true
+    }
+
+    "return false if the value is not in the list of valid types" in {
+      minCustomerInfoModel.isValidPartyType shouldBe false
+    }
+  }
 }

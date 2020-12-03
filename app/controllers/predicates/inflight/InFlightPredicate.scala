@@ -16,7 +16,7 @@
 
 package controllers.predicates.inflight
 
-import common.SessionKeys.inFlightTradingNameChangeKey
+import common.SessionKeys.{inFlightOrgDetailsKey, orgNameAccessPermittedKey}
 import config.AppConfig
 import models.User
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -24,12 +24,12 @@ import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.{Conflict, Redirect}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import utils.LoggerUtil.{logDebug, logWarn}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
-                        redirectURL: String) extends ActionRefiner[User, User] with I18nSupport {
+                        redirectURL: String,
+                        orgNameJourney: Boolean) extends ActionRefiner[User, User] with I18nSupport {
 
   implicit val appConfig: AppConfig = inFlightComps.appConfig
   implicit val executionContext: ExecutionContext = inFlightComps.ec
@@ -40,28 +40,13 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
     implicit val req: User[A] = request
 
-    req.session.get(inFlightTradingNameChangeKey) match {
-      case Some("false") => Future.successful(Right(req))
-      case Some("true") => Future.successful(Left(Conflict(inFlightComps.inFlightChangeView())))
-      case _ => getCustomerInfoCall(req.vrn)
+    val accessPermitted: Option[String] = if(orgNameJourney) req.session.get(orgNameAccessPermittedKey) else Some("true")
+
+    (accessPermitted, req.session.get(inFlightOrgDetailsKey)) match {
+      case (Some("true"), Some("false")) => Future.successful(Right(req))
+      case (Some("true"), Some("true")) => Future.successful(Left(Conflict(inFlightComps.inFlightChangeView())))
+      case (Some("false"), _) if orgNameJourney => Future.successful(Left(Redirect(appConfig.manageVatSubscriptionServicePath)))
+      case _ => inFlightComps.getCustomerInfoCall(req.vrn, redirectURL, orgNameJourney)
     }
   }
-
-  private def getCustomerInfoCall[A](vrn: String)
-                                    (implicit hc: HeaderCarrier, request: User[A]): Future[Either[Result, User[A]]] =
-    inFlightComps.vatSubscriptionService.getCustomerInfo(vrn).map {
-      case Right(customerInfo) =>
-        customerInfo.changeIndicators.map(_.organisationDetails) match {
-          case Some(true) =>
-            Left(Conflict(inFlightComps.inFlightChangeView()).addingToSession(inFlightTradingNameChangeKey -> "true"))
-          case _ =>
-            logDebug("[InFlightPredicate][getCustomerInfoCall] - There are no in-flight changes. " +
-              "Redirecting user to the start of the journey.")
-            Left(Redirect(redirectURL).addingToSession(inFlightTradingNameChangeKey -> "false"))
-        }
-      case Left(error) =>
-        logWarn("[InFlightPredicate][getCustomerInfoCall] - " +
-          s"The call to the GetCustomerInfo API failed. Error: ${error.message}")
-        Left(inFlightComps.errorHandler.showInternalServerError)
-    }
 }

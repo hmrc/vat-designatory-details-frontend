@@ -20,6 +20,7 @@ import common.SessionKeys.{prepopulationTradingNameKey, tradingNameChangeSuccess
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
+import stubs.VatSubscriptionStub
 
 class ChangeSuccessPageSpec extends BasePageISpec {
 
@@ -39,6 +40,8 @@ class ChangeSuccessPageSpec extends BasePageISpec {
         "load successfully" in {
 
           given.user.isAuthenticated
+
+          VatSubscriptionStub.stubCustomerInfo
 
           val result = show
 

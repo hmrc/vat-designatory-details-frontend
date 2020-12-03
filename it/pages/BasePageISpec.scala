@@ -28,7 +28,7 @@ trait BasePageISpec extends IntegrationBaseSpec {
     _.fold(Map.empty[String, String])(x => Map(SessionKeys.clientVrn -> x))
 
   def formatInflightChange: Option[String] => Map[String, String] =
-    _.fold(Map.empty[String, String])(x => Map(SessionKeys.inFlightTradingNameChangeKey -> x))
+    _.fold(Map.empty[String, String])(x => Map(SessionKeys.inFlightOrgDetailsKey -> x))
 
   def formatValidationTradingName: Option[String] => Map[String, String] =
     _.fold(Map.empty[String, String])(x => Map(SessionKeys.validationTradingNameKey -> x))
