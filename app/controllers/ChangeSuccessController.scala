@@ -26,13 +26,13 @@ import models.viewModels.ChangeSuccessViewModel
 import play.api.Logger
 import play.api.mvc._
 import services.VatSubscriptionService
-import views.html.templates.ChangeSuccessView
+import views.html.tradingName.TradingNameChangeSuccessView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionService,
-                                        changeSuccessView: ChangeSuccessView)
+                                        changeSuccessView: TradingNameChangeSuccessView)
                                        (implicit val appConfig: AppConfig,
                                         mcc: MessagesControllerComponents,
                                         authComps: AuthPredicateComponents,

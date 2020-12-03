@@ -58,7 +58,7 @@ class CaptureTradingNameController @Inject()(val errorHandler: ErrorHandler,
           Future.successful(BadRequest(captureTradingNameView(errorForm, validation)))
         },
         tradingName => {
-          Future.successful(Redirect(routes.CheckYourAnswersController.show())
+          Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.show())
             .addingToSession(prepopulationTradingNameKey -> tradingName))
         }
       )

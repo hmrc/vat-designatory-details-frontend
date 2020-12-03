@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.tradingName
+package controllers.businessTradingName
 
 import audit.AuditingService
 import controllers.ControllerBaseSpec
 import play.api.test.Helpers._
-import views.html.tradingName.CheckYourAnswersView
+import views.html.businessTradingName.CheckYourAnswersView
 
 
 class CheckYourAnswersControllerSpec extends ControllerBaseSpec {

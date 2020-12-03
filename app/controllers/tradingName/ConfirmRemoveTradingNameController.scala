@@ -55,7 +55,7 @@ class ConfirmRemoveTradingNameController @Inject()(confirmRemoveTradingNameView:
             BadRequest(confirmRemoveTradingNameView(errorForm, tradingName))
           },
           {
-            case Yes => Redirect(routes.CheckYourAnswersController.updateTradingName())
+            case Yes => Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName())
               .addingToSession(prepopulationTradingNameKey -> "")
             case No => Redirect(appConfig.manageVatSubscriptionServicePath)
           }
