@@ -84,7 +84,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect to the trading name changed success page" in {
-          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.ChangeSuccessController.tradingName().url)
+          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.ChangeSuccessController.tradingName().url)
         }
       }
     }

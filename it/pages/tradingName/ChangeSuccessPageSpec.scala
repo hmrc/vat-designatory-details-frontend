@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pages.businessTradingName
+package pages.tradingName
 
 import common.SessionKeys.{prepopulationTradingNameKey, tradingNameChangeSuccessful, validationTradingNameKey}
 import pages.BasePageISpec

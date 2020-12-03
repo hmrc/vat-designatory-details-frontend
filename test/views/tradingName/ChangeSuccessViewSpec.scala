@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.businessTradingName
+package views.tradingName
 
 import assets.BaseTestConstants
 import common.ContactPreference
@@ -23,7 +23,7 @@ import models.viewModels.ChangeSuccessViewModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ViewBaseSpec
-import views.html.businessTradingName.ChangeSuccessView
+import views.html.tradingName.ChangeSuccessView
 
 class ChangeSuccessViewSpec extends ViewBaseSpec {
 

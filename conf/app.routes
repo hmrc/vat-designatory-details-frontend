@@ -12,7 +12,7 @@ GET         /confirm-new-trading-name              controllers.businessTradingNa
 GET         /update-trading-name                   controllers.businessTradingName.CheckYourAnswersController.updateTradingName
 
 # tradingName change successful
-GET         /trading-name-confirmation             controllers.businessTradingName.ChangeSuccessController.tradingName
+GET         /trading-name-confirmation             controllers.tradingName.ChangeSuccessController.tradingName
 
 # remove trading name
 GET         /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.show

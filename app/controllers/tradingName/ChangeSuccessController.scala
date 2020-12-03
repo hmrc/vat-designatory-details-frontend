@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.businessTradingName
+package controllers.tradingName
 
 import common.SessionKeys._
 import config.AppConfig
@@ -27,7 +27,7 @@ import models.viewModels.ChangeSuccessViewModel
 import play.api.Logger
 import play.api.mvc._
 import services.VatSubscriptionService
-import views.html.businessTradingName.ChangeSuccessView
+import views.html.tradingName.ChangeSuccessView
 
 import scala.concurrent.{ExecutionContext, Future}
 
