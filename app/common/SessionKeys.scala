@@ -26,5 +26,5 @@ object SessionKeys {
   val tradingNameChangeSuccessful: String = "vatDesignatoryTradingNameChangeSuccessful"
 
   val inFlightOrgDetailsKey: String = "vatDesignatoryInFlightOrganisationDetails"
-  val orgNameAccessPermittedKey: String = "vatDesignatoryOrganisationNameAccessPermitted"
+  val businessNameAccessPermittedKey: String = "vatDesignatoryBusinessNameAccessPermitted"
 }

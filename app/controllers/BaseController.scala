@@ -32,10 +32,10 @@ abstract class BaseController(implicit val mcc: MessagesControllerComponents,
   val routePrefix = "/vat-through-software/account/designatory"
 
   val inFlightTradingNamePredicate = new InFlightPredicate(
-    inFlightComps, routePrefix + controllers.tradingName.routes.WhatToDoController.show().url, orgNameJourney = false
+    inFlightComps, routePrefix + controllers.tradingName.routes.WhatToDoController.show().url, businessNameJourney = false
   )
 
-  val orgNameAccessPredicate = new InFlightPredicate(
-    inFlightComps, routePrefix + "/TODO", orgNameJourney = true
+  val businessNameAccessPredicate = new InFlightPredicate(
+    inFlightComps, routePrefix + "/TODO", businessNameJourney = true
   ) // TODO add in reverse route here for first action in journey
 }

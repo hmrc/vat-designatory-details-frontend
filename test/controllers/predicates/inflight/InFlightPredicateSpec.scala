@@ -17,7 +17,7 @@
 package controllers.predicates.inflight
 
 import assets.CustomerInfoConstants._
-import common.SessionKeys.{inFlightOrgDetailsKey, orgNameAccessPermittedKey}
+import common.SessionKeys.{inFlightOrgDetailsKey, businessNameAccessPermittedKey}
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import mocks.MockAuth
 import models.User
@@ -42,26 +42,26 @@ class InFlightPredicateSpec extends MockAuth {
   val inflightTradingNamePredicate = new InFlightPredicate(
     mockInFlightPredicateComponents,
     "/redirect-location",
-    orgNameJourney = false
+    businessNameJourney = false
   )
 
-  val inflightOrgNamePredicate = new InFlightPredicate(
+  val inflightBusinessNamePredicate = new InFlightPredicate(
     mockInFlightPredicateComponents,
     "/redirect-location",
-    orgNameJourney = true
+    businessNameJourney = true
   )
 
   def inflightRequest(value: String): User[AnyContentAsEmpty.type] =
     User("999999999")(request.withSession(inFlightOrgDetailsKey -> value))
 
   def inflightRequestWithAccess(value: String, access: String): User[AnyContentAsEmpty.type] =
-    User("999999999")(request.withSession(inFlightOrgDetailsKey -> value, orgNameAccessPermittedKey -> access))
+    User("999999999")(request.withSession(inFlightOrgDetailsKey -> value, businessNameAccessPermittedKey -> access))
 
   val userWithoutSession: User[AnyContentAsEmpty.type] = User("999999999")(FakeRequest())
 
   "The InFlightPredicate" when {
 
-    "orgDetailsJourney is set to 'false'" when {
+    "businessNameJourney is set to 'false'" when {
 
       "there is an inflight indicator in session" when {
 
@@ -156,13 +156,13 @@ class InFlightPredicateSpec extends MockAuth {
       }
     }
 
-    "orgDetailsJourney is set to 'true'" when {
+    "businessNameJourney is set to 'true'" when {
 
       "there is an access permission of 'true' in session" when {
 
         "the inflight indicator is set to 'true'" should {
 
-          lazy val result = await(inflightOrgNamePredicate.refine(inflightRequestWithAccess("true", "true"))).left.get
+          lazy val result = await(inflightBusinessNamePredicate.refine(inflightRequestWithAccess("true", "true"))).left.get
           lazy val document = Jsoup.parse(bodyOf(result))
 
           "return 409" in {
@@ -181,7 +181,7 @@ class InFlightPredicateSpec extends MockAuth {
 
         "the inflight indicator is set to 'false'" should {
 
-          lazy val result = await(inflightOrgNamePredicate.refine(inflightRequestWithAccess("false", "true")))
+          lazy val result = await(inflightBusinessNamePredicate.refine(inflightRequestWithAccess("false", "true")))
 
           "allow the request to pass through the predicate" in {
             result shouldBe Right(inflightRequestWithAccess("false", "true"))
@@ -198,7 +198,7 @@ class InFlightPredicateSpec extends MockAuth {
 
         lazy val result = {
           setup(Right(minCustomerInfoModel))
-          await(inflightOrgNamePredicate.refine(inflightRequestWithAccess("false", "false"))).left.get
+          await(inflightBusinessNamePredicate.refine(inflightRequestWithAccess("false", "false"))).left.get
         }
 
         "return 303" in {
@@ -216,7 +216,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending))
-            await(inflightOrgNamePredicate.refine(userWithoutSession)).left.get
+            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
           }
 
           "return 303" in {
@@ -228,7 +228,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "add the access permission 'true' to session" in {
-            session(result).get(orgNameAccessPermittedKey) shouldBe Some("true")
+            session(result).get(businessNameAccessPermittedKey) shouldBe Some("true")
           }
 
           "add the inflight indicator 'false' to session" in {
@@ -240,7 +240,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending.copy(partyType = Some("F"))))
-            await(inflightOrgNamePredicate.refine(userWithoutSession)).left.get
+            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
           }
 
           "return 303" in {
@@ -252,7 +252,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "add the access permission 'false' to session" in {
-            session(result).get(orgNameAccessPermittedKey) shouldBe Some("false")
+            session(result).get(businessNameAccessPermittedKey) shouldBe Some("false")
           }
 
           "add the inflight indicator 'false' to session" in {
@@ -260,11 +260,11 @@ class InFlightPredicateSpec extends MockAuth {
           }
         }
 
-        "the user does not have an organisation name" should {
+        "the user does not have a business name" should {
 
           lazy val result = {
             setup(Right(customerInfoNoPending.copy(organisationName = None)))
-            await(inflightOrgNamePredicate.refine(userWithoutSession)).left.get
+            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
           }
 
           "return 303" in {
@@ -276,7 +276,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "add the access permission 'false' to session" in {
-            session(result).get(orgNameAccessPermittedKey) shouldBe Some("false")
+            session(result).get(businessNameAccessPermittedKey) shouldBe Some("false")
           }
 
           "add the inflight indicator 'false' to session" in {
@@ -288,7 +288,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending.copy(nameIsReadOnly = Some(true))))
-            await(inflightOrgNamePredicate.refine(userWithoutSession)).left.get
+            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
           }
 
           "return 303" in {
@@ -300,7 +300,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "add the access permission 'false' to session" in {
-            session(result).get(orgNameAccessPermittedKey) shouldBe Some("false")
+            session(result).get(businessNameAccessPermittedKey) shouldBe Some("false")
           }
 
           "add the inflight indicator 'false' to session" in {

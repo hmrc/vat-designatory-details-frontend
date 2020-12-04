@@ -16,7 +16,7 @@
 
 package controllers.predicates.inflight
 
-import common.SessionKeys.{inFlightOrgDetailsKey, orgNameAccessPermittedKey}
+import common.SessionKeys.{inFlightOrgDetailsKey, businessNameAccessPermittedKey}
 import config.{AppConfig, ErrorHandler}
 import javax.inject.{Inject, Singleton}
 import models.User
@@ -39,23 +39,28 @@ class InFlightPredicateComponents @Inject()(val vatSubscriptionService: VatSubsc
                                             val ec: ExecutionContext,
                                             val messagesApi: MessagesApi) extends I18nSupport {
 
-  def getCustomerInfoCall[A](vrn: String, redirectURL: String, orgNameJourney: Boolean)
+  def getCustomerInfoCall[A](vrn: String, redirectURL: String, businessNameJourney: Boolean)
                             (implicit hc: HeaderCarrier, request: User[A]): Future[Either[Result, User[A]]] =
     vatSubscriptionService.getCustomerInfo(vrn).map {
       case Right(customerInfo) =>
-        val accessToOrgNameJourney: Boolean = customerInfo.organisationName.isDefined &&
-                                              customerInfo.nameIsReadOnly.contains(false) &&
-                                              customerInfo.isValidPartyType
+        val accessToBusinessNameJourney: Boolean = customerInfo.organisationName.isDefined &&
+                                                   customerInfo.nameIsReadOnly.contains(false) &&
+                                                   customerInfo.isValidPartyType
         val redirectLocation: String =
-          if(orgNameJourney && !accessToOrgNameJourney) appConfig.manageVatSubscriptionServicePath else redirectURL
+          if(businessNameJourney && !accessToBusinessNameJourney) appConfig.manageVatSubscriptionServicePath else redirectURL
+
         customerInfo.changeIndicators.map(_.organisationDetails) match {
           case Some(true) =>
-            Left(Conflict(inFlightChangeView())
-              .addingToSession(inFlightOrgDetailsKey -> "true", orgNameAccessPermittedKey -> accessToOrgNameJourney.toString))
+            Left(Conflict(inFlightChangeView()).addingToSession(
+              inFlightOrgDetailsKey -> "true",
+              businessNameAccessPermittedKey -> accessToBusinessNameJourney.toString
+            ))
           case _ =>
             logDebug("[InFlightPredicateComponents][getCustomerInfoCall] - Redirecting user to the start of the journey.")
-            Left(Redirect(redirectLocation)
-              .addingToSession(inFlightOrgDetailsKey -> "false", orgNameAccessPermittedKey -> accessToOrgNameJourney.toString))
+            Left(Redirect(redirectLocation).addingToSession(
+              inFlightOrgDetailsKey -> "false",
+              businessNameAccessPermittedKey -> accessToBusinessNameJourney.toString
+            ))
         }
       case Left(error) =>
         logWarn("[InFlightPredicateComponents][getCustomerInfoCall] - " +
