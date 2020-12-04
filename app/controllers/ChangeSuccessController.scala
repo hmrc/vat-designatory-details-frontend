@@ -26,13 +26,15 @@ import models.viewModels.ChangeSuccessViewModel
 import play.api.Logger
 import play.api.mvc._
 import services.VatSubscriptionService
+import views.html.businessName.BusinessNameChangeSuccessView
 import views.html.tradingName.TradingNameChangeSuccessView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionService,
-                                        changeSuccessView: TradingNameChangeSuccessView)
+                                        tradingNameSuccessView: TradingNameChangeSuccessView,
+                                        businessNameSuccessView: BusinessNameChangeSuccessView)
                                        (implicit val appConfig: AppConfig,
                                         mcc: MessagesControllerComponents,
                                         authComps: AuthPredicateComponents,
@@ -41,18 +43,24 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
   implicit val ec: ExecutionContext = mcc.executionContext
 
   def tradingName: Action[AnyContent] = authPredicate.async { implicit user =>
-    sessionGuard(tradingNameChangeSuccessful, prepopulationTradingNameKey, validationTradingNameKey)
-  }
-
-  private[controllers] def sessionGuard(changeKey: String, prePopKey: String, validationKey: String)(implicit user: User[_]): Future[Result] =
-  (user.session.get(changeKey), user.session.get(validationKey), user.session.get(prePopKey)) match {
+    (user.session.get(tradingNameChangeSuccessful), user.session.get(validationTradingNameKey), user.session.get(prepopulationTradingNameKey)) match {
       case (Some("true"), Some(validationValue), Some(prePopValue)) =>
-        renderView(isRemoval = prePopValue == "", isAddition = validationValue == "")
+        renderTradingNameView(isRemoval = prePopValue == "", isAddition = validationValue == "")
       case _ =>
         Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show()))
     }
+  }
 
-  private[controllers] def renderView(isRemoval: Boolean, isAddition: Boolean)(implicit user: User[_]): Future[Result] =
+  def businessName: Action[AnyContent] = authPredicate.async { implicit user =>
+    user.session.get(businessNameChangeSuccessful) match {
+      case Some("true") =>
+        renderBusinessNameView
+      case _ =>
+        Future.successful(Redirect("#")) //TODO add reverse route for first action in the journey
+    }
+  }
+
+  private[controllers] def renderTradingNameView(isRemoval: Boolean, isAddition: Boolean)(implicit user: User[_]): Future[Result] =
 
     vatSubscriptionService.getCustomerInfo(user.vrn).map { vatSubscriptionResponse =>
       val titleMessageKey: Option[String] = (isAddition, isRemoval) match {
@@ -68,9 +76,17 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
           "Rendering InternalServerError")
         authComps.errorHandler.showInternalServerError
       } { title =>
-        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference,
-          isRemoval, isAddition)
-        Ok(changeSuccessView(viewModel))
+        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference)
+        Ok(tradingNameSuccessView(viewModel, isRemoval, isAddition))
       }
+    }
+
+  private[controllers] def renderBusinessNameView(implicit user: User[_]): Future[Result] =
+    vatSubscriptionService.getCustomerInfo(user.vrn).map { vatSubscriptionResponse =>
+      val entityName = vatSubscriptionResponse.fold(_ => None, details => details.entityName)
+      val contactPreference = vatSubscriptionResponse.fold(_ => None, details => details.contactPreference)
+      val title = "businessNameChangeSuccess.title"
+      val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference)
+      Ok(businessNameSuccessView(viewModel))
     }
 }

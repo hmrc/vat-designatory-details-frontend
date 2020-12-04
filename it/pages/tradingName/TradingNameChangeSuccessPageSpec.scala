@@ -22,18 +22,18 @@ import play.api.http.Status
 import play.api.libs.ws.WSResponse
 import stubs.VatSubscriptionStub
 
-class ChangeSuccessPageSpec extends BasePageISpec {
+class TradingNameChangeSuccessPageSpec extends BasePageISpec {
 
   val path = "/trading-name-confirmation"
   val newTradingName = "New Trading Name"
   val oldTradingName = "Old Trading Name"
 
-  "Calling the trading name change success (.show) route" when {
+  "Calling the trading name change success route" when {
 
     def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName,
       validationTradingNameKey -> oldTradingName, tradingNameChangeSuccessful -> "true"))
 
-    "the user is a authenticated" when {
+    "the user is authenticated" when {
 
       "there is a new trading name and change indicator in session" should {
 

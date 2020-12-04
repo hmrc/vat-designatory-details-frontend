@@ -19,13 +19,12 @@
 @import views.html.templates.AgentPaperUpdateClient
 @import views.html.templates.UpdateClient
 
-
 @this(mainTemplate: MainTemplate,
       updateClient: UpdateClient,
       agentPaperUpdateClient: AgentPaperUpdateClient,
       govukButton: GovukButton)
 
-@(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
+@(model: ChangeSuccessViewModel, isRemoval: Boolean, isAddition: Boolean)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
 @messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
 @buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}
@@ -43,16 +42,16 @@
   @if(user.isAgent) {
 
     @model.agentEmail match {
-      case Some(email) if(model.isRemoval) => {
+      case Some(email) if(isRemoval) => {
         <p class="govuk-body">@messages("removeSuccess.helpOne.digital.agent")</p>
         @updateClient(model.businessName)
       }
-      case _ if(model.isRemoval) => {@agentPaperUpdateClient(model.businessName, true)}
-      case Some(email) if(model.isAddition) => {
-        <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
+      case _ if(isRemoval) => {@agentPaperUpdateClient(model.businessName, true)}
+      case Some(email) if(isAddition) => {
+        <p class="govuk-body">@messages("tradingNameChangeSuccess.helpOne.digital")</p>
         @updateClient(model.businessName)
       }
-      case _ if(model.isAddition) => {@agentPaperUpdateClient(model.businessName, false)}
+      case _ if(isAddition) => {@agentPaperUpdateClient(model.businessName, false)}
       case Some(email) => {
             <p class="govuk-body">
             @messages("updateSuccess.helpOne.digital.agent1")
@@ -66,18 +65,18 @@
   } else {
     @model.contactPreference  match {
 
-        case Some(ContactPreference.digital) if(model.isRemoval) => {
+        case Some(ContactPreference.digital) if(isRemoval) => {
         <p class="govuk-body">@messages("removeSuccess.helpOne.digital")</p>
         }
-        case Some(ContactPreference.paper) if(model.isRemoval) => {
+        case Some(ContactPreference.paper) if(isRemoval) => {
         <p class="govuk-body">@messages("removeSuccess.helpOne.paper")</p>
         }
-        case Some(ContactPreference.digital) if(model.isAddition) => {
-        <p class="govuk-body">@messages("changeSuccess.helpOne.digital")</p>
-        <p class="govuk-body">@messages("changeSuccess.helpTwo.digital")</p>
+        case Some(ContactPreference.digital) if(isAddition) => {
+        <p class="govuk-body">@messages("tradingNameChangeSuccess.helpOne.digital")</p>
+        <p class="govuk-body">@messages("tradingNameChangeSuccess.helpTwo.digital")</p>
         }
-        case Some(ContactPreference.paper) if(model.isAddition) => {
-        <p class="govuk-body">@messages("changeSuccess.helpOne.paper")</p>
+        case Some(ContactPreference.paper) if(isAddition) => {
+        <p class="govuk-body">@messages("tradingNameChangeSuccess.helpOne.paper")</p>
         }
         case Some(ContactPreference.digital) => {
         <p class="govuk-body">@messages("updateSuccess.helpOne.digital")</p>
@@ -92,11 +91,11 @@
 
   }
 
-  @if(model.isRemoval) {
+  @if(isRemoval) {
     <p class="govuk-body">@messages(s"removeSuccess.vatCertificate$messageKeySuffix")</p>
   }
 
-  @if(!model.isRemoval && !model.isAddition) {
+  @if(!isRemoval && !isAddition) {
     <p class="govuk-body">@messages(s"updateSuccess.questionsDisclaimer$messageKeySuffix")</p>
   }
 
