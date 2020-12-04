@@ -16,7 +16,7 @@
 
 package controllers.predicates.inflight
 
-import common.SessionKeys.{inFlightOrgDetailsKey, orgNameAccessPermittedKey}
+import common.SessionKeys.{inFlightOrgDetailsKey, businessNameAccessPermittedKey}
 import config.AppConfig
 import models.User
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
                         redirectURL: String,
-                        orgNameJourney: Boolean) extends ActionRefiner[User, User] with I18nSupport {
+                        businessNameJourney: Boolean) extends ActionRefiner[User, User] with I18nSupport {
 
   implicit val appConfig: AppConfig = inFlightComps.appConfig
   implicit val executionContext: ExecutionContext = inFlightComps.ec
@@ -40,13 +40,14 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
     implicit val req: User[A] = request
 
-    val accessPermitted: Option[String] = if(orgNameJourney) req.session.get(orgNameAccessPermittedKey) else Some("true")
+    val accessPermitted: Option[String] =
+      if(businessNameJourney) req.session.get(businessNameAccessPermittedKey) else Some("true")
 
     (accessPermitted, req.session.get(inFlightOrgDetailsKey)) match {
       case (Some("true"), Some("false")) => Future.successful(Right(req))
       case (Some("true"), Some("true")) => Future.successful(Left(Conflict(inFlightComps.inFlightChangeView())))
-      case (Some("false"), _) if orgNameJourney => Future.successful(Left(Redirect(appConfig.manageVatSubscriptionServicePath)))
-      case _ => inFlightComps.getCustomerInfoCall(req.vrn, redirectURL, orgNameJourney)
+      case (Some("false"), _) if businessNameJourney => Future.successful(Left(Redirect(appConfig.manageVatSubscriptionServicePath)))
+      case _ => inFlightComps.getCustomerInfoCall(req.vrn, redirectURL, businessNameJourney)
     }
   }
 }
