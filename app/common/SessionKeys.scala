@@ -25,6 +25,6 @@ object SessionKeys {
   val prepopulationTradingNameKey: String = "vatDesignatoryPrepopulationTradingName"
   val tradingNameChangeSuccessful: String = "vatDesignatoryTradingNameChangeSuccessful"
 
-  val inFlightTradingNameChangeKey: String = "inFlightTradingNameChange"
-
+  val inFlightOrgDetailsKey: String = "vatDesignatoryInFlightOrganisationDetails"
+  val orgNameAccessPermittedKey: String = "vatDesignatoryOrganisationNameAccessPermitted"
 }

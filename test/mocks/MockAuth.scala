@@ -28,9 +28,7 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import utils.TestUtil
 import assets.BaseTestConstants._
 import audit.AuditingService
-import controllers.predicates.inflight.{InFlightPredicate, InFlightPredicateComponents}
-import models.User
-import play.api.mvc.Result
+import controllers.predicates.inflight.InFlightPredicateComponents
 import views.html.errors.{InFlightChangeView, NotSignedUpView, SessionTimeoutView}
 import views.html.errors.agent.UnauthorisedAgentView
 
@@ -83,11 +81,8 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
   implicit val mockInFlightPredicateComponents: InFlightPredicateComponents = new InFlightPredicateComponents(
     mockVatSubscriptionService,
     mockErrorHandler,
-    messagesApi,
     mcc,
     inFlightChangeView,
-    mockConfig,
-    ec
   )
 
   val mockAuthPredicate: AuthPredicate =
@@ -96,19 +91,6 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
     )
 
   val mockAuditingService: AuditingService = mock[AuditingService]
-
-  val mockInflightPPOBPredicate: InFlightPredicate = {
-
-    object MockPredicate extends InFlightPredicate(
-      mockInFlightPredicateComponents,
-      "/redirect-location"
-    ) {
-      override def refine[A](request: User[A]): Future[Either[Result, User[A]]] =
-        Future.successful(Right(User(vrn)(request)))
-    }
-
-    MockPredicate
-  }
 
   def mockIndividualAuthorised(): OngoingStubbing[Future[~[Option[AffinityGroup], Enrolments]]] =
     setupAuthResponse(Future.successful(

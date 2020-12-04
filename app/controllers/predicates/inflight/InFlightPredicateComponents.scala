@@ -16,20 +16,50 @@
 
 package controllers.predicates.inflight
 
+import common.SessionKeys.{inFlightOrgDetailsKey, orgNameAccessPermittedKey}
 import config.{AppConfig, ErrorHandler}
 import javax.inject.{Inject, Singleton}
-import play.api.i18n.MessagesApi
-import play.api.mvc.MessagesControllerComponents
+import models.User
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.mvc.Results.{Conflict, Redirect}
 import services.VatSubscriptionService
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.LoggerUtil.{logDebug, logWarn}
 import views.html.errors.InFlightChangeView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InFlightPredicateComponents @Inject()(val vatSubscriptionService: VatSubscriptionService,
                                             val errorHandler: ErrorHandler,
-                                            val messagesApi: MessagesApi,
                                             val mcc: MessagesControllerComponents,
-                                            val inFlightChangeView: InFlightChangeView,
-                                            val appConfig: AppConfig,
-                                            val ec: ExecutionContext)
+                                            val inFlightChangeView: InFlightChangeView)
+                                           (implicit val appConfig: AppConfig,
+                                            val ec: ExecutionContext,
+                                            val messagesApi: MessagesApi) extends I18nSupport {
+
+  def getCustomerInfoCall[A](vrn: String, redirectURL: String, orgNameJourney: Boolean)
+                            (implicit hc: HeaderCarrier, request: User[A]): Future[Either[Result, User[A]]] =
+    vatSubscriptionService.getCustomerInfo(vrn).map {
+      case Right(customerInfo) =>
+        val accessToOrgNameJourney: Boolean = customerInfo.organisationName.isDefined &&
+                                              customerInfo.nameIsReadOnly.contains(false) &&
+                                              customerInfo.isValidPartyType
+        val redirectLocation: String =
+          if(orgNameJourney && !accessToOrgNameJourney) appConfig.manageVatSubscriptionServicePath else redirectURL
+        customerInfo.changeIndicators.map(_.organisationDetails) match {
+          case Some(true) =>
+            Left(Conflict(inFlightChangeView())
+              .addingToSession(inFlightOrgDetailsKey -> "true", orgNameAccessPermittedKey -> accessToOrgNameJourney.toString))
+          case _ =>
+            logDebug("[InFlightPredicateComponents][getCustomerInfoCall] - Redirecting user to the start of the journey.")
+            Left(Redirect(redirectLocation)
+              .addingToSession(inFlightOrgDetailsKey -> "false", orgNameAccessPermittedKey -> accessToOrgNameJourney.toString))
+        }
+      case Left(error) =>
+        logWarn("[InFlightPredicateComponents][getCustomerInfoCall] - " +
+          s"The call to the GetCustomerInfo API failed. Error: ${error.message}")
+        Left(errorHandler.showInternalServerError)
+    }
+}

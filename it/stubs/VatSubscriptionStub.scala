@@ -25,7 +25,6 @@ import play.api.libs.json.{JsObject, Json}
 object VatSubscriptionStub extends WireMockMethods {
 
   private val getCustomerInfoUri: String = "/vat-subscription/([0-9]+)/full-information"
-  private val updateOrganisationDetailsUri: String = "/vat-subscription/([0-9]+)/organisationDetails"
 
   def stubCustomerInfo: StubMapping = {
     when(method = GET, uri = getCustomerInfoUri)
@@ -37,23 +36,8 @@ object VatSubscriptionStub extends WireMockMethods {
       .thenReturn(status = OK, body = emptyCustomerInfo)
   }
 
-  def stubUpdateOrganisationDetails: StubMapping = {
-    when(method = PUT, uri = updateOrganisationDetailsUri)
-      .thenReturn(status = OK, body = updateOrganisationDetailsJson)
-  }
-
-  def stubUpdateOrganisationDetailsNoMessage: StubMapping = {
-    when(method = PUT, uri = updateOrganisationDetailsUri)
-      .thenReturn(status = OK, body = updateOrganisationDetailsEmptyResponse)
-  }
-
   def stubCustomerInfoError: StubMapping = {
     when(method = GET, uri = getCustomerInfoUri)
-      .thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj("fail" -> "nope"))
-  }
-
-  def stubUpdateOrganisationDetailsError: StubMapping = {
-    when(method = PUT, uri = updateOrganisationDetailsUri)
       .thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj("fail" -> "nope"))
   }
 
@@ -65,19 +49,13 @@ object VatSubscriptionStub extends WireMockMethods {
       "firstName" -> "Dave",
       "lastName" -> "Taylor",
       "organisationName" -> "D Taylor's Cars",
-      "tradingName" -> "DT Autos"
+      "tradingName" -> "DT Autos",
+      "nameIsReadOnly" -> false
     ),
     "commsPreference" -> "DIGITAL",
-    "changeIndicators" -> changeIndicatorsModel
+    "changeIndicators" -> changeIndicatorsModel,
+    "partyType" -> "1"
   )
 
   val emptyCustomerInfo: JsObject = Json.obj("xxx" -> "xxx")
-
-  val updateOrganisationDetailsJson: JsObject = Json.obj(
-    "formBundle" -> "success"
-  )
-
-  val updateOrganisationDetailsEmptyResponse: JsObject = Json.obj(
-    "formBundle" -> ""
-  )
 }
