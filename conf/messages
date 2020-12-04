@@ -96,6 +96,20 @@ updateSuccess.helpOne.paper.agent = We’ll contact your client telling them whe
 updateSuccess.questionsDisclaimer = If we need to ask you any questions about your change in trading name, we will contact you within 30 days.
 updateSuccess.questionsDisclaimer.agent = If we need to ask your client any questions about the change in trading name, we will contact them within 30 days.
 
+captureBusinessName.title = Change the business name
+captureBusinessName.firstPara1 = You can
+captureBusinessName.firstPara2 = check the guidance around business names (opens in a new tab)
+captureBusinessName.firstPara3 = before you continue.
+captureBusinessName.secondPara = In general, business names cannot:
+captureBusinessName.lengthCondition = be longer than 160 characters
+captureBusinessName.specialCharactersCondition = contain certain special characters or symbols
+captureBusinessName.offensiveLanguageCondition = contain offensive language
+captureBusinessName.textBox = What is the new business name?
+captureBusinessName.error.exceedsMaxLength = Enter a business name that is 160 characters or less
+captureBusinessName.error.containsSpecialCharacters = Enter a business name that does not contain special characters or symbols
+captureBusinessName.error.empty = Enter a business name
+captureBusinessName.error.notChanged = Enter a new business name
+
 inFlightChange.title = You cannot request another change now
 inFlightChange.pendingChange = There is already a change pending on this account.
 inFlightChange.pendingChange2 = We can only accept one change of name request at a time.
