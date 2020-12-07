@@ -58,6 +58,7 @@ checkYourAnswers.heading = Check your answer
 checkYourAnswers.tradingName = Trading name
 checkYourAnswers.change = Change
 checkYourAnswers.confirm = Confirm and continue
+checkYourAnswers.businessName = Business name
 
 confirmRemove.title = Do you want us to remove {0} as the trading name?
 confirmRemove.error = Select yes if you want us to remove the current trading name

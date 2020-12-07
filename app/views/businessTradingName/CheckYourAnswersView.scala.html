@@ -15,13 +15,12 @@
  *@
 
 @import config.AppConfig
-
+@import models.viewModels.CheckYourAnswersViewModel
 @this(mainTemplate: MainTemplate,
-      govukButton: GovukButton)
-
-@(tradingName: String)(implicit appConfig: AppConfig,
-                                messages: Messages,
-                                request: Request[_])
+        govukButton: GovukButton)
+@(model: CheckYourAnswersViewModel)(implicit messages: Messages,
+                                    appConfig: config.AppConfig,
+                                    user: User[_])
 
 @mainTemplate(pageTitle = messages("checkYourAnswers.heading")) {
 
@@ -30,21 +29,21 @@
 
     <dl class="govuk-summary-list">
       <dt class="govuk-summary-list__key">
-        @messages("checkYourAnswers.tradingName")
+        @messages(model.question)
       </dt>
 
       <dd class="govuk-summary-list__value">
-        @tradingName
+        @model.answer
       </dd>
 
       <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="@controllers.tradingName.routes.CaptureTradingNameController.show().url">
+        <a class="govuk-link" href=@model.changeLink>
         @messages("checkYourAnswers.change")</a>
       </dd>
     </dl>
 
     @govukButton(Button(
-      href = Some(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName().url),
+      href = Some(model.continueLink),
       content = Text(messages("checkYourAnswers.confirm"))
     ))
   </div>

@@ -30,13 +30,13 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     inject[CheckYourAnswersView]
   )
 
-  "Calling the show action in CheckYourAnswersController" when {
+  "Calling the show trading name action in CheckYourAnswersController" when {
 
     "there is a trading name in session" should {
 
       "show the Check your answer page" in {
         mockIndividualAuthorised()
-        val result = controller.show(requestWithTradingName)
+        val result = controller.showTradingName(requestWithTradingName)
 
         status(result) shouldBe OK
       }
@@ -46,7 +46,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       lazy val result = {
         mockIndividualAuthorised()
-        controller.show(request)
+        controller.showTradingName(request)
       }
 
       "return 303" in {
@@ -62,7 +62,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "return forbidden (403)" in {
         mockIndividualWithoutEnrolment()
-        val result = controller.show(requestWithTradingName)
+        val result = controller.showTradingName(requestWithTradingName)
 
         status(result) shouldBe FORBIDDEN
       }
@@ -114,4 +114,89 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       }
     }
   }
+  "Calling the show business name action in CheckYourAnswersController" when {
+
+    "there is a business name in session" should {
+
+      "show the Check your answer page" in {
+        mockIndividualAuthorised()
+        val result = controller.showBusinessName(requestWithBusinessName)
+
+        status(result) shouldBe OK
+      }
+    }
+
+    "there isn't a business name in session" should {
+
+      lazy val result = {
+        mockIndividualAuthorised()
+        controller.showBusinessName(request)
+      }
+
+      "return 303" in {
+        status(result) shouldBe SEE_OTHER
+      }
+
+      "redirect the user to enter a new business name" in {
+        redirectLocation(result) shouldBe Some ("")
+      }
+    }
+
+    "the user is not authorised" should {
+
+      "return forbidden (403)" in {
+        mockIndividualWithoutEnrolment()
+        val result = controller.showBusinessName(requestWithBusinessName)
+
+        status(result) shouldBe FORBIDDEN
+      }
+    }
+  }
+
+  "Calling updateBusinessName() in CheckYourAnswersController" when {
+
+    "there is a business name in session" when {
+
+      "the business name has been updated successfully" should {
+
+        lazy val result = {
+          controller.updateBusinessName()(requestWithBusinessName)
+        }
+
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect to the business name changed success page" in {
+          redirectLocation(result) shouldBe Some("")
+        }
+      }
+    }
+
+    "there isn't a business name in session" should {
+
+      lazy val result = {
+        controller.updateBusinessName()(request)
+      }
+
+      "return 303" in {
+        status(result) shouldBe SEE_OTHER
+      }
+
+      "redirect the user to the capture business name page" in {
+        redirectLocation(result) shouldBe Some("")
+      }
+    }
+
+    "the user is not authorised" should {
+
+      "return forbidden (403)" in {
+        mockIndividualWithoutEnrolment()
+        val result = controller.updateBusinessName()(requestWithBusinessName)
+
+        status(result) shouldBe FORBIDDEN
+      }
+    }
+  }
 }
+

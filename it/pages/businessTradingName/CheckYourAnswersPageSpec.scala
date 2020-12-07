@@ -16,19 +16,43 @@
 
 package pages.businessTradingName
 
-import common.SessionKeys.prepopulationTradingNameKey
+import common.SessionKeys.{prepopulationBusinessNameKey, prepopulationTradingNameKey}
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
 
 class CheckYourAnswersPageSpec extends BasePageISpec {
 
-  val path = "/confirm-new-trading-name"
+  val tradingNamePath = "/confirm-new-trading-name"
+  val businessNamePath = "/check-business-name"
   val newTradingName = "New Trading Name"
+  val newBusinessName = "New Business Name"
 
-  "Calling the Check your answers (.show) route" when {
+  "Calling the Check your answers (.show trading name) route" when {
 
-    def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
+    def show: WSResponse = get(tradingNamePath, Map(prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
+
+    "the user is a authenticated" when {
+
+      "there is a new trading name in session" should {
+
+        "load successfully" in {
+
+          given.user.isAuthenticated
+
+          val result = show
+
+          result should have(
+            httpStatus(Status.OK),
+            pageTitle(generateDocumentTitle("checkYourAnswers.heading"))
+          )
+        }
+      }
+    }
+  }
+  "Calling the Check your answers (.show business name) route" when {
+
+    def show: WSResponse = get(businessNamePath, Map(prepopulationBusinessNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
 
     "the user is a authenticated" when {
 

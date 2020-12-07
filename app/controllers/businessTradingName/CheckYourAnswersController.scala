@@ -25,6 +25,7 @@ import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import models.viewModels.CheckYourAnswersViewModel
 import views.html.businessTradingName.CheckYourAnswersView
 
 import scala.concurrent.ExecutionContext
@@ -40,15 +41,19 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
-  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def showTradingName: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(prepopulationTradingNameKey) match {
       case Some(tradingName) =>
-        Ok(checkYourAnswersView(tradingName))
+        val viewModel = CheckYourAnswersViewModel(
+          question = "checkYourAnswers.tradingName",
+          answer = tradingName,
+          changeLink = controllers.tradingName.routes.CaptureTradingNameController.show().url,
+          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName().url)
+        Ok(checkYourAnswersView(viewModel))
       case _ =>
         Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
     }
   }
-
 
   def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
 
@@ -70,8 +75,35 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
         )
         Redirect(controllers.routes.ChangeSuccessController.tradingName())
           .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+
       case _ =>
         Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
     }
   }
+
+
+  def showBusinessName: Action[AnyContent] = authPredicate { implicit user =>
+    user.session.get(prepopulationBusinessNameKey) match {
+      case Some(businessName) =>
+        val viewModel = CheckYourAnswersViewModel(
+          question = "checkYourAnswers.businessName",
+          answer = businessName,
+          changeLink = "", //TODO captureBusinessNameController,
+          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName().url)
+        Ok(checkYourAnswersView(viewModel))
+      case _ =>
+        Redirect ("") //TODO captureBusinessNameController
+    }
+  }
+  def updateBusinessName(): Action[AnyContent] = authPredicate { implicit user =>
+
+    user.session.get(prepopulationBusinessNameKey) match {
+      case Some(businessName) =>
+        Redirect("")//TODO success controller action
+          .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+      case _ =>
+        Redirect("")//TODO captureBusinessNameController
+    }
+  }
+
 }
