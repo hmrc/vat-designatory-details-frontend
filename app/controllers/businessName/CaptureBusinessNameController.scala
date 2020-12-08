@@ -17,7 +17,7 @@
 package controllers.businessName
 
 import audit.AuditingService
-import common.SessionKeys.{prepopulationBusinessNameKey, prepopulationTradingNameKey, validationBusinessNameKey, validationTradingNameKey}
+import common.SessionKeys.{prepopulationBusinessNameKey, validationBusinessNameKey}
 import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
@@ -37,18 +37,15 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
                                               authComps: AuthPredicateComponents,
                                               inFlightComps: InFlightPredicateComponents) extends BaseController {
 
-  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
-    user.session.get(validationBusinessNameKey) match {
-      case Some(validationBusinessName) =>
-        val prepopulationBusinessName = user.session.get(prepopulationBusinessNameKey).getOrElse(validationBusinessName)
-        Ok(captureBusinessNameView(
-          businessNameForm(validationBusinessName).fill(prepopulationBusinessName), validationBusinessName)
-        )
-      case _ => Redirect(routes.WhatToDoController.show())
-    }
+  def show: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
+    val validationBusinessName = user.session.get(validationBusinessNameKey).getOrElse("")
+    val prepopulationBusinessName = user.session.get(prepopulationBusinessNameKey).getOrElse(validationBusinessName)
+    Ok(captureBusinessNameView(
+      businessNameForm(validationBusinessName).fill(prepopulationBusinessName), validationBusinessName)
+    )
   }
 
-  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def submit: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     val validationBusinessName: Option[String] = user.session.get(validationBusinessNameKey)
 
     validationBusinessName match {

@@ -32,6 +32,4 @@ object SessionKeys {
 
   val validationBusinessNameKey: String = "vatDesignatoryValidationBusinessName"
   val prepopulationBusinessNameKey: String = "vatDesignatoryPrepopulationBusinessName"
-
-  val inFlightTradingNameChangeKey: String = "inFlightTradingNameChange"
 }
