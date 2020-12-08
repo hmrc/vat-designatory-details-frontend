@@ -17,7 +17,7 @@
 package controllers.businessName
 
 import audit.AuditingService
-import common.SessionKeys.{prepopulationTradingNameKey, validationTradingNameKey}
+import common.SessionKeys.{prepopulationBusinessNameKey, prepopulationTradingNameKey, validationBusinessNameKey, validationTradingNameKey}
 import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
@@ -30,10 +30,38 @@ import views.html.businessName.CaptureBusinessNameView
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBusinessNameController @Inject()(captureBusinessNameView: CaptureBusinessNameView)
+class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
+                                              captureBusinessNameView: CaptureBusinessNameView)
                                              (implicit val appConfig: AppConfig,
                                               mcc: MessagesControllerComponents,
                                               authComps: AuthPredicateComponents,
                                               inFlightComps: InFlightPredicateComponents) extends BaseController {
 
+  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+    user.session.get(validationBusinessNameKey) match {
+      case Some(validationBusinessName) =>
+        val prepopulationBusinessName = user.session.get(prepopulationBusinessNameKey).getOrElse(validationBusinessName)
+        Ok(captureBusinessNameView(
+          businessNameForm(validationBusinessName).fill(prepopulationBusinessName), validationBusinessName)
+        )
+      case _ => Redirect(routes.WhatToDoController.show())
+    }
+  }
+
+  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+    val validationBusinessName: Option[String] = user.session.get(validationBusinessNameKey)
+
+    validationBusinessName match {
+      case Some(validation) => businessNameForm(validation).bindFromRequest.fold(
+        errorForm => {
+          Future.successful(BadRequest(captureBusinessNameView(errorForm, validation)))
+        },
+        businessName => {
+          Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.show())
+            .addingToSession(prepopulationBusinessNameKey -> businessName))
+        }
+      )
+      case None => Future.successful(errorHandler.showInternalServerError)
+    }
+  }
 }

@@ -29,4 +29,9 @@ object SessionKeys {
 
   val inFlightOrgDetailsKey: String = "vatDesignatoryInFlightOrganisationDetails"
   val businessNameAccessPermittedKey: String = "vatDesignatoryBusinessNameAccessPermitted"
+
+  val validationBusinessNameKey: String = "vatDesignatoryValidationBusinessName"
+  val prepopulationBusinessNameKey: String = "vatDesignatoryPrepopulationBusinessName"
+
+  val inFlightTradingNameChangeKey: String = "inFlightTradingNameChange"
 }

@@ -27,3 +27,53 @@ form: FormWithCSRF)
 @(businessNameForm: Form[String],
 currentbusinessName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
+@mainTemplate(
+ pageTitle =
+  if(businessNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
+  "captureBusinessName.title") else messages("captureBusinessName.title")
+) {
+
+ @govukBackLink(BackLink(
+  href = appConfig.manageVatSubscriptionServicePath,
+  content = Text(messages("base.back"))
+ ))
+
+ @if(businessNameForm.hasErrors) {
+  @govukErrorSummary(ErrorSummary(
+   title = Text(messages("common.error.heading")),
+   errorList = businessNameForm.errors.map { error =>
+    ErrorLink(
+     href = Some(s"#${businessNameForm("business-name").id}"),
+     content = Text(messages(error.message))
+    )
+   }
+  ))
+ }
+
+ @form(action = controllers.businessName.routes.CaptureBusinessNameController.submit) {
+
+  @govukInput(Input(
+   id = businessNameForm("business-name").id,
+   name = "business-name",
+   label = Label(
+    isPageHeading = true,
+    classes = "govuk-label--l",
+    content = Text(messages("captureBusinessName.title"))),
+   value = businessNameForm.value,
+   hint = Some(Hint(
+     content = Text(messages("captureBusinessName.firstPara1"))
+   )),
+   classes = "govuk-input--width-20",
+   attributes = Map("maxlength" -> (maxLength + 1).toString),
+   errorMessage = businessNameForm("trading-name").error.map( error =>
+    ErrorMessage(content = Text(messages(error.message)))
+   )
+  ))
+
+
+  @govukButton(Button(
+   content = Text(messages("common.continue"))
+  ))
+ }
+}
+
