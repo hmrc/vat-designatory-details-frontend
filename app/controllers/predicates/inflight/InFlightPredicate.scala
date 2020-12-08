@@ -48,6 +48,7 @@ class InFlightPredicate(inFlightComps: InFlightPredicateComponents,
       case (Some("true"), Some("true")) => Future.successful(Left(Conflict(inFlightComps.inFlightChangeView())))
       case (Some("false"), _) if businessNameJourney => Future.successful(Left(Redirect(appConfig.manageVatSubscriptionServicePath)))
       case _ => inFlightComps.getCustomerInfoCall(req.vrn, redirectURL, businessNameJourney)
+
     }
   }
 }

@@ -18,6 +18,7 @@ package controllers.predicates.inflight
 
 import assets.CustomerInfoConstants._
 import common.SessionKeys.{inFlightOrgDetailsKey, businessNameAccessPermittedKey}
+
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import mocks.MockAuth
 import models.User

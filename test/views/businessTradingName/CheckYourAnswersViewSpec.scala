@@ -16,6 +16,7 @@
 
 package views.businessTradingName
 
+import models.viewModels.CheckYourAnswersViewModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ViewBaseSpec
@@ -33,11 +34,13 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
     val confirmButton = ".govuk-button"
   }
 
+  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "/continue-link")
+
   "Rendering the Check Your Answer view" when {
 
     "the user is a principle entity" should {
 
-      lazy val view = injectedView(testTradingName)(mockConfig, messages, user)
+      lazy val view = injectedView(viewModel)(messages, mockConfig, user)
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct title" in {
@@ -48,12 +51,12 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
         elementText(Selectors.heading) shouldBe "Check your answer"
       }
 
-      "have the correct key text in the Check Your Answers table" in {
-      elementText(Selectors.firstColumn) shouldBe "Trading name"
+      "have the correct key text in the Check Your Answers table from the viewModel" in {
+      elementText(Selectors.firstColumn) shouldBe "journeyName"
       }
 
-      "have the trading name the user provided" in {
-        elementText(Selectors.newTradingName) shouldBe testTradingName
+      "have the trading name the user provided from the viewModel" in {
+        elementText(Selectors.newTradingName) shouldBe "answer"
       }
 
       "have a link to change the trading name" which {
@@ -62,9 +65,8 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
           elementText(Selectors.changeLink) shouldBe "Change"
         }
 
-        "has the correct URL" in {
-          element(Selectors.changeLink).attr("href") shouldBe
-            "/vat-through-software/account/designatory/new-trading-name"
+        "has the correct URL from the viewModel" in {
+          element(Selectors.changeLink).attr("href") shouldBe "/change-link"
         }
       }
 
@@ -75,17 +77,15 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
         }
 
         "has the correct URL" in {
-          element(Selectors.confirmButton).attr("href") shouldBe
-            "/vat-through-software/account/designatory/update-trading-name"
+          element(Selectors.confirmButton).attr("href") shouldBe "/continue-link"
         }
-
       }
     }
 
     "the user is an agent" when {
 
       "there are no errors in the form" should {
-        val view = injectedView(testTradingName)(mockConfig, messages, agent)
+        val view = injectedView(viewModel)(messages, mockConfig,  agent)
         implicit val document: Document = Jsoup.parse(view.body)
 
         "have the correct title" in {

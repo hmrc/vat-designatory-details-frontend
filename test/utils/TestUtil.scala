@@ -46,12 +46,17 @@ trait TestUtil extends UnitSpec with GuiceOneAppPerSuite with MaterializerSuppor
   lazy val mockErrorHandler: ErrorHandler = new ErrorHandler(messagesApi, inject[StandardErrorView], mockConfig)
 
   val testTradingName = "Test Trading Name"
+  val testBusinessName = "Test Business Name"
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
+
     inFlightOrgDetailsKey -> "false")
 
   lazy val requestWithTradingName: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(prepopulationTradingNameKey -> testTradingName)
+
+  lazy val requestWithBusinessName: FakeRequest[AnyContentAsEmpty.type] =
+    request.withSession(prepopulationBusinessNameKey -> testBusinessName)
 
   lazy val fakeRequestWithClientsVRN: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(clientVrn -> vrn)
