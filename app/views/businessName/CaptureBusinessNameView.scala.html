@@ -65,7 +65,7 @@ currentbusinessName: String)(implicit request: Request[_], messages: Messages, a
    )),
    classes = "govuk-input--width-20",
    attributes = Map("maxlength" -> (maxLength + 1).toString),
-   errorMessage = businessNameForm("trading-name").error.map( error =>
+   errorMessage = businessNameForm("business-name").error.map( error =>
     ErrorMessage(content = Text(messages(error.message)))
    )
   ))
