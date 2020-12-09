@@ -28,15 +28,16 @@ form: FormWithCSRF)
 currentbusinessName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @pageContent = {
- <p>messages("captureBusinessName.firstPara1")
+ <h1 class="heading-xlarge">@messages("captureBusinessName.title")</h1>
+ <p>@messages("captureBusinessName.firstPara1")
     <a href="@appConfig.businessNameGuidanceUrl" target="_blank">@messages("captureBusinessName.firstPara2")</a>
-    messages("captureBusinessName.firstPara3")
+    @messages("captureBusinessName.firstPara3")
  </p>
- <p>messages("captureBusinessName.secondPara")
+ <p>@messages("captureBusinessName.secondPara")
   <ul>
- <li>captureBusinessName.lengthCondition</li>
- <li>captureBusinessName.specialCharactersCondition</li>
- <li>captureBusinessName.offensiveLanguageCondition</li>
+ <li>@messages("captureBusinessName.lengthCondition")</li>
+ <li>@messages("captureBusinessName.specialCharactersCondition")</li>
+ <li>@messages("captureBusinessName.offensiveLanguageCondition")</li>
 </ul>
  </p>
 }
@@ -64,6 +65,8 @@ currentbusinessName: String)(implicit request: Request[_], messages: Messages, a
   ))
  }
 
+ @pageContent
+
  @form(action = controllers.businessName.routes.CaptureBusinessNameController.submit) {
 
   @govukInput(Input(
@@ -72,11 +75,8 @@ currentbusinessName: String)(implicit request: Request[_], messages: Messages, a
    label = Label(
     isPageHeading = true,
     classes = "govuk-label--l",
-    content = Text(messages("captureBusinessName.title"))),
+    content = Text(messages("captureBusinessName.textBox"))),
    value = businessNameForm.value,
-   hint = Some(Hint(
-     content = Text(pageContent)
-   )),
    classes = "govuk-input--width-20",
    attributes = Map("maxlength" -> (maxLength + 1).toString),
    errorMessage = businessNameForm("business-name").error.map( error =>
