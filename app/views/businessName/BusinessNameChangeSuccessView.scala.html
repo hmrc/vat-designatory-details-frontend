@@ -1,0 +1,72 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.viewModels.ChangeSuccessViewModel
+@import common.ContactPreference
+@import views.html.templates.AgentPaperUpdateClient
+@import views.html.templates.UpdateClient
+
+@this(mainTemplate: MainTemplate, updateClient: UpdateClient, govukButton: GovukButton)
+
+@(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
+
+@messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
+@buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}
+
+@mainTemplate(pageTitle = messages(model.pageTitle)) {
+
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
+      @messages(model.pageTitle)
+    </h1>
+  </div>
+
+  <h2 class="govuk-heading-m">@messages("common.whatHappensNext")</h2>
+
+  @if(user.isAgent) {
+
+    @model.agentEmail match {
+      case Some(email) => {
+        <p class="govuk-body">
+          @messages("businessNameChangeSuccess.helpOne.digital.agent1")
+          <strong class="bold">@email</strong>
+          @messages("businessNameChangeSuccess.helpOne.digital.agent2")
+        </p>
+        @updateClient(model.businessName)
+      }
+      case _ => {<p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper.agent")</p>}
+    }
+
+  } else {
+    @model.contactPreference  match {
+      case Some(ContactPreference.digital) => {
+        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.digital")</p>
+        <p class="govuk-body">@messages("businessNameChangeSuccess.helpTwo.digital")</p>
+      }
+      case Some(ContactPreference.paper) => {
+        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper")</p>
+      }
+      case _ => {
+        <p class="govuk-body">@messages("common.helpOne.apiFailure")</p>
+      }
+    }
+  }
+
+  @govukButton(Button(
+    href = Some(appConfig.manageVatSubscriptionServicePath),
+    content = Text(messages(buttonMessageKey))
+  ))
+}

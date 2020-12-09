@@ -24,6 +24,7 @@ import org.jsoup.Jsoup
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.test.Helpers._
+import views.html.businessName.BusinessNameChangeSuccessView
 import views.html.tradingName.TradingNameChangeSuccessView
 
 import scala.concurrent.Future
@@ -32,7 +33,8 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   val controller: ChangeSuccessController = new ChangeSuccessController(
     mockVatSubscriptionService,
-    inject[TradingNameChangeSuccessView]
+    inject[TradingNameChangeSuccessView],
+    inject[BusinessNameChangeSuccessView]
   )
 
   "Calling the tradingName action" when {
@@ -95,13 +97,13 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
     }
   }
 
-  "the renderView function" when {
+  "the renderTradingNameView function" when {
 
     "the user is adding a trading name" should {
 
       lazy val result = {
         mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-        controller.renderView(false, true)(user)
+        controller.renderTradingNameView(isRemoval = false, isAddition = true)(user)
       }
 
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -120,7 +122,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
       lazy val result = {
         mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-        controller.renderView(true, false)(user)
+        controller.renderTradingNameView(isRemoval = true, isAddition = false)(user)
       }
 
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -139,7 +141,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
       lazy val result = {
         mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-        controller.renderView(false, false)(user)
+        controller.renderTradingNameView(isRemoval = false, isAddition = false)(user)
       }
 
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -158,13 +160,87 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
       lazy val result = {
         mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-        controller.renderView(true, true)(user)
+        controller.renderTradingNameView(isRemoval = true, isAddition = true)(user)
       }
 
       "return 500" in {
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
+    }
+  }
 
+  "Calling the businessName action" when {
+
+    "the businessNameChangeSuccessful session key is 'true'" when {
+
+      "the call to customer info is successful" when {
+
+        "the user is a principal entity" should {
+          lazy val result: Future[Result] = {
+            mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+            controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
+          }
+
+          "return 200" in {
+            status(result) shouldBe Status.OK
+          }
+        }
+
+        "the user is an agent" should {
+          lazy val result: Future[Result] = {
+            mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
+            controller.businessName(request.withSession(
+              businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
+            ))
+          }
+
+          "return 200" in {
+            mockAgentAuthorised()
+            status(result) shouldBe Status.OK
+          }
+        }
+
+        "the call to customer info is unsuccessful" should {
+          lazy val result: Future[Result] = {
+            mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
+            controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
+          }
+
+          "return 200" in {
+            status(result) shouldBe Status.OK
+          }
+        }
+      }
+    }
+
+    "the businessNameChangeSuccessful session key is not populated" should {
+
+      lazy val result: Future[Result] = controller.businessName(request)
+
+      "return 303" in {
+        status(result) shouldBe Status.SEE_OTHER
+      }
+
+      "redirect the user to the capture business name controller" in {
+        redirectLocation(result) shouldBe Some("#")
+      }
+    }
+  }
+
+  "The renderBusinessName function" should {
+
+    lazy val result = {
+      mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+      controller.renderBusinessNameView(user)
+    }
+    lazy val document = Jsoup.parse(bodyOf(result))
+
+    "return 200" in {
+      status(result) shouldBe Status.OK
+    }
+
+    "render the correct heading" in {
+      document.select("h1").text() shouldBe "businessNameChangeSuccess.title"
     }
   }
 }

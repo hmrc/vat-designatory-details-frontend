@@ -19,6 +19,4 @@ package models.viewModels
 case class ChangeSuccessViewModel(pageTitle: String,
                                   agentEmail: Option[String],
                                   businessName: Option[String],
-                                  contactPreference: Option[String],
-                                  isRemoval: Boolean,
-                                  isAddition: Boolean)
+                                  contactPreference: Option[String])

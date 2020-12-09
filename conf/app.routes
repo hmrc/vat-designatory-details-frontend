@@ -15,8 +15,9 @@ GET         /update-trading-name                   controllers.businessTradingNa
 GET         /check-business-name                   controllers.businessTradingName.CheckYourAnswersController.showBusinessName
 GET         /update-business-name                  controllers.businessTradingName.CheckYourAnswersController.updateBusinessName
 
-# tradingName change successful
+# change successful
 GET         /trading-name-confirmation             controllers.ChangeSuccessController.tradingName
+GET         /business-name-confirmation            controllers.ChangeSuccessController.businessName
 
 # remove trading name
 GET         /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.show
