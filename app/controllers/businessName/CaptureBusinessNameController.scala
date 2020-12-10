@@ -25,24 +25,40 @@ import controllers.predicates.inflight.InFlightPredicateComponents
 import forms.BusinessNameForm.businessNameForm
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
+import services.VatSubscriptionService
 import views.html.businessName.CaptureBusinessNameView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
-                                              captureBusinessNameView: CaptureBusinessNameView)
+                                              captureBusinessNameView: CaptureBusinessNameView,
+                                              vatSubscriptionService: VatSubscriptionService)
                                              (implicit val appConfig: AppConfig,
                                               mcc: MessagesControllerComponents,
                                               authComps: AuthPredicateComponents,
                                               inFlightComps: InFlightPredicateComponents) extends BaseController {
 
-  def show: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
-    val validationBusinessName = user.session.get(validationBusinessNameKey).getOrElse("")
-    val prepopulationBusinessName = user.session.get(prepopulationBusinessNameKey).getOrElse(validationBusinessName)
-    Ok(captureBusinessNameView(
-      businessNameForm(validationBusinessName).fill(prepopulationBusinessName), validationBusinessName)
-    )
+  implicit val ec: ExecutionContext = authComps.executionContext
+
+  def show: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+    val validationBusinessName: Future[Option[String]] = user.session.get(validationBusinessNameKey) match {
+      case Some(businessName) => Future.successful(Some(businessName))
+      case _ =>
+        vatSubscriptionService.getCustomerInfo(user.vrn) map {
+          case Right(details) => Some(details.organisationName.getOrElse(""))
+          case _ => None
+        }
+    }
+    validationBusinessName.map {
+      case Some(businessName) =>
+        val prepopulationBusinessName = user.session.get(prepopulationBusinessNameKey).getOrElse(businessName)
+        Ok(captureBusinessNameView(
+          businessNameForm(businessName).fill(prepopulationBusinessName))
+        ).addingToSession(validationBusinessNameKey -> businessName)
+      case None => errorHandler.showInternalServerError
+    }
+
   }
 
   def submit: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
@@ -51,7 +67,7 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
     validationBusinessName match {
       case Some(validation) => businessNameForm(validation).bindFromRequest.fold(
         errorForm => {
-          Future.successful(BadRequest(captureBusinessNameView(errorForm, validation)))
+          Future.successful(BadRequest(captureBusinessNameView(errorForm)))
         },
         businessName => {
           Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.showBusinessName())

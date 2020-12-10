@@ -24,28 +24,29 @@ govukBackLink: GovukBackLink,
 govukErrorSummary: GovukErrorSummary,
 form: FormWithCSRF)
 
-@(businessNameForm: Form[String],
-currentbusinessName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(businessNameForm: Form[String])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @pageContent = {
- <h1 class="heading-xlarge">@messages("captureBusinessName.title")</h1>
- <p>@messages("captureBusinessName.firstPara1")
-    <a href="@appConfig.businessNameGuidanceUrl" target="_blank">@messages("captureBusinessName.firstPara2")</a>
+<div class="govuk-!-margin-bottom-7">
+ <h1 class="govuk-heading-l">@messages("captureBusinessName.title")</h1>
+ <p class="govuk-body">@messages("captureBusinessName.firstPara1")
+    <a href="@appConfig.businessNameGuidanceUrl" target="_blank" class="govuk-link">@messages("captureBusinessName.firstPara2")</a>
     @messages("captureBusinessName.firstPara3")
  </p>
- <p>@messages("captureBusinessName.secondPara")
-  <ul>
+ <p class="govuk-body">@messages("captureBusinessName.secondPara")
+ </p>
+ <ul class="govuk-list govuk-list--bullet" >
  <li>@messages("captureBusinessName.lengthCondition")</li>
  <li>@messages("captureBusinessName.specialCharactersCondition")</li>
  <li>@messages("captureBusinessName.offensiveLanguageCondition")</li>
-</ul>
- </p>
+ </ul>
+</div>
 }
 
 @mainTemplate(
  pageTitle =
-  if(businessNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
-  "captureBusinessName.title") else messages("captureBusinessName.title")
+  if(businessNameForm.errors.nonEmpty) messages("common.error.prefixTitle", messages("captureBusinessName.title"))
+  else messages("captureBusinessName.title")
 ) {
 
  @govukBackLink(BackLink(
@@ -73,14 +74,14 @@ currentbusinessName: String)(implicit request: Request[_], messages: Messages, a
    id = businessNameForm("business-name").id,
    name = "business-name",
    label = Label(
-    isPageHeading = true,
-    classes = "govuk-label--l",
+    isPageHeading = false,
+    classes = "govuk-label--m",
     content = Text(messages("captureBusinessName.textBox"))),
    value = businessNameForm.value,
    classes = "govuk-input--width-20",
    attributes = Map("maxlength" -> (maxLength + 1).toString),
    errorMessage = businessNameForm("business-name").error.map( error =>
-    ErrorMessage(content = Text(error.message))
+    ErrorMessage(content = Text(messages(error.message)))
    )
   ))
 
