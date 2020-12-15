@@ -16,7 +16,6 @@
 
 package controllers.businessName
 
-import audit.AuditingService
 import common.SessionKeys.{prepopulationBusinessNameKey, validationBusinessNameKey}
 import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
