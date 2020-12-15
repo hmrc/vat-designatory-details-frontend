@@ -37,5 +37,5 @@ abstract class BaseController(implicit val mcc: MessagesControllerComponents,
 
   val businessNameAccessPredicate = new InFlightPredicate(
     inFlightComps, routePrefix + controllers.businessName.routes.CaptureBusinessNameController.show().url, businessNameJourney = true
-  ) // TODO add in reverse route here for first action in journey
+  )
 }
