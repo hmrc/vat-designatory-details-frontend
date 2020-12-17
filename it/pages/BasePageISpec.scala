@@ -33,6 +33,8 @@ trait BasePageISpec extends IntegrationBaseSpec {
   def formatValidationTradingName: Option[String] => Map[String, String] =
     _.fold(Map.empty[String, String])(x => Map(SessionKeys.validationTradingNameKey -> x))
 
+  val formatBusinessNameAccess: Map[String, String] = Map(SessionKeys.businessNameAccessPermittedKey -> "true")
+
   def httpPostAuthenticationTests(path: String, sessionVrn: Option[String] = None)(formData: Map[String, Seq[String]]): Unit =
     authenticationTests(path, post(path, formatSessionVrn(sessionVrn))(formData))
 

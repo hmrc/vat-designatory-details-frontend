@@ -82,27 +82,27 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
   }
 
 
-  def showBusinessName: Action[AnyContent] = authPredicate { implicit user =>
+  def showBusinessName: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
     user.session.get(prepopulationBusinessNameKey) match {
       case Some(businessName) =>
         val viewModel = CheckYourAnswersViewModel(
           question = "checkYourAnswers.businessName",
           answer = businessName,
-          changeLink = "", //TODO captureBusinessNameController,
+          changeLink = controllers.businessName.routes.CaptureBusinessNameController.show().url,
           continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName().url)
         Ok(checkYourAnswersView(viewModel))
       case _ =>
-        Redirect ("") //TODO captureBusinessNameController
+        Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
     }
   }
-  def updateBusinessName(): Action[AnyContent] = authPredicate { implicit user =>
+  def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
 
     user.session.get(prepopulationBusinessNameKey) match {
       case Some(businessName) =>
-        Redirect("")//TODO success controller action
+        Redirect(controllers.routes.ChangeSuccessController.businessName())
           .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
       case _ =>
-        Redirect("")//TODO captureBusinessNameController
+        Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
     }
   }
 
