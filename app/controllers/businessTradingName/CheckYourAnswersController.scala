@@ -24,14 +24,17 @@ import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
+import models.customerInformation.UpdateOrganisationDetails
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import models.viewModels.CheckYourAnswersViewModel
+import services.VatSubscriptionService
 import views.html.businessTradingName.CheckYourAnswersView
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView)(
+class CheckYourAnswersController @Inject()(checkYourAnswersView: CheckYourAnswersView,
+                                            vatSubscriptionService: VatSubscriptionService)(
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
                                             inFlightComps: InFlightPredicateComponents,
@@ -65,6 +68,14 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
 
     user.session.get(prepopulationTradingNameKey) match {
       case Some(prepopTradingName) =>
+
+        val orgDetails = UpdateOrganisationDetails(
+          tradingName = prepopTradingName,
+          capacitorEmail = user.session.get(verifiedAgentEmail)
+        )
+
+        vatSubscriptionService.updateTradingName(user.vrn, orgDetails)
+
         auditingService.audit(ChangedTradingNameAuditModel(
           currentTradingName,
           prepopTradingName,

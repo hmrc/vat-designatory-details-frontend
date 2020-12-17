@@ -34,8 +34,8 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
   private[connectors] def getCustomerInfoUrl(vrn: String): String =
     s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/full-information"
 
-  private[connectors] def updateOrganisationDetailsUrl(vrn: String): String =
-    s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/organisationDetails"
+  private[connectors] def updateTradingNameUrl(vrn: String): String =
+    s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/trading-name"
 
   def getCustomerInfo(vrn: String)
                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CustomerInformation]] = {
@@ -55,5 +55,12 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
   def updateOrganisationDetails(vrn: String, orgDetails: UpdateOrganisationDetails)
                                (implicit hc: HeaderCarrier,
                                 ec: ExecutionContext,
-                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = ???
+                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+
+    import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
+
+    http.PUT[UpdateOrganisationDetails, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateTradingNameUrl(vrn), orgDetails)
+
+  }
+
 }

@@ -21,6 +21,7 @@ import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import javax.inject.{Inject, Singleton}
 import models.User
+import models.customerInformation.UpdateOrganisationDetails
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,8 +33,12 @@ class VatSubscriptionService @Inject()(connector: VatSubscriptionConnector) {
                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[GetCustomerInfoResponse] =
     connector.getCustomerInfo(vrn)
 
-  def updateTradingName(vrn: String, tradingName: String)
+  def updateTradingName(vrn: String, orgDetails: UpdateOrganisationDetails)
                    (implicit hc: HeaderCarrier, ec: ExecutionContext,
-                    user: User[_]): Future[UpdateOrganisationDetailsResponse] = ???
+                    user: User[_]): Future[UpdateOrganisationDetailsResponse] = {
+
+    connector.updateOrganisationDetails(vrn, orgDetails)
+
+  }
 
 }

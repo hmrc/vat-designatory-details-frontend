@@ -20,6 +20,7 @@ import audit.AuditingService
 import common.SessionKeys.businessNameAccessPermittedKey
 import controllers.ControllerBaseSpec
 import play.api.test.Helpers._
+import services.VatSubscriptionService
 import views.html.businessTradingName.CheckYourAnswersView
 
 
@@ -28,7 +29,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
   implicit val auditingService: AuditingService = inject[AuditingService]
 
   val controller = new CheckYourAnswersController(
-    inject[CheckYourAnswersView]
+    inject[CheckYourAnswersView],
+    inject[VatSubscriptionService]
   )
 
   "Calling the show trading name action in CheckYourAnswersController" when {

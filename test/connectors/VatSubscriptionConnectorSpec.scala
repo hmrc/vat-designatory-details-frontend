@@ -33,8 +33,8 @@ class VatSubscriptionConnectorSpec extends ControllerBaseSpec {
     }
 
     "generate the correct url for updateOrganisationDetails" in {
-      connector.updateOrganisationDetailsUrl(testVrn) shouldBe
-        "mockVatSubscriptionHost/vat-subscription/123456789/organisationDetails"
+      connector.updateTradingNameUrl(testVrn) shouldBe
+        "mockVatSubscriptionHost/vat-subscription/123456789/trading-name"
     }
   }
 }

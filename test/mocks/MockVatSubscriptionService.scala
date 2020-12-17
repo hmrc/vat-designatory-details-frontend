@@ -18,6 +18,7 @@ package mocks
 
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
+import models.customerInformation.UpdateOrganisationDetails
 import org.mockito.ArgumentMatchers.{any, eq => argEq}
 import org.mockito.Mockito.{reset, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,8 +37,8 @@ trait MockVatSubscriptionService extends MockitoSugar with BeforeAndAfterEach {
 
   val mockVatSubscriptionService: VatSubscriptionService = mock[VatSubscriptionService]
 
-  def mockUpdateTradingName(vrn: String, website: String)(response: Future[UpdateOrganisationDetailsResponse]): Unit =
-    when(mockVatSubscriptionService.updateTradingName(argEq(vrn), argEq(website))(any(), any(), any())) thenReturn response
+  def mockUpdateTradingName(vrn: String, orgDetails: UpdateOrganisationDetails)(response: Future[UpdateOrganisationDetailsResponse]): Unit =
+    when(mockVatSubscriptionService.updateTradingName(argEq(vrn), argEq(orgDetails))(any(), any(), any())) thenReturn response
 
   def mockGetCustomerInfo(vrn: String)(response: GetCustomerInfoResponse): Unit =
     when(mockVatSubscriptionService.getCustomerInfo(argEq(vrn))(any(), any())) thenReturn Future.successful(response)
