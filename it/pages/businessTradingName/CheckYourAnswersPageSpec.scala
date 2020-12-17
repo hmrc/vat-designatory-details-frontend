@@ -24,7 +24,7 @@ import play.api.libs.ws.WSResponse
 class CheckYourAnswersPageSpec extends BasePageISpec {
 
   val tradingNamePath = "/confirm-new-trading-name"
-  val businessNamePath = "/check-business-name"
+  val businessNamePath = "/confirm-new-business-name"
   val newTradingName = "New Trading Name"
   val newBusinessName = "New Business Name"
 
