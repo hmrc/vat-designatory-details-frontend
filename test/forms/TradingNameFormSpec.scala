@@ -35,11 +35,6 @@ class TradingNameFormSpec extends TestUtil {
       actual.value shouldBe Some(testTradingName)
     }
 
-    "validate that testTradingName capitalised is valid" in {
-      val actual = tradingNameForm("").bind(Map("trading-name" -> testTradingName.toUpperCase()))
-      actual.value shouldBe Some(testTradingName.toUpperCase())
-    }
-
     "validate that trading name does not exceed max length" in {
       val exceed = tradingNameForm("").bind(Map("trading-name" -> ("a" * (maxLength + 1)))).errors
       exceed should contain(FormError("trading-name", maxLengthErrorMessage))

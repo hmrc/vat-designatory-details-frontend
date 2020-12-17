@@ -49,7 +49,9 @@ object CustomerInfoConstants {
     partyType = Some("1")
   )
 
-  val customerInfoNoPending: CustomerInformation = fullCustomerInfoModel.copy(changeIndicators = None)
+  val customerInfoNoPending: CustomerInformation = fullCustomerInfoModel.copy(pendingChanges = None, changeIndicators = Some(ChangeIndicators(false)))
+
+  val customerInfoNoBusinessName = fullCustomerInfoModel.copy(organisationName = None)
 
   val fullCustomerInfoModelSameTradingName: CustomerInformation = fullCustomerInfoModel.copy(
     tradingName = Some("New trading name")

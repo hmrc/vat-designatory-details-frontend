@@ -60,6 +60,7 @@ trait AppConfig {
   val footerPrivacyUrl: String
   val footerTermsConditionsUrl: String
   val footerHelpUrl: String
+  val businessNameGuidanceUrl: String
 }
 
 @Singleton
@@ -139,4 +140,6 @@ class FrontendAppConfig @Inject()(sc: ServicesConfig) extends AppConfig {
   override val footerTermsConditionsUrl: String = sc.getString(ConfigKeys.footerTermsConditionsUrl)
   override val footerHelpUrl: String = sc.getString(ConfigKeys.footerHelpUrl)
   override val footerCookiesUrl: String = sc.getString(ConfigKeys.footerCookiesUrl)
+
+  override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
 }

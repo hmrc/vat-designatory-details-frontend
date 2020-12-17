@@ -38,7 +38,6 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
     val errorSummaryTitle = "#error-summary-title"
     val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val tradingNameFormGroup = "#content > article > form > div:nth-child(1)"
-    val removeTradingName = "#remove-trading-name"
   }
 
   "Rendering the capture trading name page" when {

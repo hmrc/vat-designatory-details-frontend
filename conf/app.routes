@@ -26,6 +26,10 @@ POST        /remove-trading-name                   controllers.tradingName.Confi
 GET         /change-remove-trading-name            controllers.tradingName.WhatToDoController.show
 POST        /change-remove-trading-name            controllers.tradingName.WhatToDoController.submit
 
+# capture business name
+GET         /change-business-name                  controllers.businessName.CaptureBusinessNameController.show
+POST        /change-business-name                  controllers.businessName.CaptureBusinessNameController.submit
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                          controllers.Assets.at(path="/public", file)
 

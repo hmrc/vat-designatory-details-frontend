@@ -79,6 +79,20 @@ businessNameChangeSuccess.helpOne.digital = Byddwn yn anfon e-bost atoch cyn pen
 businessNameChangeSuccess.helpTwo.digital = Gallwch hefyd wirio’ch negeseuon diogel oddi wrth CThEM i gael diweddariad.
 businessNameChangeSuccess.helpOne.paper = Byddwn yn anfon llythyr i brif leoliad eich busnes cyn pen 15 diwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
 
+captureBusinessName.title = Newid enw busnes
+captureBusinessName.firstPara1 = Gallwch
+captureBusinessName.firstPara2 = wirio’r arweiniad ynghylch enwau busnesau (yn agor tab newydd)
+captureBusinessName.firstPara3 = cyn mynd yn eich blaen.
+captureBusinessName.secondPara = Yn gyffredinol, nid yw enwau busnesau’n gallu:
+captureBusinessName.lengthCondition = bod yn fwy na 160 o gymeriadau
+captureBusinessName.specialCharactersCondition = cynnwys cymeriadau arbennig penodol na symbolau penodol
+captureBusinessName.offensiveLanguageCondition = cynnwys iaith sarhaus
+captureBusinessName.textBox = Beth yw enw newydd y busnes?
+captureBusinessName.error.exceedsMaxLength = Nodwch enw busnes sy’n 160 o gymeriadau neu lai
+captureBusinessName.error.containsSpecialCharacters = Nodwch enw busnes nad yw’n cynnwys cymeriadau arbennig na symbolau
+captureBusinessName.error.empty = Nodwch enw busnes
+captureBusinessName.error.notChanged = Nodwch enw busnes newydd
+
 inFlightChange.title = Mae gennych newid ar y gweill yn barod
 
 footerLinks.cookies = Cwcis
