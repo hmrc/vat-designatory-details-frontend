@@ -50,12 +50,12 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
         }
     }
     validationBusinessName.map {
-      case Some(businessName) =>
+      case Some(businessName) if businessName.nonEmpty =>
         val prepopulationBusinessName = user.session.get(prepopulationBusinessNameKey).getOrElse(businessName)
         Ok(captureBusinessNameView(
           businessNameForm(businessName).fill(prepopulationBusinessName))
         ).addingToSession(validationBusinessNameKey -> businessName)
-      case None => errorHandler.showInternalServerError
+      case _ => errorHandler.showInternalServerError
     }
 
   }

@@ -65,7 +65,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
           }
 
           "should have the correct href" in {
-            element(Selectors.backLink).attr("href") shouldBe "mockManageVatOverviewUrl"
+            element(Selectors.backLink).attr("href") shouldBe mockConfig.manageVatSubscriptionServicePath
           }
         }
 
@@ -83,7 +83,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
 
         "have the correct href" in {
           element(Selectors.businessGuidanceLink).attr("href") shouldBe
-            "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
+            mockConfig.businessNameGuidanceUrl
         }
 
         "have the correct second paragraph" in {

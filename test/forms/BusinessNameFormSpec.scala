@@ -35,11 +35,6 @@ class BusinessNameFormSpec extends TestUtil {
       actual.value shouldBe Some(testBusinessName)
     }
 
-    "validate that testBusinessName capitalised is valid" in {
-      val actual = businessNameForm("").bind(Map("business-name" -> testBusinessName.toUpperCase()))
-      actual.value shouldBe Some(testBusinessName.toUpperCase())
-    }
-
     "validate that business name does not exceed max length" in {
       val exceed = businessNameForm("").bind(Map("business-name" -> ("a" * (maxLength + 1)))).errors
       exceed should contain(FormError("business-name", maxLengthErrorMessage))

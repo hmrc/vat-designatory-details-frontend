@@ -16,7 +16,7 @@
 
 package controllers.businessName
 
-import assets.CustomerInfoConstants.{customerInfoNoPending, fullCustomerInfoModel}
+import assets.CustomerInfoConstants.{customerInfoNoBusinessName, customerInfoNoPending, fullCustomerInfoModel}
 import common.SessionKeys
 import common.SessionKeys.{businessNameAccessPermittedKey, prepopulationBusinessNameKey, validationBusinessNameKey}
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
@@ -58,7 +58,9 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
       "the user's current business name is retrieved from session" should {
 
-        lazy val result = target().show(request.withSession(validationBusinessNameKey -> testValidationBusinessName, businessNameAccessPermittedKey -> "true"))
+        lazy val result = target().show(request.withSession(
+          validationBusinessNameKey -> testValidationBusinessName,
+          businessNameAccessPermittedKey -> "true"))
 
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -96,6 +98,50 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
         "prepopulate the form with the previously entered form value" in {
           document.select("#business-name").attr("value") shouldBe testValidBusinessName
+        }
+      }
+
+      "there is no business name in session but vatSubscriptionService returns a business name" should {
+
+        lazy val result = {
+          target(Right(fullCustomerInfoModel)).show(request
+            .withSession(businessNameAccessPermittedKey -> "true"))
+        }
+
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return 200" in {
+          status(result) shouldBe Status.OK
+        }
+
+        "return HTML" in {
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
+
+        "prepopulate the form with the user's current business name" in {
+          Some(document.select("#business-name").attr("value")) shouldBe fullCustomerInfoModel.organisationName
+        }
+      }
+
+      "there is no business name in session and the user doesn't have a business name" when {
+
+        lazy val result = {
+          target(Right(customerInfoNoBusinessName)).show(request
+            .withSession(businessNameAccessPermittedKey -> "true"))
+        }
+
+        "return 500" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        }
+
+        "render the error view" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        }
+
+        "return HTML" in {
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
       }
     }
@@ -176,7 +222,9 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
       "there is no business name in session" when {
 
-        lazy val result = controller.submit(request.withSession(businessNameAccessPermittedKey -> "true"))
+        lazy val result = controller.submit(request
+          .withFormUrlEncodedBody("business-name" -> testValidBusinessName)
+          .withSession(businessNameAccessPermittedKey -> "true"))
 
         "return 500" in {
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
