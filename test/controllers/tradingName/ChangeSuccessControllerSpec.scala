@@ -222,7 +222,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       }
 
       "redirect the user to the capture business name controller" in {
-        redirectLocation(result) shouldBe Some("#")
+        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
       }
     }
   }

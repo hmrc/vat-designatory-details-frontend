@@ -45,7 +45,7 @@
           <strong class="bold">@email</strong>
           @messages("businessNameChangeSuccess.helpOne.digital.agent2")
         </p>
-        @updateClient(model.businessName)
+        @updateClient(None)
       }
       case _ => {<p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper.agent")</p>}
     }
