@@ -56,7 +56,7 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
       case Some("true") =>
         renderBusinessNameView
       case _ =>
-        Future.successful(Redirect("#")) //TODO add reverse route for first action in the journey
+        Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
     }
   }
 

@@ -24,7 +24,7 @@ import play.api.libs.ws.WSResponse
 class CheckYourAnswersPageSpec extends BasePageISpec {
 
   val tradingNamePath = "/confirm-new-trading-name"
-  val businessNamePath = "/check-business-name"
+  val businessNamePath = "/confirm-new-business-name"
   val newTradingName = "New Trading Name"
   val newBusinessName = "New Business Name"
 
@@ -52,11 +52,13 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
   }
   "Calling the Check your answers (.show business name) route" when {
 
-    def show: WSResponse = get(businessNamePath, Map(prepopulationBusinessNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
+    def show: WSResponse = get(businessNamePath, Map(prepopulationBusinessNameKey -> newTradingName)
+      ++ formatInflightChange(Some("false"))
+      ++ formatBusinessNameAccess)
 
     "the user is a authenticated" when {
 
-      "there is a new trading name in session" should {
+      "there is a new business name in session" should {
 
         "load successfully" in {
 

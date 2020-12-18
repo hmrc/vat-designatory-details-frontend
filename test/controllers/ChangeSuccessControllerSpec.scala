@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package controllers.tradingName
+package controllers
 
 import assets.CustomerInfoConstants.fullCustomerInfoModel
 import common.SessionKeys._
-import controllers.{ChangeSuccessController, ControllerBaseSpec}
 import models.errors.ErrorModel
 import org.jsoup.Jsoup
 import play.api.http.Status
@@ -222,7 +221,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       }
 
       "redirect the user to the capture business name controller" in {
-        redirectLocation(result) shouldBe Some("#")
+        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
       }
     }
   }

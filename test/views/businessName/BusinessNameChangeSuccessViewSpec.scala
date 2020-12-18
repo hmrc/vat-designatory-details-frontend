@@ -109,11 +109,11 @@ class BusinessNameChangeSuccessViewSpec extends ViewBaseSpec {
 
         "have the correct first paragraph" in {
           elementText("#content p:nth-of-type(1)") shouldBe "We’ll send an email to lewis@email.com " +
-            "within 2 working days telling you whether we can accept the new business name."
+            "within 2 working days, telling you whether we can accept the new business name."
         }
 
         "have the correct second paragraph" in {
-          elementText("#content p:nth-of-type(2)") shouldBe "We’ll also contact Coca Cola with an update."
+          elementText("#content p:nth-of-type(2)") shouldBe "We’ll also contact your client with an update."
         }
 
         "have a finish button" which {

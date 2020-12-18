@@ -17,6 +17,7 @@
 package controllers.businessTradingName
 
 import audit.AuditingService
+import common.SessionKeys.businessNameAccessPermittedKey
 import controllers.ControllerBaseSpec
 import play.api.test.Helpers._
 import views.html.businessTradingName.CheckYourAnswersView
@@ -120,7 +121,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "show the Check your answer page" in {
         mockIndividualAuthorised()
-        val result = controller.showBusinessName(requestWithBusinessName)
+        val result = controller.showBusinessName(requestWithBusinessName.withSession(
+          businessNameAccessPermittedKey -> "true"))
 
         status(result) shouldBe OK
       }
@@ -130,7 +132,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       lazy val result = {
         mockIndividualAuthorised()
-        controller.showBusinessName(request)
+        controller.showBusinessName(request.withSession(
+          businessNameAccessPermittedKey -> "true"))
       }
 
       "return 303" in {
@@ -138,7 +141,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       }
 
       "redirect the user to enter a new business name" in {
-        redirectLocation(result) shouldBe Some ("")
+        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
       }
     }
 
@@ -160,7 +163,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "the business name has been updated successfully" should {
 
         lazy val result = {
-          controller.updateBusinessName()(requestWithBusinessName)
+          controller.updateBusinessName()(requestWithBusinessName.withSession(
+            businessNameAccessPermittedKey -> "true"))
         }
 
         "return 303" in {
@@ -168,7 +172,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect to the business name changed success page" in {
-          redirectLocation(result) shouldBe Some("")
+          redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.businessName().url)
         }
       }
     }
@@ -176,7 +180,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there isn't a business name in session" should {
 
       lazy val result = {
-        controller.updateBusinessName()(request)
+        controller.updateBusinessName()(request.withSession(
+          businessNameAccessPermittedKey -> "true"))
       }
 
       "return 303" in {
@@ -184,7 +189,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       }
 
       "redirect the user to the capture business name page" in {
-        redirectLocation(result) shouldBe Some("")
+        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
       }
     }
 
