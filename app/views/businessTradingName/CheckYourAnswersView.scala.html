@@ -16,10 +16,11 @@
 
 @import config.AppConfig
 @import models.viewModels.CheckYourAnswersViewModel
-@this(mainTemplate: MainTemplate,
-        govukButton: GovukButton)
+
+@this(mainTemplate: MainTemplate, govukButton: GovukButton)
+
 @(model: CheckYourAnswersViewModel)(implicit messages: Messages,
-                                    appConfig: config.AppConfig,
+                                    appConfig: AppConfig,
                                     user: User[_])
 
 @mainTemplate(pageTitle = messages("checkYourAnswers.heading")) {
