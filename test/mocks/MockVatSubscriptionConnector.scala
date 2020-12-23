@@ -21,7 +21,7 @@ import connectors.VatSubscriptionConnector
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import models.User
-import models.customerInformation.{UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{UpdateTradingName, UpdateOrganisationDetailsSuccess}
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -38,7 +38,7 @@ trait MockVatSubscriptionConnector extends MockFactory {
   }
 
   def mockUpdateOrganisationDetailsResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit = {
-    (connector.updateOrganisationDetails(_: String, _: UpdateOrganisationDetails)(_: HeaderCarrier,
+    (connector.updateTradingName(_: String, _: UpdateTradingName)(_: HeaderCarrier,
       _: ExecutionContext, _: User[_]))
       .expects(*, *, *, *, *)
       .returns(result)

@@ -20,7 +20,7 @@ import config.AppConfig
 import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
 import javax.inject.{Inject, Singleton}
 import models.User
-import models.customerInformation.{CustomerInformation, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{CustomerInformation, UpdateTradingName, UpdateOrganisationDetailsSuccess}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import utils.LoggerUtil.{logDebug, logWarn}
@@ -52,14 +52,14 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
     }
   }
 
-  def updateOrganisationDetails(vrn: String, orgDetails: UpdateOrganisationDetails)
-                               (implicit hc: HeaderCarrier,
-                                ec: ExecutionContext,
-                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+  def updateTradingName(vrn: String, orgDetails: UpdateTradingName)
+                       (implicit hc: HeaderCarrier,
+                        ec: ExecutionContext,
+                        user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
 
     import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
 
-    http.PUT[UpdateOrganisationDetails, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateTradingNameUrl(vrn), orgDetails)
+    http.PUT[UpdateTradingName, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateTradingNameUrl(vrn), orgDetails)
 
   }
 

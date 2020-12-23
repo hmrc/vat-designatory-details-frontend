@@ -71,15 +71,15 @@ object CustomerInfoConstants {
     "partyType" -> "1"
   )
 
-  val updateOrganisationDetailsModel: UpdateOrganisationDetails =
-    UpdateOrganisationDetails("PepsiMac", Some("myAgentEmail@email.com"))
-  val updateOrganisationDetailsModelMin: UpdateOrganisationDetails =
-    UpdateOrganisationDetails("PepsiMac", None)
+  val updateTradingNameModel: UpdateTradingName =
+    UpdateTradingName("PepsiMac", Some("myAgentEmail@email.com"))
+  val updateTradingNameModelMin: UpdateTradingName =
+    UpdateTradingName("PepsiMac", None)
 
-  val updateOrganisationDetailsJson: JsObject = Json.obj(
+  val updateTradingNameJson: JsObject = Json.obj(
     "tradingName" -> "PepsiMac", "transactorOrCapacitorEmail" -> "myAgentEmail@email.com"
   )
-  val updateOrganisationDetailsJsonMin: JsObject = Json.obj("tradingName" -> "PepsiMac")
+  val updateTradingNameJsonMin: JsObject = Json.obj("tradingName" -> "PepsiMac")
 
   val invalidJsonError: ErrorModel = ErrorModel(Status.INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON.")
 }

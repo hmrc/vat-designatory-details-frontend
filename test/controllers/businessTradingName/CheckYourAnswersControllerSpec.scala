@@ -16,12 +16,16 @@
 
 package controllers.businessTradingName
 
+import assets.BaseTestConstants.vrn
 import audit.AuditingService
 import common.SessionKeys.businessNameAccessPermittedKey
 import controllers.ControllerBaseSpec
+import models.customerInformation.{UpdateOrganisationDetailsSuccess, UpdateTradingName}
+import models.errors.ErrorModel
 import play.api.test.Helpers._
-import services.VatSubscriptionService
 import views.html.businessTradingName.CheckYourAnswersView
+
+import scala.concurrent.Future
 
 
 class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
@@ -29,8 +33,9 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
   implicit val auditingService: AuditingService = inject[AuditingService]
 
   val controller = new CheckYourAnswersController(
+    mockErrorHandler,
     inject[CheckYourAnswersView],
-    inject[VatSubscriptionService]
+    mockVatSubscriptionService
   )
 
   "Calling the show trading name action in CheckYourAnswersController" when {
@@ -79,6 +84,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "the trading name has been updated successfully" should {
 
         lazy val result = {
+          mockUpdateTradingName(vrn, UpdateTradingName(testTradingName, None))(Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
           controller.updateTradingName()(requestWithTradingName)
         }
 
@@ -88,6 +94,34 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "redirect to the trading name changed success page" in {
           redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName().url)
+        }
+      }
+
+      "VatSubscriptionService returns a conflict" should {
+
+        lazy val result = {
+          mockUpdateTradingName(vrn, UpdateTradingName(testTradingName, None))(Future(Left(ErrorModel(CONFLICT, "bad things"))))
+          controller.updateTradingName()(requestWithTradingName)
+        }
+
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect to manage-vat" in {
+          redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
+        }
+      }
+
+      "VatSubscriptionService returns an error" should {
+
+        lazy val result = {
+          mockUpdateTradingName(vrn, UpdateTradingName(testTradingName, None))(Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again"))))
+          controller.updateTradingName()(requestWithTradingName)
+        }
+
+        "return 500" in {
+          status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
     }

@@ -16,26 +16,19 @@
 
 package models.customerInformation
 
-import assets.CustomerInfoConstants._
-import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.UnitSpec
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Writes}
 
-class UpdateOrganisationDetailsSpec extends UnitSpec {
+case class UpdateTradingName(tradingName: String,
+                             capacitorEmail: Option[String])
 
-  "UpdateOrganisationDetails" when {
+object UpdateTradingName {
 
-    "all optional fields are present" should {
+  private val tradingNamePath = JsPath \ "tradingName"
+  private val capacitorEmailPath = JsPath \ "transactorOrCapacitorEmail"
 
-      "parse to JSON correctly" in {
-        Json.toJson(updateOrganisationDetailsModel) shouldBe updateOrganisationDetailsJson
-      }
-    }
-
-    "no optional fields are present" should {
-
-      "parse to JSON correctly" in {
-        Json.toJson(updateOrganisationDetailsModelMin) shouldBe updateOrganisationDetailsJsonMin
-      }
-    }
-  }
+  implicit val writes: Writes[UpdateTradingName] = (
+    tradingNamePath.write[String] and
+    capacitorEmailPath.writeNullable[String]
+  )(unlift(UpdateTradingName.unapply))
 }

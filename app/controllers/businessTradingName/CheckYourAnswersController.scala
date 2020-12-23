@@ -19,21 +19,24 @@ package controllers.businessTradingName
 import audit.AuditingService
 import audit.models.ChangedTradingNameAuditModel
 import common.SessionKeys._
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
-import models.customerInformation.UpdateOrganisationDetails
+import models.customerInformation.UpdateTradingName
+import models.errors.ErrorModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import models.viewModels.CheckYourAnswersViewModel
 import services.VatSubscriptionService
 import views.html.businessTradingName.CheckYourAnswersView
+import utils.LoggerUtil.logWarn
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswersController @Inject()(checkYourAnswersView: CheckYourAnswersView,
+class CheckYourAnswersController @Inject()(val errorHandler: ErrorHandler,
+                                            checkYourAnswersView: CheckYourAnswersView,
                                             vatSubscriptionService: VatSubscriptionService)(
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
@@ -58,7 +61,7 @@ class CheckYourAnswersController @Inject()(checkYourAnswersView: CheckYourAnswer
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
     val currentTradingName: Option[String] = user.session.get(validationTradingNameKey) match {
       case Some("") => None
@@ -69,26 +72,36 @@ class CheckYourAnswersController @Inject()(checkYourAnswersView: CheckYourAnswer
     user.session.get(prepopulationTradingNameKey) match {
       case Some(prepopTradingName) =>
 
-        val orgDetails = UpdateOrganisationDetails(
+        val orgDetails = UpdateTradingName(
           tradingName = prepopTradingName,
           capacitorEmail = user.session.get(verifiedAgentEmail)
         )
 
-        vatSubscriptionService.updateTradingName(user.vrn, orgDetails)
+        vatSubscriptionService.updateTradingName(user.vrn, orgDetails) map {
+          case Right(_) =>
+            auditingService.audit(ChangedTradingNameAuditModel(
+              currentTradingName,
+              prepopTradingName,
+              user.vrn,
+              user.isAgent,
+              user.arn),
+              Some(routes.CheckYourAnswersController.updateTradingName().url)
+            )
+            Redirect(controllers.routes.ChangeSuccessController.tradingName())
+              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
 
-        auditingService.audit(ChangedTradingNameAuditModel(
-          currentTradingName,
-          prepopTradingName,
-          user.vrn,
-          user.isAgent,
-          user.arn),
-          Some(routes.CheckYourAnswersController.updateTradingName().url)
-        )
-        Redirect(controllers.routes.ChangeSuccessController.tradingName())
-          .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+          case Left(ErrorModel(CONFLICT, _)) =>
+            logWarn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
+              "already in progress. Redirecting user to manage-vat overview page.")
+            Redirect(appConfig.manageVatSubscriptionServicePath)
+              .addingToSession(inFlightOrgDetailsKey -> "true")
+
+          case Left(_) =>
+            errorHandler.showInternalServerError
+        }
 
       case _ =>
-        Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
+        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show()))
     }
   }
 
