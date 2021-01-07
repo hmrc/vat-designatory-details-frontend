@@ -108,7 +108,7 @@
 
 @getHelpHtml = @{hmrcReportTechnicalIssue(ReportTechnicalIssue(
   serviceCode = appConfig.contactFormServiceIdentifier,
-  language = Some(messages.lang.language)
+  language = if (messages.lang.language == "en") En else Cy
 ))}
 
 @fullContent = {
