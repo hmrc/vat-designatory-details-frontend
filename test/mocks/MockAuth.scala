@@ -69,6 +69,7 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
     mockEnrolmentsAuthService,
     mcc,
     mockErrorHandler,
+    mockVatSubscriptionService,
     mockAuthAsAgentWithClient,
     sessionTimeoutView,
     unauthorisedAgentView,

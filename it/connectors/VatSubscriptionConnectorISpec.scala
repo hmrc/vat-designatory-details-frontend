@@ -54,7 +54,9 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
     contactPreference = Some(ContactPreference.digital),
     changeIndicators = Some(changeIndicators),
     nameIsReadOnly = Some(false),
-    partyType = Some("1")
+    partyType = Some("1"),
+    isInsolvent = false,
+    continueToTrade = None
   )
 
   "Calling getCustomerInfo" when {

@@ -96,4 +96,21 @@ class CustomerInformationSpec extends UnitSpec {
       minCustomerInfoModel.isValidPartyType shouldBe false
     }
   }
+
+  "calling .isInsolventWithoutAccess" should {
+
+    "return true when the user is insolvent and not continuing to trade" in {
+      customerInfoInsolvent.isInsolventWithoutAccess shouldBe true
+    }
+
+    "return false when the user is insolvent but is continuing to trade" in {
+      customerInfoInsolvent.copy(continueToTrade = Some(true)).isInsolventWithoutAccess shouldBe false
+    }
+
+    "return false when the user is not insolvent, regardless of the continueToTrade flag" in {
+      fullCustomerInfoModel.isInsolventWithoutAccess shouldBe false
+      fullCustomerInfoModel.copy(continueToTrade = Some(false)).isInsolventWithoutAccess shouldBe false
+      fullCustomerInfoModel.copy(continueToTrade = None).isInsolventWithoutAccess shouldBe false
+    }
+  }
 }
