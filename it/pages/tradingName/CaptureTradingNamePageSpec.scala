@@ -31,7 +31,8 @@ class CaptureTradingNamePageSpec extends BasePageISpec {
 
   "Calling the Capture trading name (.show) route" when {
 
-    def show: WSResponse = get(path, formatInflightChange(Some("false")) ++ formatValidationTradingName(Some("ABC Trading")))
+    def show: WSResponse = get(path, formatInflightChange(Some("false")) ++
+      formatValidationTradingName(Some("ABC Trading")) ++ insolvencyValue)
 
     "the user is authenticated" should {
 
@@ -52,7 +53,7 @@ class CaptureTradingNamePageSpec extends BasePageISpec {
   "Calling the Capture trading name (.submit) route" when {
 
     def submit(data: String): WSResponse = post(path,
-      formatValidationTradingName(Some(currentTradingName)) ++ formatInflightChange(Some("false"))
+      formatValidationTradingName(Some(currentTradingName)) ++ formatInflightChange(Some("false")) ++ insolvencyValue
     )(toFormData(TradingNameForm.tradingNameForm(currentTradingName), data))
 
     "the user is authenticated" when {

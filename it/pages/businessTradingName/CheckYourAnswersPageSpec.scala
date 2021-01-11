@@ -30,7 +30,8 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
   "Calling the Check your answers (.show trading name) route" when {
 
-    def show: WSResponse = get(tradingNamePath, Map(prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")))
+    def show: WSResponse = get(tradingNamePath, Map(prepopulationTradingNameKey -> newTradingName)
+      ++ formatInflightChange(Some("false")) ++ insolvencyValue)
 
     "the user is a authenticated" when {
 
@@ -54,7 +55,8 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
     def show: WSResponse = get(businessNamePath, Map(prepopulationBusinessNameKey -> newTradingName)
       ++ formatInflightChange(Some("false"))
-      ++ formatBusinessNameAccess)
+      ++ formatBusinessNameAccess
+      ++ insolvencyValue)
 
     "the user is a authenticated" when {
 

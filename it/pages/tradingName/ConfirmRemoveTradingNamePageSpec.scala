@@ -16,7 +16,7 @@
 
 package pages.tradingName
 
-import common.SessionKeys.validationTradingNameKey
+import common.SessionKeys.{insolventWithoutAccessKey, validationTradingNameKey}
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
@@ -28,7 +28,7 @@ class ConfirmRemoveTradingNamePageSpec extends BasePageISpec {
 
   "Calling the Confirm Remove trading name (.show) route" when {
 
-    def show: WSResponse = get(path, Map(validationTradingNameKey -> currentTradingName) ++ formatInflightChange(Some("false")))
+    def show: WSResponse = get(path, Map(validationTradingNameKey -> currentTradingName) ++ formatInflightChange(Some("false")) ++ insolvencyValue)
 
     "the user is a authenticated" when {
 

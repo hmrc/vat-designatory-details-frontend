@@ -54,7 +54,9 @@ object VatSubscriptionStub extends WireMockMethods {
     ),
     "commsPreference" -> "DIGITAL",
     "changeIndicators" -> changeIndicatorsModel,
-    "partyType" -> "1"
+    "partyType" -> "1",
+    "isInsolvent" -> false,
+    "continueToTrade" -> true
   )
 
   val emptyCustomerInfo: JsObject = Json.obj("xxx" -> "xxx")

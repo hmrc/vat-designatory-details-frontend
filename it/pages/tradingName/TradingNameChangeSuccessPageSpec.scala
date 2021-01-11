@@ -31,7 +31,7 @@ class TradingNameChangeSuccessPageSpec extends BasePageISpec {
   "Calling the trading name change success route" when {
 
     def show: WSResponse = get(path, Map(prepopulationTradingNameKey -> newTradingName,
-      validationTradingNameKey -> oldTradingName, tradingNameChangeSuccessful -> "true"))
+      validationTradingNameKey -> oldTradingName, tradingNameChangeSuccessful -> "true") ++ insolvencyValue)
 
     "the user is authenticated" when {
 
