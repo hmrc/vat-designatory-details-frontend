@@ -64,8 +64,8 @@ object CustomerInformation {
   private val changeIndicatorsPath = JsPath \ "changeIndicators"
   private val nameIsReadOnlyPath = JsPath \ "customerDetails" \ "nameIsReadOnly"
   private val partyTypePath = JsPath \ "partyType"
-  private val isInsolventPath = JsPath \ "isInsolvent"
-  private val continueToTradePath = JsPath \ "continueToTrade"
+  private val isInsolventPath = JsPath \ "customerDetails" \ "isInsolvent"
+  private val continueToTradePath = JsPath \ "customerDetails" \ "continueToTrade"
 
   implicit val reads: Reads[CustomerInformation] = (
     pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
@@ -77,7 +77,7 @@ object CustomerInformation {
     changeIndicatorsPath.readNullable[ChangeIndicators].orElse(Reads.pure(None)) and
     nameIsReadOnlyPath.readNullable[Boolean].orElse(Reads.pure(None)) and
     partyTypePath.readNullable[String].orElse(Reads.pure(None)) and
-    isInsolventPath.read[Boolean].orElse(Reads.pure(false)) and
+    isInsolventPath.read[Boolean] and
     continueToTradePath.readNullable[Boolean].orElse(Reads.pure(None))
   )(CustomerInformation.apply _)
 }

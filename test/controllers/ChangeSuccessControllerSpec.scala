@@ -38,6 +38,8 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   "Calling the tradingName action" when {
 
+    insolvencyCheck(controller.tradingName)
+
     "all three expected session keys are populated" when {
 
       "the user is a principal entity" should {
@@ -169,6 +171,8 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the businessName action" when {
+
+    insolvencyCheck(controller.businessName)
 
     "the businessNameChangeSuccessful session key is 'true'" when {
 

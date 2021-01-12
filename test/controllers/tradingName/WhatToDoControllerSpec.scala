@@ -44,6 +44,8 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
   "Calling the show action" when {
 
+    insolvencyCheck(target().show)
+
     "there is a validation trading name in session that is not empty ('change' or 'remove' journey)" should {
 
       lazy val result = target().show(request.withSession(validationTradingNameKey -> "ABC Trading"))
@@ -114,6 +116,8 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the submit action" when {
+
+    insolvencyCheck(target().submit)
 
     "there is a validation trading name in session" when {
 

@@ -54,6 +54,8 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
   "Calling the show action" when {
 
+    insolvencyCheck(controller.show)
+
     "a user is enrolled with a valid enrolment" when {
 
       "the user's current business name is retrieved from session" should {
@@ -178,6 +180,8 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the submit action" when {
+
+    insolvencyCheck(controller.submit)
 
     "a user is enrolled with a valid enrolment" when {
 

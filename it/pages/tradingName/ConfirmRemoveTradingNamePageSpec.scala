@@ -16,7 +16,7 @@
 
 package pages.tradingName
 
-import common.SessionKeys.{insolventWithoutAccessKey, validationTradingNameKey}
+import common.SessionKeys.validationTradingNameKey
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse

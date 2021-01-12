@@ -33,6 +33,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
   "Calling the show trading name action in CheckYourAnswersController" when {
 
+    insolvencyCheck(controller.showTradingName)
+
     "there is a trading name in session" should {
 
       "show the Check your answer page" in {
@@ -71,6 +73,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling updateTradingName() in CheckYourAnswersController" when {
+
+    insolvencyCheck(controller.updateTradingName())
 
     "there is a trading name in session" when {
 
@@ -117,6 +121,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
   }
   "Calling the show business name action in CheckYourAnswersController" when {
 
+    insolvencyCheck(controller.showBusinessName)
+
     "there is a business name in session" should {
 
       "show the Check your answer page" in {
@@ -157,6 +163,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling updateBusinessName() in CheckYourAnswersController" when {
+
+    insolvencyCheck(controller.updateBusinessName())
 
     "there is a business name in session" when {
 

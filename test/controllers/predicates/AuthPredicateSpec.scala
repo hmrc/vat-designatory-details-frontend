@@ -111,9 +111,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
     "they have an active HMRC-MTD-VAT enrolment" when {
 
       "they have a value in session for their insolvency status" when {
-        mockIndividualAuthorised()
 
-        status(authPredicate(request)) shouldBe Status.OK
         "the value is 'true' (insolvent user not continuing to trade)" should {
 
           "return Forbidden (403)" in {
