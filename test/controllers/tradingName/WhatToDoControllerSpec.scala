@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the show action" when {
+
+    insolvencyCheck(target().show)
 
     "there is a validation trading name in session that is not empty ('change' or 'remove' journey)" should {
 
@@ -114,6 +116,8 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the submit action" when {
+
+    insolvencyCheck(target().submit)
 
     "there is a validation trading name in session" when {
 

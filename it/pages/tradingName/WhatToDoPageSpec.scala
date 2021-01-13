@@ -28,7 +28,7 @@ class WhatToDoPageSpec extends BasePageISpec {
 
   "Calling the WhatToDo (.show) route" when {
 
-    def show: WSResponse = get(path, formatInflightChange(Some("false")))
+    def show: WSResponse = get(path, formatInflightChange(Some("false")) ++ insolvencyValue)
 
     "the user is authenticated" when {
 

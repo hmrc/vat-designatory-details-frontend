@@ -17,6 +17,7 @@
 package pages
 
 import common.SessionKeys
+import common.SessionKeys.insolventWithoutAccessKey
 import helpers.IntegrationBaseSpec
 import play.api.i18n.Messages
 import play.api.libs.ws.WSResponse
@@ -34,6 +35,8 @@ trait BasePageISpec extends IntegrationBaseSpec {
     _.fold(Map.empty[String, String])(x => Map(SessionKeys.validationTradingNameKey -> x))
 
   val formatBusinessNameAccess: Map[String, String] = Map(SessionKeys.businessNameAccessPermittedKey -> "true")
+
+  val insolvencyValue: Map[String, String] = Map(insolventWithoutAccessKey -> "false")
 
   def httpPostAuthenticationTests(path: String, sessionVrn: Option[String] = None)(formData: Map[String, Seq[String]]): Unit =
     authenticationTests(path, post(path, formatSessionVrn(sessionVrn))(formData))

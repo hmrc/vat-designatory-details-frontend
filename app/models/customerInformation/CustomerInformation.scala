@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,9 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
                                contactPreference: Option[String],
                                changeIndicators: Option[ChangeIndicators],
                                nameIsReadOnly: Option[Boolean],
-                               partyType: Option[String]) {
+                               partyType: Option[String],
+                               isInsolvent: Boolean,
+                               continueToTrade: Option[Boolean]) {
 
   val pendingTradingName: Option[String] = pendingChanges.flatMap(_.tradingName)
 
@@ -44,6 +46,11 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
   val isValidPartyType: Boolean =
     Seq("Z1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "50",
       "51", "52", "53", "54", "55", "58", "59", "60", "61", "62", "63").contains(partyType.getOrElse(""))
+
+  val isInsolventWithoutAccess: Boolean = continueToTrade match {
+    case Some(false) => isInsolvent
+    case _ => false
+  }
 }
 
 object CustomerInformation {
@@ -57,6 +64,8 @@ object CustomerInformation {
   private val changeIndicatorsPath = JsPath \ "changeIndicators"
   private val nameIsReadOnlyPath = JsPath \ "customerDetails" \ "nameIsReadOnly"
   private val partyTypePath = JsPath \ "partyType"
+  private val isInsolventPath = JsPath \ "customerDetails" \ "isInsolvent"
+  private val continueToTradePath = JsPath \ "customerDetails" \ "continueToTrade"
 
   implicit val reads: Reads[CustomerInformation] = (
     pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
@@ -67,6 +76,8 @@ object CustomerInformation {
     contactPreferencePath.readNullable[String].orElse(Reads.pure(None)) and
     changeIndicatorsPath.readNullable[ChangeIndicators].orElse(Reads.pure(None)) and
     nameIsReadOnlyPath.readNullable[Boolean].orElse(Reads.pure(None)) and
-    partyTypePath.readNullable[String].orElse(Reads.pure(None))
+    partyTypePath.readNullable[String].orElse(Reads.pure(None)) and
+    isInsolventPath.read[Boolean] and
+    continueToTradePath.readNullable[Boolean].orElse(Reads.pure(None))
   )(CustomerInformation.apply _)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,6 +94,23 @@ class CustomerInformationSpec extends UnitSpec {
 
     "return false if the value is not in the list of valid types" in {
       minCustomerInfoModel.isValidPartyType shouldBe false
+    }
+  }
+
+  "calling .isInsolventWithoutAccess" should {
+
+    "return true when the user is insolvent and not continuing to trade" in {
+      customerInfoInsolvent.isInsolventWithoutAccess shouldBe true
+    }
+
+    "return false when the user is insolvent but is continuing to trade" in {
+      customerInfoInsolvent.copy(continueToTrade = Some(true)).isInsolventWithoutAccess shouldBe false
+    }
+
+    "return false when the user is not insolvent, regardless of the continueToTrade flag" in {
+      fullCustomerInfoModel.isInsolventWithoutAccess shouldBe false
+      fullCustomerInfoModel.copy(continueToTrade = Some(false)).isInsolventWithoutAccess shouldBe false
+      fullCustomerInfoModel.copy(continueToTrade = None).isInsolventWithoutAccess shouldBe false
     }
   }
 }

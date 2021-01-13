@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,11 @@ object CustomerInfoConstants {
   val pendingTradingNameModel: PendingChanges = PendingChanges(Some("New trading name"))
   val changeIndicatorsModel: ChangeIndicators = ChangeIndicators(true)
 
-  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None, None, None, None)
-  val minCustomerInfoJson: JsObject = Json.obj()
+  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None, None, None, None, false, None)
+  val minCustomerInfoJson: JsObject = Json.obj(
+    "customerDetails" -> Json.obj(
+      "isInsolvent" -> false
+    ))
 
   val fullCustomerInfoModel: CustomerInformation = CustomerInformation(
     pendingChanges = Some(pendingTradingNameModel),
@@ -46,7 +49,9 @@ object CustomerInfoConstants {
     contactPreference = Some(ContactPreference.digital),
     changeIndicators = Some(changeIndicatorsModel),
     nameIsReadOnly = Some(false),
-    partyType = Some("1")
+    partyType = Some("1"),
+    isInsolvent = false,
+    continueToTrade = Some(true)
   )
 
   val customerInfoNoPending: CustomerInformation = fullCustomerInfoModel.copy(pendingChanges = None, changeIndicators = Some(ChangeIndicators(false)))
@@ -64,12 +69,16 @@ object CustomerInfoConstants {
       "lastName" -> "Mac",
       "organisationName" -> "PepsiMac Ltd",
       "tradingName" -> "PepsiMac",
-      "nameIsReadOnly" -> false
+      "nameIsReadOnly" -> false,
+      "isInsolvent" -> false,
+      "continueToTrade" -> Some(true)
     ),
     "commsPreference" -> "DIGITAL",
     "changeIndicators" -> Some(changeIndicatorsModel),
     "partyType" -> "1"
   )
+
+  val customerInfoInsolvent: CustomerInformation = fullCustomerInfoModel.copy(isInsolvent = true, continueToTrade = Some(false))
 
   val updateOrganisationDetailsModel: UpdateOrganisationDetails =
     UpdateOrganisationDetails("PepsiMac", Some("myAgentEmail@email.com"))

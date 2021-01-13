@@ -50,7 +50,9 @@ object VatSubscriptionStub extends WireMockMethods {
       "lastName" -> "Taylor",
       "organisationName" -> "D Taylor's Cars",
       "tradingName" -> "DT Autos",
-      "nameIsReadOnly" -> false
+      "nameIsReadOnly" -> false,
+      "isInsolvent" -> false,
+      "continueToTrade" -> true
     ),
     "commsPreference" -> "DIGITAL",
     "changeIndicators" -> changeIndicatorsModel,

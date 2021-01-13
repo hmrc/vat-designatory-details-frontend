@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,8 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
   )
 
   "Calling the show action" when {
+
+    insolvencyCheck(controller.show)
 
     "a user is enrolled with a valid enrolment" when {
 
@@ -129,6 +131,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the submit action" when {
+    insolvencyCheck(controller.submit)
 
     "a user is enrolled with a valid enrolment" when {
 

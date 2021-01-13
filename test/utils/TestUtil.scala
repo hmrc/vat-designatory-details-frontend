@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 import views.html.errors.StandardErrorView
 import assets.BaseTestConstants._
+import common.SessionKeys
 
 trait TestUtil extends UnitSpec with GuiceOneAppPerSuite with MaterializerSupport with BeforeAndAfterEach with Injecting {
 
@@ -50,7 +51,8 @@ trait TestUtil extends UnitSpec with GuiceOneAppPerSuite with MaterializerSuppor
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
 
-    inFlightOrgDetailsKey -> "false")
+    inFlightOrgDetailsKey -> "false",
+    insolventWithoutAccessKey -> "false")
 
   lazy val requestWithTradingName: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(prepopulationTradingNameKey -> testTradingName)
@@ -60,6 +62,9 @@ trait TestUtil extends UnitSpec with GuiceOneAppPerSuite with MaterializerSuppor
 
   lazy val fakeRequestWithClientsVRN: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(clientVrn -> vrn)
+
+  lazy val insolventRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest().withSession(SessionKeys.insolventWithoutAccessKey -> "true")
 
   lazy val user: User[AnyContentAsEmpty.type] = User[AnyContentAsEmpty.type](vrn, active = true)(request)
   lazy val agent: User[AnyContentAsEmpty.type] =

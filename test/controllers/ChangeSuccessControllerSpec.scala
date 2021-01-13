@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
   )
 
   "Calling the tradingName action" when {
+
+    insolvencyCheck(controller.tradingName)
 
     "all three expected session keys are populated" when {
 
@@ -169,6 +171,8 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
   }
 
   "Calling the businessName action" when {
+
+    insolvencyCheck(controller.businessName)
 
     "the businessNameChangeSuccessful session key is 'true'" when {
 

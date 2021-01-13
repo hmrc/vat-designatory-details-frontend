@@ -27,7 +27,7 @@ class BusinessNameChangeSuccessPageSpec extends BasePageISpec {
 
   "Calling the business name change success route" when {
 
-    def show: WSResponse = get(path, Map(businessNameChangeSuccessful -> "true"))
+    def show: WSResponse = get(path, Map(businessNameChangeSuccessful -> "true") ++ insolvencyValue)
 
     "the user is authenticated" when {
 
