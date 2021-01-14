@@ -33,7 +33,8 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
   val controller: ChangeSuccessController = new ChangeSuccessController(
     mockVatSubscriptionService,
     inject[TradingNameChangeSuccessView],
-    inject[BusinessNameChangeSuccessView]
+    inject[BusinessNameChangeSuccessView],
+    mockErrorHandler
   )
 
   "Calling the tradingName action" when {
@@ -172,60 +173,77 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   "Calling the businessName action" when {
 
-    insolvencyCheck(controller.businessName)
+    "the business name feature switch is on" when {
 
-    "the businessNameChangeSuccessful session key is 'true'" when {
+      insolvencyCheck(controller.businessName)
 
-      "the call to customer info is successful" when {
+      "the businessNameChangeSuccessful session key is 'true'" when {
 
-        "the user is a principal entity" should {
-          lazy val result: Future[Result] = {
-            mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-            controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
+        "the call to customer info is successful" when {
+
+          "the user is a principal entity" should {
+            lazy val result: Future[Result] = {
+              mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
+              controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
+            }
+
+            "return 200" in {
+              status(result) shouldBe Status.OK
+            }
           }
 
-          "return 200" in {
-            status(result) shouldBe Status.OK
+          "the user is an agent" should {
+            lazy val result: Future[Result] = {
+              mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
+              controller.businessName(request.withSession(
+                businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
+              ))
+            }
+
+            "return 200" in {
+              mockAgentAuthorised()
+              status(result) shouldBe Status.OK
+            }
+          }
+
+          "the call to customer info is unsuccessful" should {
+            lazy val result: Future[Result] = {
+              mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
+              controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
+            }
+
+            "return 200" in {
+              status(result) shouldBe Status.OK
+            }
           }
         }
+      }
 
-        "the user is an agent" should {
-          lazy val result: Future[Result] = {
-            mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-            controller.businessName(request.withSession(
-              businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
-            ))
-          }
+      "the businessNameChangeSuccessful session key is not populated" should {
 
-          "return 200" in {
-            mockAgentAuthorised()
-            status(result) shouldBe Status.OK
-          }
+        lazy val result: Future[Result] = controller.businessName(request)
+
+        "return 303" in {
+          status(result) shouldBe Status.SEE_OTHER
         }
 
-        "the call to customer info is unsuccessful" should {
-          lazy val result: Future[Result] = {
-            mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
-            controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
-          }
-
-          "return 200" in {
-            status(result) shouldBe Status.OK
-          }
+        "redirect the user to the capture business name controller" in {
+          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
         }
       }
     }
 
-    "the businessNameChangeSuccessful session key is not populated" should {
+    "the business name feature is off" should {
 
-      lazy val result: Future[Result] = controller.businessName(request)
+      "return not found (404)" in {
 
-      "return 303" in {
-        status(result) shouldBe Status.SEE_OTHER
-      }
+        lazy val result: Future[Result] = {
+          mockConfig.features.businessNameR19_R20Enabled(false)
+          mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
+          controller.businessName(request)
+        }
 
-      "redirect the user to the capture business name controller" in {
-        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+        status(result) shouldBe NOT_FOUND
       }
     }
   }

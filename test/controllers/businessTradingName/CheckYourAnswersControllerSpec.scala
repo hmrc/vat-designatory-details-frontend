@@ -40,41 +40,45 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
   "Calling the show trading name action in CheckYourAnswersController" when {
 
-    insolvencyCheck(controller.showTradingName)
+    "the business name feature is switched on" when {
 
-    "there is a trading name in session" should {
+      insolvencyCheck(controller.showTradingName)
 
-      "show the Check your answer page" in {
-        mockIndividualAuthorised()
-        val result = controller.showTradingName(requestWithTradingName)
+      "there is a trading name in session" should {
 
-        status(result) shouldBe OK
-      }
-    }
+        "show the Check your answer page" in {
+          mockConfig.features.businessNameR19_R20Enabled(true)
+          mockIndividualAuthorised()
+          val result = controller.showTradingName(requestWithTradingName)
 
-    "there isn't a trading name in session" should {
-
-      lazy val result = {
-        mockIndividualAuthorised()
-        controller.showTradingName(request)
+          status(result) shouldBe OK
+        }
       }
 
-      "return 303" in {
-        status(result) shouldBe SEE_OTHER
+      "there isn't a trading name in session" should {
+
+        lazy val result = {
+          mockIndividualAuthorised()
+          controller.showTradingName(request)
+        }
+
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect the user to enter a new trading name" in {
+          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+        }
       }
 
-      "redirect the user to enter a new trading name" in {
-        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
-      }
-    }
+      "the user is not authorised" should {
 
-    "the user is not authorised" should {
+        "return forbidden (403)" in {
+          mockIndividualWithoutEnrolment()
+          val result = controller.showTradingName(requestWithTradingName)
 
-      "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
-        val result = controller.showTradingName(requestWithTradingName)
-
-        status(result) shouldBe FORBIDDEN
+          status(result) shouldBe FORBIDDEN
+        }
       }
     }
   }
@@ -126,62 +130,29 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       }
     }
   }
+
   "Calling the show business name action in CheckYourAnswersController" when {
 
-    insolvencyCheck(controller.showBusinessName)
+    "the business name feature switch is on" when {
 
-    "there is a business name in session" should {
+      insolvencyCheck(controller.showBusinessName)
 
-      "show the Check your answer page" in {
-        mockIndividualAuthorised()
-        val result = controller.showBusinessName(requestWithBusinessName.withSession(
-          businessNameAccessPermittedKey -> "true"))
+      "there is a business name in session" should {
 
-        status(result) shouldBe OK
-      }
-    }
+        "show the Check your answer page" in {
+          mockIndividualAuthorised()
+          val result = controller.showBusinessName(requestWithBusinessName.withSession(
+            businessNameAccessPermittedKey -> "true"))
 
-    "there isn't a business name in session" should {
-
-      lazy val result = {
-        mockIndividualAuthorised()
-        controller.showBusinessName(request.withSession(
-          businessNameAccessPermittedKey -> "true"))
+          status(result) shouldBe OK
+        }
       }
 
-      "return 303" in {
-        status(result) shouldBe SEE_OTHER
-      }
-
-      "redirect the user to enter a new business name" in {
-        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
-      }
-    }
-
-    "the user is not authorised" should {
-
-      "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
-        val result = controller.showBusinessName(requestWithBusinessName)
-
-        status(result) shouldBe FORBIDDEN
-      }
-    }
-  }
-
-  "Calling updateBusinessName() in CheckYourAnswersController" when {
-
-    insolvencyCheck(controller.updateBusinessName())
-
-    "there is a business name in session" when {
-
-      "the business name has been updated successfully" should {
+      "there isn't a business name in session" should {
 
         lazy val result = {
-          mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
-            Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle")))
-          )
-          controller.updateBusinessName()(requestWithBusinessName.withSession(
+          mockIndividualAuthorised()
+          controller.showBusinessName(request.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
@@ -189,11 +160,63 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           status(result) shouldBe SEE_OTHER
         }
 
-        "redirect to the business name changed success page" in {
-          redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.businessName().url)
+        "redirect the user to enter a new business name" in {
+          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+        }
+      }
+
+      "the user is not authorised" should {
+
+        "return forbidden (403)" in {
+          mockIndividualWithoutEnrolment()
+          val result = controller.showBusinessName(requestWithBusinessName)
+
+          status(result) shouldBe FORBIDDEN
         }
       }
     }
+
+    "the business name feature switch is off" should {
+
+      "return not found (404)" in {
+        mockConfig.features.businessNameR19_R20Enabled(false)
+        mockIndividualAuthorised()
+        val result = controller.showBusinessName(requestWithBusinessName.withSession(
+          businessNameAccessPermittedKey -> "true"))
+
+        status(result) shouldBe NOT_FOUND
+      }
+    }
+  }
+
+  "Calling updateBusinessName() in CheckYourAnswersController" when {
+
+    "the business name feature switch is on" when {
+
+      insolvencyCheck(controller.updateBusinessName())
+
+    "there is a business name in session" when {
+
+        "the business name has been updated successfully" should {
+
+        lazy val result = {
+          mockConfig.features.businessNameR19_R20Enabled(true)
+          mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
+            Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle")))
+          )
+          controller.updateBusinessName()(requestWithBusinessName.withSession(
+            businessNameAccessPermittedKey -> "true"))
+        }
+
+          "return 303" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "redirect to the business name changed success page" in {
+            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.businessName().url)
+          }
+        }
+      }
 
     "VatSubscriptionService returns a conflict" should {
 
@@ -231,29 +254,46 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
     "there isn't a business name in session" should {
 
-      lazy val result = {
-        controller.updateBusinessName()(request.withSession(
-          businessNameAccessPermittedKey -> "true"))
+        lazy val result = {
+          mockConfig.features.businessNameR19_R20Enabled(true)
+          controller.updateBusinessName()(request.withSession(
+            businessNameAccessPermittedKey -> "true"))
+        }
+
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect the user to the capture business name page" in {
+          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+        }
       }
 
-      "return 303" in {
-        status(result) shouldBe SEE_OTHER
-      }
+      "the user is not authorised" should {
 
-      "redirect the user to the capture business name page" in {
-        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+        "return forbidden (403)" in {
+          mockIndividualWithoutEnrolment()
+          val result = controller.updateBusinessName()(requestWithBusinessName)
+
+          status(result) shouldBe FORBIDDEN
+        }
       }
     }
 
-    "the user is not authorised" should {
+    "the business name feature switch is off" should {
 
-      "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
-        val result = controller.updateBusinessName()(requestWithBusinessName)
+      "return not found (404)" in {
 
-        status(result) shouldBe FORBIDDEN
+        mockIndividualAuthorised()
+
+        lazy val result = {
+          mockConfig.features.businessNameR19_R20Enabled(false)
+          controller.updateBusinessName()(requestWithBusinessName.withSession(
+            businessNameAccessPermittedKey -> "true"))
+        }
+
+        status(result) shouldBe NOT_FOUND
       }
     }
   }
 }
-

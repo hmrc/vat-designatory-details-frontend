@@ -39,6 +39,8 @@ object ConfigKeys {
   val manageVatSubscriptionServiceUrl: String = "manage-vat-subscription-frontend.url"
   val manageVatSubscriptionServicePath: String = "manage-vat-subscription-frontend.path"
 
+  val businessNameR19_R20Feature: String = "features.businessNameR19_R20.enabled"
+
   val host: String = "host"
 
   val vatSubscription: String = "vat-subscription"

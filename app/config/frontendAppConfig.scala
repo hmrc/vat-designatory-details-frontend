@@ -20,8 +20,10 @@ import java.util.Base64
 
 import config.{ConfigKeys => Keys}
 import javax.inject.{Inject, Singleton}
+import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.Call
+import testOnly.features.Features
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -61,10 +63,11 @@ trait AppConfig {
   val footerTermsConditionsUrl: String
   val footerHelpUrl: String
   val businessNameGuidanceUrl: String
+  val features: Features
 }
 
 @Singleton
-class FrontendAppConfig @Inject()(sc: ServicesConfig) extends AppConfig {
+class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConfig) extends AppConfig {
 
   override lazy val appName: String = sc.getString("appName")
 
@@ -142,4 +145,6 @@ class FrontendAppConfig @Inject()(sc: ServicesConfig) extends AppConfig {
   override val footerCookiesUrl: String = sc.getString(ConfigKeys.footerCookiesUrl)
 
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
+
+  override val features: Features = new Features(configuration)
 }
