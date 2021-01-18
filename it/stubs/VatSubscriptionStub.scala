@@ -26,6 +26,8 @@ object VatSubscriptionStub extends WireMockMethods {
 
   private val getCustomerInfoUri: String = "/vat-subscription/([0-9]+)/full-information"
 
+  private val updateBusinessNameUri: String = "/vat-subscription/([0-9]+)/business-name"
+
   def stubCustomerInfo: StubMapping = {
     when(method = GET, uri = getCustomerInfoUri)
       .thenReturn(status = OK, body = customerInfoJson)
@@ -39,6 +41,16 @@ object VatSubscriptionStub extends WireMockMethods {
   def stubCustomerInfoError: StubMapping = {
     when(method = GET, uri = getCustomerInfoUri)
       .thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj("fail" -> "nope"))
+  }
+
+  def stubUpdateBusinessName: StubMapping = {
+    when(method = PUT, uri = updateBusinessNameUri)
+      .thenReturn(status = OK, body = Json.obj("formBundle" -> "success"))
+  }
+
+  def stubUpdateBusinessNameError: StubMapping = {
+    when(method = PUT, uri = updateBusinessNameUri)
+      .thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj("bad" -> "things"))
   }
 
   val currentTradingName = "Current Trading Name"

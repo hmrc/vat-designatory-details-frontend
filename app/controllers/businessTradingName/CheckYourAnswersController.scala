@@ -19,19 +19,25 @@ package controllers.businessTradingName
 import audit.AuditingService
 import audit.models.ChangedTradingNameAuditModel
 import common.SessionKeys._
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
+import models.customerInformation.UpdateBusinessName
+import models.errors.ErrorModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import models.viewModels.CheckYourAnswersViewModel
+import services.VatSubscriptionService
 import views.html.businessTradingName.CheckYourAnswersView
+import utils.LoggerUtil.logWarn
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswersView)(
+class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
+                                            checkYourAnswersView: CheckYourAnswersView,
+                                            vatSubscriptionService: VatSubscriptionService)(
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
                                             inFlightComps: InFlightPredicateComponents,
@@ -95,14 +101,28 @@ class CheckYourAnswersController @Inject() (checkYourAnswersView: CheckYourAnswe
         Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
     }
   }
-  def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
+  def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
 
     user.session.get(prepopulationBusinessNameKey) match {
       case Some(businessName) =>
-        Redirect(controllers.routes.ChangeSuccessController.businessName())
-          .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+
+        val updatedBusinessName = UpdateBusinessName(businessName, capacitorEmail = user.session.get(verifiedAgentEmail))
+
+        vatSubscriptionService.updateBusinessName(user.vrn, updatedBusinessName) map {
+          case Right(_) => Redirect(controllers.routes.ChangeSuccessController.businessName())
+            .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+          case Left(ErrorModel(CONFLICT, _)) =>
+            logWarn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +
+              "already in progress. Redirecting user to manage-vat overview page.")
+            Redirect(appConfig.manageVatSubscriptionServicePath)
+              .addingToSession(inFlightOrgDetailsKey -> "true")
+
+          case Left(_) =>
+            errorHandler.showInternalServerError
+        }
+
       case _ =>
-        Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
+        Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
     }
   }
 

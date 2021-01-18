@@ -56,7 +56,7 @@ object CustomerInfoConstants {
 
   val customerInfoNoPending: CustomerInformation = fullCustomerInfoModel.copy(pendingChanges = None, changeIndicators = Some(ChangeIndicators(false)))
 
-  val customerInfoNoBusinessName = fullCustomerInfoModel.copy(organisationName = None)
+  val customerInfoNoBusinessName: CustomerInformation = fullCustomerInfoModel.copy(organisationName = None)
 
   val fullCustomerInfoModelSameTradingName: CustomerInformation = fullCustomerInfoModel.copy(
     tradingName = Some("New trading name")
@@ -89,6 +89,16 @@ object CustomerInfoConstants {
     "tradingName" -> "PepsiMac", "transactorOrCapacitorEmail" -> "myAgentEmail@email.com"
   )
   val updateOrganisationDetailsJsonMin: JsObject = Json.obj("tradingName" -> "PepsiMac")
+
+  val updateBusinessNameModel: UpdateBusinessName = UpdateBusinessName("Just a Business", Some("bestAgentEva@email.com"))
+
+  val updateBusinessNameJson: JsObject = Json.obj(
+    "organisationName" -> "Just a Business", "transactorOrCapacitorEmail" -> "bestAgentEva@email.com"
+  )
+
+  val updateBusinessNameModelMin: UpdateBusinessName = UpdateBusinessName("Just a Business", None)
+
+  val updateBusinessNameJsonMin: JsObject = Json.obj("organisationName" -> "Just a Business")
 
   val invalidJsonError: ErrorModel = ErrorModel(Status.INTERNAL_SERVER_ERROR, "The endpoint returned invalid JSON.")
 }

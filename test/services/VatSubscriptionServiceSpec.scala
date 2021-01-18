@@ -20,7 +20,10 @@ import assets.CustomerInfoConstants._
 import mocks.MockVatSubscriptionConnector
 import utils.TestUtil
 import models.User
+import models.customerInformation.{UpdateBusinessName, UpdateOrganisationDetailsSuccess}
 import play.api.mvc.AnyContentAsEmpty
+
+import scala.concurrent.Future
 
 class VatSubscriptionServiceSpec extends TestUtil with MockVatSubscriptionConnector {
 
@@ -46,6 +49,29 @@ class VatSubscriptionServiceSpec extends TestUtil with MockVatSubscriptionConnec
         mockGetCustomerInfoFailureResponse()
 
         val result = await(service.getCustomerInfo(testVrn))
+        result shouldBe Left(invalidJsonError)
+      }
+    }
+  }
+
+  "calling updateBusinessName" when {
+
+    "the VatSubscriptionConnector returns a model" should {
+
+      "return the model" in {
+        mockUpdateBusinessNameResponse(Future.successful(Right(UpdateOrganisationDetailsSuccess("success"))))
+
+        val result = await(service.updateBusinessName(testVrn, UpdateBusinessName("The Business", None)))
+        result shouldBe Right(UpdateOrganisationDetailsSuccess("success"))
+      }
+    }
+
+    "the VatSubscriptionConnector returns an error" should {
+
+      "return the error" in {
+        mockUpdateBusinessNameResponse(Future.successful(Left(invalidJsonError)))
+
+        val result = await(service.updateBusinessName(testVrn, UpdateBusinessName("The Business", None)))
         result shouldBe Left(invalidJsonError)
       }
     }
