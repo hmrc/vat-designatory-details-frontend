@@ -20,7 +20,7 @@ import config.AppConfig
 import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
 import javax.inject.{Inject, Singleton}
 import models.User
-import models.customerInformation.{CustomerInformation, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import utils.LoggerUtil.{logDebug, logWarn}
@@ -36,6 +36,9 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
 
   private[connectors] def updateOrganisationDetailsUrl(vrn: String): String =
     s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/organisationDetails"
+
+  private[connectors] def updateBusinessNameUrl(vrn: String): String =
+    s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/business-name"
 
   def getCustomerInfo(vrn: String)
                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CustomerInformation]] = {
@@ -56,4 +59,16 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
                                (implicit hc: HeaderCarrier,
                                 ec: ExecutionContext,
                                 user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = ???
+
+
+  def updateBusinessName(vrn: String, businessName: UpdateBusinessName)
+                        (implicit hc: HeaderCarrier,
+                         ec: ExecutionContext,
+                         user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+
+    import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
+
+    http.PUT[UpdateBusinessName, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateBusinessNameUrl(vrn), businessName)
+  }
+
 }

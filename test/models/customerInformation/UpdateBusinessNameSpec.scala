@@ -14,10 +14,30 @@
  * limitations under the License.
  */
 
-package assets
+package models.customerInformation
 
-object BaseITConstants {
+import assets.CustomerInfoConstants._
+import play.api.libs.json.Json
+import uk.gov.hmrc.play.test.UnitSpec
 
-  val internalServerErrorTitle = "There is a problem with the service"
+class UpdateBusinessNameSpec extends UnitSpec {
 
+  "UpdateBusinessName" when {
+
+    "all optional fields are present" should {
+
+      "parse to JSON correctly" in {
+
+        Json.toJson(updateBusinessNameModel) shouldBe updateBusinessNameJson
+      }
+    }
+
+    "no optional fields are present" should {
+
+      "parse to JSON correctly" in {
+
+        Json.toJson(updateBusinessNameModelMin) shouldBe updateBusinessNameJsonMin
+      }
+    }
+  }
 }

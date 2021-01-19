@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package assets
+package models.customerInformation
 
-object BaseITConstants {
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Writes}
 
-  val internalServerErrorTitle = "There is a problem with the service"
+case class UpdateBusinessName(organisationName: String,
+                              capacitorEmail: Option[String])
 
+object UpdateBusinessName {
+
+  private val organisationNamePath = JsPath \ "organisationName"
+  private val capacitorEmailPath = JsPath \ "transactorOrCapacitorEmail"
+
+  implicit val writes: Writes[UpdateBusinessName] = (
+    organisationNamePath.write[String] and
+      capacitorEmailPath.writeNullable[String]
+    )(unlift(UpdateBusinessName.unapply))
 }

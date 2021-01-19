@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,19 @@
 
 package pages.businessTradingName
 
-import common.SessionKeys.{prepopulationBusinessNameKey, prepopulationTradingNameKey}
+import common.SessionKeys
+import common.SessionKeys.{businessNameAccessPermittedKey, prepopulationBusinessNameKey, prepopulationTradingNameKey}
+import helpers.SessionCookieCrumbler
 import pages.BasePageISpec
 import play.api.http.Status
 import play.api.libs.ws.WSResponse
+import stubs.VatSubscriptionStub
 
 class CheckYourAnswersPageSpec extends BasePageISpec {
 
   val tradingNamePath = "/confirm-new-trading-name"
   val businessNamePath = "/confirm-new-business-name"
+  val updateBusinessNamePath = "/update-business-name"
   val newTradingName = "New Trading Name"
   val newBusinessName = "New Business Name"
 
@@ -72,6 +76,50 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
             httpStatus(Status.OK),
             pageTitle(generateDocumentTitle("checkYourAnswers.heading"))
           )
+        }
+      }
+    }
+  }
+
+  "Calling the Check your answers (.updateBusinessName) route" when {
+
+    def update: WSResponse = get(updateBusinessNamePath, Map(prepopulationBusinessNameKey -> newBusinessName, businessNameAccessPermittedKey -> "true")
+      ++ formatInflightChange(Some("false")) ++ insolvencyValue)
+
+    "the user is a authenticated" when {
+
+      "the vat subscription service successfully updates the business name" should {
+
+        "redirect to the Change Success Controller" in {
+
+          given.user.isAuthenticated
+
+          When("The update business name route is called")
+
+          And("a successful business name update response is stubbed")
+          VatSubscriptionStub.stubUpdateBusinessName
+
+          val result = update
+
+          result should have(
+            httpStatus(Status.SEE_OTHER),
+            redirectURI(controllers.routes.ChangeSuccessController.businessName().url)
+          )
+        }
+
+        "add the businessNameChangeSuccessful and inFlightOrgDetailsKey to session" in {
+
+          given.user.isAuthenticated
+
+          When("The update business name route is called")
+
+          And("a successful business name update response is stubbed")
+          VatSubscriptionStub.stubUpdateBusinessName
+
+          val result = update
+
+          SessionCookieCrumbler.getSessionMap(result).get(SessionKeys.businessNameChangeSuccessful) shouldBe Some("true")
+          SessionCookieCrumbler.getSessionMap(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
         }
       }
     }

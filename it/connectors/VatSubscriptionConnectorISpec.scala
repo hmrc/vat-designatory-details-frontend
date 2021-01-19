@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package connectors
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.ContactPreference
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
+import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import helpers.IntegrationBaseSpec
 import models.{ChangeIndicators, User}
 import models.customerInformation._
@@ -84,6 +85,38 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
 
         val expected = Left(ErrorModel(INTERNAL_SERVER_ERROR, """{"fail":"nope"}"""))
         val result: GetCustomerInfoResponse = await(connector.getCustomerInfo("123456789"))
+
+        result shouldBe expected
+      }
+    }
+  }
+
+  "Calling updateBusinessName" when {
+
+    "valid JSON is returned by the endpoint" should {
+
+      "return an UpdateOrganisationDetailsSuccess model" in new Test {
+        override def setupStubs(): StubMapping = VatSubscriptionStub.stubUpdateBusinessName
+
+        setupStubs()
+
+        val expected = Right(UpdateOrganisationDetailsSuccess("success"))
+        val result: UpdateOrganisationDetailsResponse = await(connector.updateBusinessName(testVrn, UpdateBusinessName("Business name", None)))
+
+        result shouldBe expected
+      }
+    }
+
+    "the endpoint returns an unexpected status" should {
+
+      "return an error model" in new Test {
+        override def setupStubs(): StubMapping = VatSubscriptionStub.stubUpdateBusinessNameError
+
+        setupStubs()
+
+        val expected = Left(ErrorModel(INTERNAL_SERVER_ERROR, """{"bad":"things"}"""))
+        val result: UpdateOrganisationDetailsResponse = await(connector.updateBusinessName(testVrn, UpdateBusinessName("Business name", None)))
+
 
         result shouldBe expected
       }
