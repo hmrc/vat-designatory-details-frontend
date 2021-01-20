@@ -87,42 +87,49 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-
   def showBusinessName: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
-    user.session.get(prepopulationBusinessNameKey) match {
-      case Some(businessName) =>
-        val viewModel = CheckYourAnswersViewModel(
-          question = "checkYourAnswers.businessName",
-          answer = businessName,
-          changeLink = controllers.businessName.routes.CaptureBusinessNameController.show().url,
-          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName().url)
-        Ok(checkYourAnswersView(viewModel))
-      case _ =>
-        Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
+    if (appConfig.features.businessNameR19_R20Enabled()) {
+      user.session.get(prepopulationBusinessNameKey) match {
+        case Some(businessName) =>
+          val viewModel = CheckYourAnswersViewModel(
+            question = "checkYourAnswers.businessName",
+            answer = businessName,
+            changeLink = controllers.businessName.routes.CaptureBusinessNameController.show().url,
+            continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName().url)
+          Ok(checkYourAnswersView(viewModel))
+        case _ =>
+          Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
+      }
+    } else {
+      errorHandler.showNotFoundError
     }
   }
+
   def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+    if (appConfig.features.businessNameR19_R20Enabled()) {
+      user.session.get(prepopulationBusinessNameKey) match {
+        case Some(businessName) =>
 
-    user.session.get(prepopulationBusinessNameKey) match {
-      case Some(businessName) =>
+          val updatedBusinessName = UpdateBusinessName(businessName, capacitorEmail = user.session.get(verifiedAgentEmail))
 
-        val updatedBusinessName = UpdateBusinessName(businessName, capacitorEmail = user.session.get(verifiedAgentEmail))
+          vatSubscriptionService.updateBusinessName(user.vrn, updatedBusinessName) map {
+            case Right(_) => Redirect(controllers.routes.ChangeSuccessController.businessName())
+              .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+            case Left(ErrorModel(CONFLICT, _)) =>
+              logWarn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +
+                "already in progress. Redirecting user to manage-vat overview page.")
+              Redirect(appConfig.manageVatSubscriptionServicePath)
+                .addingToSession(inFlightOrgDetailsKey -> "true")
 
-        vatSubscriptionService.updateBusinessName(user.vrn, updatedBusinessName) map {
-          case Right(_) => Redirect(controllers.routes.ChangeSuccessController.businessName())
-            .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
-          case Left(ErrorModel(CONFLICT, _)) =>
-            logWarn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +
-              "already in progress. Redirecting user to manage-vat overview page.")
-            Redirect(appConfig.manageVatSubscriptionServicePath)
-              .addingToSession(inFlightOrgDetailsKey -> "true")
+            case Left(_) =>
+              errorHandler.showInternalServerError
+          }
 
-          case Left(_) =>
-            errorHandler.showInternalServerError
-        }
-
-      case _ =>
-        Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
+        case _ =>
+          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
+      }
+    } else {
+      Future.successful(errorHandler.showNotFoundError)
     }
   }
 

@@ -20,6 +20,7 @@ import config.AppConfig
 import play.api.{Configuration, Mode}
 import play.api.i18n.Lang
 import play.api.mvc.Call
+import testOnly.features.Features
 
 class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mode.Test) extends AppConfig {
 
@@ -70,4 +71,6 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val footerHelpUrl: String = "/help"
 
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
+
+  override val features: Features = new Features(runModeConfiguration)
 }

@@ -21,7 +21,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Request, Result}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import play.api.mvc.Results.InternalServerError
+import play.api.mvc.Results.{InternalServerError, NotFound}
 import views.html.errors.StandardErrorView
 
 @Singleton
@@ -37,4 +37,7 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
 
   override def notFoundTemplate(implicit request: Request[_]): Html =
     standardErrorView("notFound.title", "notFound.heading", "notFound.message")
+
+  def showNotFoundError(implicit request: Request[_]): Result =
+    NotFound(notFoundTemplate)
 }

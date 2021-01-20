@@ -17,7 +17,7 @@
 package controllers
 
 import common.SessionKeys._
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionService,
                                         tradingNameSuccessView: TradingNameChangeSuccessView,
-                                        businessNameSuccessView: BusinessNameChangeSuccessView)
+                                        businessNameSuccessView: BusinessNameChangeSuccessView,
+                                        errorHandler: ErrorHandler)
                                        (implicit val appConfig: AppConfig,
                                         mcc: MessagesControllerComponents,
                                         authComps: AuthPredicateComponents,
@@ -52,11 +53,15 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
   }
 
   def businessName: Action[AnyContent] = authPredicate.async { implicit user =>
-    user.session.get(businessNameChangeSuccessful) match {
-      case Some("true") =>
-        renderBusinessNameView
-      case _ =>
-        Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
+    if(appConfig.features.businessNameR19_R20Enabled()) {
+      user.session.get(businessNameChangeSuccessful) match {
+        case Some("true") =>
+          renderBusinessNameView
+        case _ =>
+          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
+      }
+    } else {
+      Future.successful(errorHandler.showNotFoundError)
     }
   }
 
