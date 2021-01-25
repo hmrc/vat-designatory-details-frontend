@@ -74,6 +74,7 @@ changeSuccess.viewBusinessDetails.agent = Bwrw golwg dros fanylion busnes eich c
 businessNameChangeSuccess.title = Rydych wedi gofyn am gael newid enw’r busnes
 businessNameChangeSuccess.helpOne.digital.agent1 = Byddwn yn anfon e-bost at
 businessNameChangeSuccess.helpOne.digital.agent2 = cyn pen 2 ddiwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
+businessNameChangeSuccess.helpOne.digital.agent3 = Byddwn hefyd yn cysylltu â’ch cleient gyda diweddariad.
 businessNameChangeSuccess.helpOne.paper.agent = Byddwn yn cysylltu â’ch cleient cyn pen 15 diwrnod gwaith, yn rhoi gwybod iddo a allwn dderbyn eich cais i newid enw’r busnes.
 businessNameChangeSuccess.helpOne.digital = Byddwn yn anfon e-bost atoch cyn pen 2 ddiwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
 businessNameChangeSuccess.helpTwo.digital = Gallwch hefyd wirio’ch negeseuon diogel oddi wrth CThEM i gael diweddariad.

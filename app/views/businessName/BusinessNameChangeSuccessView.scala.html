@@ -16,9 +16,8 @@
 
 @import models.viewModels.ChangeSuccessViewModel
 @import common.ContactPreference
-@import views.html.templates.UpdateClient
 
-@this(mainTemplate: MainTemplate, updateClient: UpdateClient, govukButton: GovukButton)
+@this(mainTemplate: MainTemplate, govukButton: GovukButton)
 
 @(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
@@ -44,9 +43,11 @@
           <strong class="bold">@email</strong>
           @messages("businessNameChangeSuccess.helpOne.digital.agent2")
         </p>
-        @updateClient(None)
+        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.digital.agent3")</p>
       }
-      case _ => {<p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper.agent")</p>}
+      case _ => {
+        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper.agent")</p>
+      }
     }
 
   } else {
