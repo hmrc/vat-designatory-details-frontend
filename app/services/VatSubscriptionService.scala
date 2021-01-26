@@ -40,10 +40,8 @@ class VatSubscriptionService @Inject()(connector: VatSubscriptionConnector) {
 
   def updateBusinessName(vrn: String, businessName: UpdateBusinessName)
                         (implicit hc: HeaderCarrier,
-                         ec: ExecutionContext,
-                         user: User[_]): Future[UpdateOrganisationDetailsResponse] = {
+                         ec: ExecutionContext): Future[UpdateOrganisationDetailsResponse] = {
 
     connector.updateBusinessName(vrn, businessName)
-
   }
 }
