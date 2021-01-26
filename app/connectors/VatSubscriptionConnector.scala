@@ -63,8 +63,7 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
 
   def updateBusinessName(vrn: String, businessName: UpdateBusinessName)
                         (implicit hc: HeaderCarrier,
-                         ec: ExecutionContext,
-                         user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+                         ec: ExecutionContext): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
 
     import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
 

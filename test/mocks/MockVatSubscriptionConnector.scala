@@ -45,9 +45,8 @@ trait MockVatSubscriptionConnector extends MockFactory {
   }
 
   def mockUpdateBusinessNameResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit = {
-    (connector.updateBusinessName(_: String, _: UpdateBusinessName)(_: HeaderCarrier,
-      _: ExecutionContext, _: User[_]))
-      .expects(*, *, *, *, *)
+    (connector.updateBusinessName(_: String, _: UpdateBusinessName)(_: HeaderCarrier, _: ExecutionContext))
+      .expects(*, *, *, *)
       .returns(result)
   }
 
