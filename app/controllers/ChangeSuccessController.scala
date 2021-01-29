@@ -75,13 +75,12 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
         case _ => None
       }
       val entityName = vatSubscriptionResponse.fold(_ => None, details => details.entityName)
-      val contactPreference = vatSubscriptionResponse.fold(_ => None, details => details.contactPreference)
       titleMessageKey.fold {
         Logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank." +
           "Rendering InternalServerError")
         authComps.errorHandler.showInternalServerError
       } { title =>
-        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference)
+        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, None)
         Ok(tradingNameSuccessView(viewModel, isRemoval, isAddition))
       }
     }

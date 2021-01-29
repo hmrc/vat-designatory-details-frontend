@@ -67,11 +67,9 @@ tradingNameChangeSuccess.title.change = You have asked to change the trading nam
 tradingNameChangeSuccess.title.remove = You have asked to remove the trading name
 tradingNameChangeSuccess.title.add = You have asked to add a trading name
 
-tradingNameSuccess.secondPara = Updates are usually done within 2 working days. However, they can take several weeks if we need to carry out additional checks.
-
 updateTradingNameSuccess = If we can accept your request, we’ll update your VAT account with the new trading name.
-
 removeTradingNameSuccess = We will remove the trading name from the VAT account.
+tradingNameSuccess.secondPara = Updates are usually done within 2 working days. However, they can take several weeks if we need to carry out additional checks.
 
 businessNameChangeSuccess.title = You have asked to change the business name
 businessNameChangeSuccess.helpOne.digital.agent1 = We’ll send an email to
