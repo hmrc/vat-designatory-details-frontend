@@ -64,13 +64,6 @@ sessionTimeout.helpOne = I reoli’ch cyfrif TAW, bydd yn rhaid i chi
 sessionTimeout.helpTwo = fewngofnodi
 sessionTimeout.helpThree = gan ddefnyddio’ch Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth.
 
-changeSuccess.helpOne.paper = Byddwn yn anfon llythyr i’ch prif fan busnes i roi diweddariad cyn pen 15 diwrnod gwaith.
-changeSuccess.helpOne.digital.agent = Byddwn yn anfon e-bost i {0} cyn pen 2 ddiwrnod gwaith i roi gwybod i chi a yw’r cais wedi’i dderbyn ai peidio.
-changeSuccess.helpOne.paper.agent = Byddwn yn anfon llythyr o gadarnhad i gyfeiriad yr asiantaeth sydd wedi’i gofrestru gyda CThEM cyn pen 15 diwrnod gwaith.
-changeSuccess.helpTwo = Sicrhewch fod eich manylion cyswllt wedi’u diweddaru.
-changeSuccess.viewBusinessDetails = Bwrw golwg dros eich manylion busnes
-changeSuccess.viewBusinessDetails.agent = Bwrw golwg dros fanylion busnes eich cleient
-
 businessNameChangeSuccess.title = Rydych wedi gofyn am gael newid enw’r busnes
 businessNameChangeSuccess.helpOne.digital.agent1 = Byddwn yn anfon e-bost at
 businessNameChangeSuccess.helpOne.digital.agent2 = cyn pen 2 ddiwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
