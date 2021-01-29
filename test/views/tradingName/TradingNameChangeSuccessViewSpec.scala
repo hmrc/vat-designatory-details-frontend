@@ -17,7 +17,6 @@
 package views.tradingName
 
 import assets.BaseTestConstants
-import common.ContactPreference
 import models.User
 import models.viewModels.ChangeSuccessViewModel
 import org.jsoup.Jsoup
