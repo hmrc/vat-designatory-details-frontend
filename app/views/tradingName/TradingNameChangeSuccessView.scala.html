@@ -19,7 +19,7 @@
 @this(mainTemplate: MainTemplate,
       govukButton: GovukButton)
 
-@(model: ChangeSuccessViewModel, isRemoval: Boolean, isAddition: Boolean)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
+@(model: ChangeSuccessViewModel, isRemoval: Boolean)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
 @messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
 @buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}

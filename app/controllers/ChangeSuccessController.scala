@@ -81,7 +81,7 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
         authComps.errorHandler.showInternalServerError
       } { title =>
         val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, None)
-        Ok(tradingNameSuccessView(viewModel, isRemoval, isAddition))
+        Ok(tradingNameSuccessView(viewModel, isRemoval))
       }
     }
 

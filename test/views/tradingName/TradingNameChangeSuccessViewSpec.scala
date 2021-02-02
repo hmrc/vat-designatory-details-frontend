@@ -44,7 +44,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
     "an individual is adding a trading name" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
-      lazy val view = injectedView(viewModel, isRemoval = false, isAddition = true)(messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(viewModel, isRemoval = false)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -81,7 +81,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
     "an individual is removing the trading name" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
-      lazy val view = injectedView(viewModel, isRemoval = true, isAddition = false)(messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(viewModel, isRemoval = true)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -98,7 +98,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
     "an individual is changing an existing trading name" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
-      lazy val view = injectedView(viewModel, isRemoval = false, isAddition = false)(messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(viewModel, isRemoval = false)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -115,7 +115,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
     "an agent is adding a trading name" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-      lazy val view = injectedView(viewModel, isRemoval = false, isAddition = true)(
+      lazy val view = injectedView(viewModel, isRemoval = false)(
         messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
@@ -141,7 +141,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
     "an agent is removing a trading name" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-      lazy val view = injectedView(viewModel, isRemoval = true, isAddition = false)(
+      lazy val view = injectedView(viewModel, isRemoval = true)(
         messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
@@ -159,7 +159,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
     "an agent is changing an existing trading  name" when {
 
       val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-      lazy val view = injectedView(viewModel, isRemoval = false, isAddition = false)(
+      lazy val view = injectedView(viewModel, isRemoval = false)(
         messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
