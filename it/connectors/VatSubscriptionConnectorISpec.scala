@@ -57,7 +57,8 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
     nameIsReadOnly = Some(false),
     partyType = Some("1"),
     isInsolvent = false,
-    continueToTrade = Some(true)
+    continueToTrade = Some(true),
+    insolvencyType = None
   )
 
   "Calling getCustomerInfo" when {
