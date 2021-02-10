@@ -24,11 +24,10 @@ import uk.gov.hmrc.SbtAutoBuildPlugin
 val appName = "vat-designatory-details-frontend"
 
 val govUkFrontendVersion       = "0.60.0-play-26"
-val hmrcUkFrontendVersion      = "0.38.0-play-26"
+val hmrcUkFrontendVersion      = "0.41.0-play-26"
 val bootstrapPlayVersion       = "2.3.0"
 val govTemplateVersion         = "5.61.0-play-26"
 val playPartialsVersion        = "7.1.0-play-26"
-val authClientVersion          = "3.3.0-play-26"
 val playUiVersion              = "8.21.0-play-26"
 val playLanguageVersion        = "4.10.0-play-26"
 val playWhiteListFilterVersion = "3.4.0-play-26"
@@ -81,7 +80,6 @@ val compile = Seq(
   "uk.gov.hmrc"       %% "play-language"              % playLanguageVersion,
   "uk.gov.hmrc"       %% "play-ui"                    % playUiVersion,
   "uk.gov.hmrc"       %% "play-partials"              % playPartialsVersion,
-  "uk.gov.hmrc"       %% "auth-client"                % authClientVersion,
   "uk.gov.hmrc"       %% "play-whitelist-filter"      % playWhiteListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-govuk"        % govUkFrontendVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,

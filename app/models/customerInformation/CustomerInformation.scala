@@ -30,7 +30,11 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
                                nameIsReadOnly: Option[Boolean],
                                partyType: Option[String],
                                isInsolvent: Boolean,
-                               continueToTrade: Option[Boolean]) {
+                               continueToTrade: Option[Boolean],
+                               insolvencyType: Option[String]) {
+
+  val allowedInsolvencyTypes: Seq[String] = Seq("07", "12", "13", "14")
+  val blockedInsolvencyTypes: Seq[String] = Seq("08", "09", "10", "15")
 
   val pendingTradingName: Option[String] = pendingChanges.flatMap(_.tradingName)
 
@@ -47,9 +51,16 @@ case class CustomerInformation(pendingChanges: Option[PendingChanges],
     Seq("Z1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "50",
       "51", "52", "53", "54", "55", "58", "59", "60", "61", "62", "63").contains(partyType.getOrElse(""))
 
-  val isInsolventWithoutAccess: Boolean = continueToTrade match {
-    case Some(false) => isInsolvent
-    case _ => false
+  val isInsolventWithoutAccess: Boolean = {
+    if (isInsolvent) {
+      insolvencyType match {
+        case Some(iType) if allowedInsolvencyTypes.contains(iType) => false
+        case Some(iType) if blockedInsolvencyTypes.contains(iType) => true
+        case _ => !continueToTrade.getOrElse(true)
+      }
+    } else {
+      false
+    }
   }
 }
 
@@ -66,6 +77,7 @@ object CustomerInformation {
   private val partyTypePath = JsPath \ "partyType"
   private val isInsolventPath = JsPath \ "customerDetails" \ "isInsolvent"
   private val continueToTradePath = JsPath \ "customerDetails" \ "continueToTrade"
+  private val insolvencyTypePath = JsPath \ "customerDetails" \ "insolvencyType"
 
   implicit val reads: Reads[CustomerInformation] = (
     pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
@@ -78,6 +90,7 @@ object CustomerInformation {
     nameIsReadOnlyPath.readNullable[Boolean].orElse(Reads.pure(None)) and
     partyTypePath.readNullable[String].orElse(Reads.pure(None)) and
     isInsolventPath.read[Boolean] and
-    continueToTradePath.readNullable[Boolean].orElse(Reads.pure(None))
+    continueToTradePath.readNullable[Boolean].orElse(Reads.pure(None)) and
+    insolvencyTypePath.readNullable[String].orElse(Reads.pure(None))
   )(CustomerInformation.apply _)
 }

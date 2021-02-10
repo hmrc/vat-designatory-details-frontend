@@ -34,7 +34,7 @@ object CustomerInfoConstants {
   val pendingTradingNameModel: PendingChanges = PendingChanges(Some("New trading name"))
   val changeIndicatorsModel: ChangeIndicators = ChangeIndicators(true)
 
-  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None, None, None, None, false, None)
+  val minCustomerInfoModel: CustomerInformation = CustomerInformation(None, None, None, None, None, None, None, None, None, false, None, None)
   val minCustomerInfoJson: JsObject = Json.obj(
     "customerDetails" -> Json.obj(
       "isInsolvent" -> false
@@ -51,7 +51,8 @@ object CustomerInfoConstants {
     nameIsReadOnly = Some(false),
     partyType = Some("1"),
     isInsolvent = false,
-    continueToTrade = Some(true)
+    continueToTrade = Some(true),
+    insolvencyType = Some("01")
   )
 
   val customerInfoNoPending: CustomerInformation = fullCustomerInfoModel.copy(pendingChanges = None, changeIndicators = Some(ChangeIndicators(false)))
@@ -71,7 +72,8 @@ object CustomerInfoConstants {
       "tradingName" -> "PepsiMac",
       "nameIsReadOnly" -> false,
       "isInsolvent" -> false,
-      "continueToTrade" -> Some(true)
+      "continueToTrade" -> Some(true),
+      "insolvencyType" -> Some("01")
     ),
     "commsPreference" -> "DIGITAL",
     "changeIndicators" -> Some(changeIndicatorsModel),

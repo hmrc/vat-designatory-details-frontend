@@ -99,6 +99,25 @@ class CustomerInformationSpec extends UnitSpec {
 
   "calling .isInsolventWithoutAccess" should {
 
+    "return true when the insolvency type is 08, 09, 10 or 15" in {
+      val blockedInsolvencyTestTypes: Seq[String] = Seq("08", "09", "10", "15")
+      blockedInsolvencyTestTypes.foreach { iType =>
+        customerInfoInsolvent.copy(continueToTrade = Some(true), insolvencyType = Some(iType)).isInsolventWithoutAccess shouldBe true
+        customerInfoInsolvent.copy(continueToTrade = Some(false), insolvencyType = Some(iType)).isInsolventWithoutAccess shouldBe true
+        customerInfoInsolvent.copy(continueToTrade = None, insolvencyType = Some(iType)).isInsolventWithoutAccess shouldBe true
+      }
+
+    }
+
+    "return false when the insolvency type is 07, 12, 13 or 14" in {
+      val allowedInsolvencyTestTypes: Seq[String] = Seq("07", "12", "13", "14")
+      allowedInsolvencyTestTypes.foreach { iType =>
+        customerInfoInsolvent.copy(continueToTrade = Some(true), insolvencyType = Some(iType)).isInsolventWithoutAccess shouldBe false
+        customerInfoInsolvent.copy(continueToTrade = Some(false), insolvencyType = Some(iType)).isInsolventWithoutAccess  shouldBe false
+        customerInfoInsolvent.copy(continueToTrade = None, insolvencyType = Some(iType)).isInsolventWithoutAccess  shouldBe false
+      }
+    }
+
     "return true when the user is insolvent and not continuing to trade" in {
       customerInfoInsolvent.isInsolventWithoutAccess shouldBe true
     }
