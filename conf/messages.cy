@@ -41,11 +41,18 @@ unauthorised.agent.title = Ni allwch ddefnyddio’r gwasanaeth hwn eto
 unauthorised.agent.instructions = I ddefnyddio’r gwasanaeth hwn, bydd angen i chi
 unauthorised.agent.instructions2 = agor cyfrif gwasanaethau asiantau
 
-captureTradingName.title = ???
-captureTradingName.removeTradingName.linkText = ???
-captureTradingName.error.exceedsMaxLength = ???
-captureTradingName.error.empty = ???
-captureTradingName.error.notChanged = ???
+captureTradingName.title = Beth yw’r enw masnachu?
+captureNewTradingName.title = Beth yw’r enw masnachu newydd?
+captureTradingName.removeTradingName.linkText = Dileu’r enw masnachu
+captureTradingName.para = Ni all eich enwau masnachu fod yn hirach na 160 o gymeriadau
+captureTradingName.error.exceedsMaxLength = Nodwch enw masnachu sy’n 160 o gymeriadau neu lai
+captureTradingName.error.empty = Nodwch enw masnachu
+captureTradingName.error.notChanged = Nodwch enw masnachu newydd
+
+whatToDo.title = Beth ydych am ei wneud â’r enw masnachu presennol?
+whatToDo.change = Rwyf am ei newid i rywbeth arall
+whatToDo.remove = Rwyf am ei dynnu
+whatToDo.error = Dewiswch ateb
 
 checkYourAnswers.heading = Gwirio’ch ateb
 checkYourAnswers.tradingName = Enw masnachu
@@ -56,13 +63,13 @@ checkYourAnswers.businessName = Enw’r busnes
 confirmRemove.title = A ydych am i ni dynnu {0} fel yr enw masnachu?
 confirmRemove.error = Dewiswch ‘Iawn’ os ydych am i ni dynnu’r enw masnachu presennol
 
-tradingNameChangeSuccess.title.change = ???
-tradingNameChangeSuccess.title.remove = ???
+tradingNameChangeSuccess.title.change = Rydych wedi gofyn am gael newid yr enw masnachu
+tradingNameChangeSuccess.title.remove = Rydych wedi gofyn am gael tynnu’r enw masnachu
+tradingNameChangeSuccess.title.add = Rydych wedi gofyn am gael ychwanegu enw masnachu
 
-sessionTimeout.title = Mae’ch sesiwn wedi’i therfynu
-sessionTimeout.helpOne = I reoli’ch cyfrif TAW, bydd yn rhaid i chi
-sessionTimeout.helpTwo = fewngofnodi
-sessionTimeout.helpThree = gan ddefnyddio’ch Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth.
+updateTradingNameSuccess = Os gallwn dderbyn eich cais, byddwn yn diweddaru’r cyfrif TAW gyda’r enw masnachu newydd.
+removeTradingNameSuccess = Byddwn yn tynnu’r enw masnachu o’r cyfrif TAW
+tradingNameSuccess.secondPara = Fel arfer, caiff diweddariadau eu gwneud cyn pen 2 ddiwrnod gwaith. Fodd bynnag, gall y broses gymryd sawl wythnos os bydd angen i ni gynnal gwiriadau ychwanegol.
 
 businessNameChangeSuccess.title = Rydych wedi gofyn am gael newid enw’r busnes
 businessNameChangeSuccess.helpOne.digital.agent1 = Byddwn yn anfon e-bost at
@@ -72,6 +79,14 @@ businessNameChangeSuccess.helpOne.paper.agent = Byddwn yn cysylltu â’ch cleie
 businessNameChangeSuccess.helpOne.digital = Byddwn yn anfon e-bost atoch cyn pen 2 ddiwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
 businessNameChangeSuccess.helpTwo.digital = Gallwch hefyd wirio’ch negeseuon diogel oddi wrth CThEM i gael diweddariad.
 businessNameChangeSuccess.helpOne.paper = Byddwn yn anfon llythyr i brif leoliad eich busnes cyn pen 15 diwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
+
+sessionTimeout.title = Mae’ch sesiwn wedi’i therfynu
+sessionTimeout.helpOne = I reoli’ch cyfrif TAW, bydd yn rhaid i chi
+sessionTimeout.helpTwo = fewngofnodi
+sessionTimeout.helpThree = gan ddefnyddio’ch Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth.
+
+changeSuccess.viewBusinessDetails = Bwrw golwg dros fanylion eich busnes
+changeSuccess.viewBusinessDetails.agent = Bwrw golwg dros fanylion busnes eich cleient
 
 captureBusinessName.title = Newid enw busnes
 captureBusinessName.firstPara1 = Gallwch

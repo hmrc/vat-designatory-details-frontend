@@ -45,7 +45,7 @@ captureTradingName.title = What is the trading name?
 captureNewTradingName.title = What is the new trading name?
 captureTradingName.removeTradingName.linkText = Remove trading name
 captureTradingName.para = Trading names cannot be longer than 160 characters
-captureTradingName.error.exceedsMaxLength = Enter a maximum of 160 characters
+captureTradingName.error.exceedsMaxLength = Enter a trading name that is 160 characters or less
 captureTradingName.error.empty = Enter a trading name
 captureTradingName.error.notChanged = Enter a new trading name
 
@@ -67,7 +67,7 @@ tradingNameChangeSuccess.title.change = You have asked to change the trading nam
 tradingNameChangeSuccess.title.remove = You have asked to remove the trading name
 tradingNameChangeSuccess.title.add = You have asked to add a trading name
 
-updateTradingNameSuccess = If we can accept your request, we’ll update your VAT account with the new trading name.
+updateTradingNameSuccess = If we can accept your request, we’ll update the VAT account with the new trading name.
 removeTradingNameSuccess = We will remove the trading name from the VAT account.
 tradingNameSuccess.secondPara = Updates are usually done within 2 working days. However, they can take several weeks if we need to carry out additional checks.
 
