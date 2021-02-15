@@ -21,7 +21,7 @@ import connectors.VatSubscriptionConnector
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import models.User
-import models.customerInformation.{UpdateBusinessName, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{UpdateBusinessName, UpdateTradingName, UpdateOrganisationDetailsSuccess}
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -37,8 +37,8 @@ trait MockVatSubscriptionConnector extends MockFactory {
       .returns(result)
   }
 
-  def mockUpdateOrganisationDetailsResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit = {
-    (connector.updateOrganisationDetails(_: String, _: UpdateOrganisationDetails)(_: HeaderCarrier,
+  def mockUpdateTradingNameResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit = {
+    (connector.updateTradingName(_: String, _: UpdateTradingName)(_: HeaderCarrier,
       _: ExecutionContext, _: User[_]))
       .expects(*, *, *, *, *)
       .returns(result)
@@ -56,9 +56,9 @@ trait MockVatSubscriptionConnector extends MockFactory {
   def mockGetCustomerInfoFailureResponse(): Unit = mockGetCustomerInfoResponse(
     Future.successful(Left(invalidJsonError)))
 
-  def mockUpdateOrganisationDetailsSuccessResponse(): Unit = mockUpdateOrganisationDetailsResponse(
+  def mockUpdateTradingNameSuccessResponse(): Unit = mockUpdateTradingNameResponse(
     Future.successful(Right(UpdateOrganisationDetailsSuccess("success"))))
 
-  def mockUpdateOrganisationDetailsFailureResponse(): Unit = mockUpdateOrganisationDetailsResponse(
+  def mockUpdateTradingNameFailureResponse(): Unit = mockUpdateTradingNameResponse(
     Future.successful(Left(invalidJsonError)))
 }

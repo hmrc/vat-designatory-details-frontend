@@ -24,7 +24,7 @@ import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
-import models.customerInformation.UpdateBusinessName
+import models.customerInformation.{UpdateBusinessName, UpdateTradingName}
 import models.errors.ErrorModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import models.viewModels.CheckYourAnswersViewModel
@@ -61,7 +61,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
     val currentTradingName: Option[String] = user.session.get(validationTradingNameKey) match {
       case Some("") => None
@@ -71,19 +71,35 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
 
     user.session.get(prepopulationTradingNameKey) match {
       case Some(prepopTradingName) =>
-        auditingService.audit(ChangedTradingNameAuditModel(
-          currentTradingName,
-          prepopTradingName,
-          user.vrn,
-          user.isAgent,
-          user.arn),
-          Some(routes.CheckYourAnswersController.updateTradingName().url)
+
+        val orgDetails = UpdateTradingName(
+          tradingName = if(prepopTradingName.nonEmpty) Some(prepopTradingName) else None,
+          capacitorEmail = user.session.get(verifiedAgentEmail)
         )
-        Redirect(controllers.routes.ChangeSuccessController.tradingName())
-          .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+
+        vatSubscriptionService.updateTradingName(user.vrn, orgDetails) map {
+          case Right(_) =>
+            auditingService.audit(ChangedTradingNameAuditModel(
+              currentTradingName,
+              prepopTradingName,
+              user.vrn,
+              user.isAgent,
+              user.arn),
+              Some(routes.CheckYourAnswersController.updateTradingName().url)
+            )
+            Redirect(controllers.routes.ChangeSuccessController.tradingName())
+              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
+
+          case Left(ErrorModel(CONFLICT, _)) =>
+            logWarn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
+            "already in progress. Redirecting user to manage-vat overview page.")
+            Redirect(appConfig.manageVatSubscriptionServicePath).addingToSession(inFlightOrgDetailsKey -> "true")
+
+          case Left(_) => errorHandler.showInternalServerError
+        }
 
       case _ =>
-        Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
+        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show()))
     }
   }
 

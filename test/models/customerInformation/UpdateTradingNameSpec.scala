@@ -20,21 +20,21 @@ import assets.CustomerInfoConstants._
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateOrganisationDetailsSpec extends UnitSpec {
+class UpdateTradingNameSpec extends UnitSpec {
 
   "UpdateOrganisationDetails" when {
 
     "all optional fields are present" should {
 
       "parse to JSON correctly" in {
-        Json.toJson(updateOrganisationDetailsModel) shouldBe updateOrganisationDetailsJson
+        Json.toJson(updateTradingNameModel) shouldBe updateTradingNameJson
       }
     }
 
     "no optional fields are present" should {
 
       "parse to JSON correctly" in {
-        Json.toJson(updateOrganisationDetailsModelMin) shouldBe updateOrganisationDetailsJsonMin
+        Json.toJson(updateTradingNameModelMin) shouldBe updateTradingNameJsonMin
       }
     }
   }

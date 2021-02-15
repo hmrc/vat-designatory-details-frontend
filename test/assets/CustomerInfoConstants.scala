@@ -82,15 +82,15 @@ object CustomerInfoConstants {
 
   val customerInfoInsolvent: CustomerInformation = fullCustomerInfoModel.copy(isInsolvent = true, continueToTrade = Some(false))
 
-  val updateOrganisationDetailsModel: UpdateOrganisationDetails =
-    UpdateOrganisationDetails("PepsiMac", Some("myAgentEmail@email.com"))
-  val updateOrganisationDetailsModelMin: UpdateOrganisationDetails =
-    UpdateOrganisationDetails("PepsiMac", None)
+  val updateTradingNameModel: UpdateTradingName =
+    UpdateTradingName(Some("PepsiMac"), Some("myAgentEmail@email.com"))
+  val updateTradingNameModelMin: UpdateTradingName =
+    UpdateTradingName(None, None)
 
-  val updateOrganisationDetailsJson: JsObject = Json.obj(
+  val updateTradingNameJson: JsObject = Json.obj(
     "tradingName" -> "PepsiMac", "transactorOrCapacitorEmail" -> "myAgentEmail@email.com"
   )
-  val updateOrganisationDetailsJsonMin: JsObject = Json.obj("tradingName" -> "PepsiMac")
+  val updateTradingNameJsonMin: JsObject = Json.obj()
 
   val updateBusinessNameModel: UpdateBusinessName = UpdateBusinessName("Just a Business", Some("bestAgentEva@email.com"))
 
