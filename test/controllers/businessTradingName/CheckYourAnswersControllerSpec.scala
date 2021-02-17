@@ -20,7 +20,7 @@ import assets.BaseTestConstants.vrn
 import audit.AuditingService
 import common.SessionKeys.businessNameAccessPermittedKey
 import controllers.ControllerBaseSpec
-import models.customerInformation.{UpdateBusinessName, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{UpdateBusinessName, UpdateOrganisationDetailsSuccess, UpdateTradingName}
 import models.errors.ErrorModel
 import play.api.test.Helpers._
 import views.html.businessTradingName.CheckYourAnswersView
@@ -92,6 +92,8 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "the trading name has been updated successfully" should {
 
         lazy val result = {
+          mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(
+            Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
           controller.updateTradingName()(requestWithTradingName)
         }
 
@@ -101,6 +103,34 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "redirect to the trading name changed success page" in {
           redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName().url)
+        }
+      }
+
+      "VatSubscriptionService returns a conflict" should {
+
+        lazy val result = {
+          mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(CONFLICT, "bad things"))))
+          controller.updateTradingName()(requestWithTradingName)
+        }
+
+        "return 303" in {
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect to manage-vat" in {
+          redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
+        }
+      }
+
+      "VatSubscriptionService returns an error" should {
+
+        lazy val result = {
+          mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again"))))
+          controller.updateTradingName()(requestWithTradingName)
+        }
+
+        "return 500" in {
+          status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
     }

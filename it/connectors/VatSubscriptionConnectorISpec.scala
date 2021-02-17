@@ -41,9 +41,9 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
     implicit val ec: ExecutionContext = ExecutionContext.global
   }
 
-  val testVrn: String = "23456789"
+  val testVrn: String = "123456789"
   val testEmail: String = "test@exmaple.com"
-  implicit val testUser: models.User[AnyContentAsEmpty.type] = User("999999999")(FakeRequest())
+  implicit val testUser: models.User[AnyContentAsEmpty.type] = User(testVrn)(FakeRequest())
   val changeIndicators: ChangeIndicators = ChangeIndicators(true)
 
   val testCustomerInfo: CustomerInformation = CustomerInformation(
@@ -71,7 +71,7 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
         setupStubs()
 
         val expected = Right(testCustomerInfo)
-        val result: GetCustomerInfoResponse = await(connector.getCustomerInfo("123456789"))
+        val result: GetCustomerInfoResponse = await(connector.getCustomerInfo(testVrn))
 
         result shouldBe expected
       }
@@ -85,7 +85,7 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
         setupStubs()
 
         val expected = Left(ErrorModel(INTERNAL_SERVER_ERROR, """{"fail":"nope"}"""))
-        val result: GetCustomerInfoResponse = await(connector.getCustomerInfo("123456789"))
+        val result: GetCustomerInfoResponse = await(connector.getCustomerInfo(testVrn))
 
         result shouldBe expected
       }
@@ -117,6 +117,38 @@ class VatSubscriptionConnectorISpec extends IntegrationBaseSpec {
 
         val expected = Left(ErrorModel(INTERNAL_SERVER_ERROR, """{"bad":"things"}"""))
         val result: UpdateOrganisationDetailsResponse = await(connector.updateBusinessName(testVrn, UpdateBusinessName("Business name", None)))
+
+
+        result shouldBe expected
+      }
+    }
+  }
+
+  "Calling updateTradingName" when {
+
+    "valid JSON is returned by the endpoint" should {
+
+      "return an UpdateOrganisationDetailsSuccess model" in new Test {
+        override def setupStubs(): StubMapping = VatSubscriptionStub.stubUpdateTradingName
+
+        setupStubs()
+
+        val expected = Right(UpdateOrganisationDetailsSuccess("success"))
+        val result: UpdateOrganisationDetailsResponse = await(connector.updateTradingName(testVrn, UpdateTradingName(Some("Trey Derr"), None)))
+
+        result shouldBe expected
+      }
+    }
+
+    "the endpoint returns an unexpected status" should {
+
+      "return an error model" in new Test {
+        override def setupStubs(): StubMapping = VatSubscriptionStub.stubUpdateTradingNameError
+
+        setupStubs()
+
+        val expected = Left(ErrorModel(INTERNAL_SERVER_ERROR, """{"bad":"things"}"""))
+        val result: UpdateOrganisationDetailsResponse = await(connector.updateTradingName(testVrn, UpdateTradingName(Some("Trey Derr"), None)))
 
 
         result shouldBe expected

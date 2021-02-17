@@ -27,6 +27,7 @@ import stubs.VatSubscriptionStub
 class CheckYourAnswersPageSpec extends BasePageISpec {
 
   val tradingNamePath = "/confirm-new-trading-name"
+  val updateTradingNamePath = "/update-trading-name"
   val businessNamePath = "/confirm-new-business-name"
   val updateBusinessNamePath = "/update-business-name"
   val newTradingName = "New Trading Name"
@@ -55,6 +56,52 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
       }
     }
   }
+
+  "Calling the Check your answers (.updateTradingName) route" when {
+
+    def update: WSResponse = get(updateTradingNamePath, Map(
+      prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")) ++ insolvencyValue
+    )
+
+    "the user is authenticated" when {
+
+      "the vat subscription service successfully updates the trading name" should {
+
+        "redirect to the Change Success Controller" in {
+
+          given.user.isAuthenticated
+
+          When("The update trading name route is called")
+
+          And("a successful trading name update response is stubbed")
+          VatSubscriptionStub.stubUpdateTradingName
+
+          val result = update
+
+          result should have(
+            httpStatus(Status.SEE_OTHER),
+            redirectURI(controllers.routes.ChangeSuccessController.tradingName().url)
+          )
+        }
+
+        "add the tradingNameChangeSuccessful and inFlightOrgDetailsKey to session" in {
+
+          given.user.isAuthenticated
+
+          When("The update trading name route is called")
+
+          And("a successful trading name update response is stubbed")
+          VatSubscriptionStub.stubUpdateTradingName
+
+          val result = update
+
+          SessionCookieCrumbler.getSessionMap(result).get(SessionKeys.tradingNameChangeSuccessful) shouldBe Some("true")
+          SessionCookieCrumbler.getSessionMap(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+        }
+      }
+    }
+  }
+
   "Calling the Check your answers (.show business name) route" when {
 
     def show: WSResponse = get(businessNamePath, Map(prepopulationBusinessNameKey -> newTradingName)

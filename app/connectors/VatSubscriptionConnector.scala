@@ -20,7 +20,7 @@ import config.AppConfig
 import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
 import javax.inject.{Inject, Singleton}
 import models.User
-import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateOrganisationDetails, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateTradingName, UpdateOrganisationDetailsSuccess}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import utils.LoggerUtil.{logDebug, logWarn}
@@ -34,8 +34,8 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
   private[connectors] def getCustomerInfoUrl(vrn: String): String =
     s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/full-information"
 
-  private[connectors] def updateOrganisationDetailsUrl(vrn: String): String =
-    s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/organisationDetails"
+  private[connectors] def updateTradingNameUrl(vrn: String): String =
+    s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/trading-name"
 
   private[connectors] def updateBusinessNameUrl(vrn: String): String =
     s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/business-name"
@@ -55,10 +55,16 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
     }
   }
 
-  def updateOrganisationDetails(vrn: String, orgDetails: UpdateOrganisationDetails)
-                               (implicit hc: HeaderCarrier,
+  def updateTradingName(vrn: String, orgDetails: UpdateTradingName)
+                       (implicit hc: HeaderCarrier,
                                 ec: ExecutionContext,
-                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = ???
+                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+
+    import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
+
+    http.PUT[UpdateTradingName, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateTradingNameUrl(vrn), orgDetails)
+
+  }
 
 
   def updateBusinessName(vrn: String, businessName: UpdateBusinessName)
