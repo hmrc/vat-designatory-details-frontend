@@ -69,7 +69,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
       }
 
       "have the correct first paragraph" in {
-        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update your VAT account with the new trading name."
+        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update the VAT account with the new trading name."
       }
 
       "have the correct second paragraph" in {
@@ -103,7 +103,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct first paragraph" in {
-        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update your VAT account with the new trading name."
+        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update the VAT account with the new trading name."
       }
 
       "have the correct second paragraph" in {
@@ -129,7 +129,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
       }
 
       "have the correct first paragraph" in {
-        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update your VAT account with the new trading name."
+        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update the VAT account with the new trading name."
       }
 
       "have the correct second paragraph" in {
@@ -165,7 +165,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct first paragraph" in {
-        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update your VAT account with the new trading name."
+        elementText(Selectors.paragraphOne) shouldBe "If we can accept your request, we’ll update the VAT account with the new trading name."
       }
 
       "have the correct second paragraph" in {
