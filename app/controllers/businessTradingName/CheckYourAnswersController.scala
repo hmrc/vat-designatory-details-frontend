@@ -17,7 +17,7 @@
 package controllers.businessTradingName
 
 import audit.AuditingService
-import audit.models.ChangedTradingNameAuditModel
+import audit.models.{ChangedBusinessNameAuditModel, ChangedTradingNameAuditModel}
 import common.SessionKeys._
 import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
@@ -126,13 +126,31 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
 
   def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     if (appConfig.features.businessNameR19_R20Enabled()) {
+
+      val currentBusinessName: Option[String] = user.session.get(validationBusinessNameKey) match {
+        case Some("") => None
+        case Some(name) => Some(name)
+        case _ => None
+      }
+
       user.session.get(prepopulationBusinessNameKey) match {
         case Some(businessName) =>
 
           val updatedBusinessName = UpdateBusinessName(businessName, capacitorEmail = user.session.get(verifiedAgentEmail))
 
           vatSubscriptionService.updateBusinessName(user.vrn, updatedBusinessName) map {
-            case Right(_) => Redirect(controllers.routes.ChangeSuccessController.businessName())
+            case Right(successModel) =>
+              auditingService.audit(ChangedBusinessNameAuditModel(
+                currentBusinessName,
+                businessName,
+                user.vrn,
+                user.isAgent,
+                user.arn,
+                OK,
+                successModel.formBundle),
+                Some(routes.CheckYourAnswersController.updateBusinessName().url)
+              )
+              Redirect(controllers.routes.ChangeSuccessController.businessName())
               .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
             case Left(ErrorModel(CONFLICT, _)) =>
               logWarn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +

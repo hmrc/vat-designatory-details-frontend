@@ -29,4 +29,7 @@ object BaseTestConstants {
 
   val testValidationTradingName: String = "Validation Trading Name"
   val testPrepopTradingName: String = "Prepop Trading Name"
+
+  val testValidationBusinessName: String = "Validation Business Name"
+  val testPrepopBusinessName: String = "Prepop Business Name"
 }
