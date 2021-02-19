@@ -31,6 +31,7 @@ import models.viewModels.CheckYourAnswersViewModel
 import services.VatSubscriptionService
 import views.html.businessTradingName.CheckYourAnswersView
 import utils.LoggerUtil.logWarn
+import play.api.http.Status.OK
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -78,13 +79,15 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
         )
 
         vatSubscriptionService.updateTradingName(user.vrn, orgDetails) map {
-          case Right(_) =>
+          case Right(successModel) =>
             auditingService.audit(ChangedTradingNameAuditModel(
               currentTradingName,
               prepopTradingName,
               user.vrn,
               user.isAgent,
-              user.arn),
+              user.arn,
+              OK,
+              successModel.formBundle),
               Some(routes.CheckYourAnswersController.updateTradingName().url)
             )
             Redirect(controllers.routes.ChangeSuccessController.tradingName())

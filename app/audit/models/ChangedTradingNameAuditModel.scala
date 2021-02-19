@@ -22,7 +22,9 @@ case class ChangedTradingNameAuditModel(currentTradingName: Option[String],
                                         requestedTradingName: String,
                                         vrn: String,
                                         isAgent: Boolean,
-                                        agentReferenceNumber: Option[String]) extends AuditModel {
+                                        agentReferenceNumber: Option[String],
+                                        etmpResponseStatusCode: Int,
+                                        etmpResponseMessage: String) extends AuditModel {
 
   override val transactionName: String = "change-vat-trading-name"
   override val auditType: String = "ChangeTradingName"

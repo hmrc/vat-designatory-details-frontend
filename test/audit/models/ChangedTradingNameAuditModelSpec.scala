@@ -17,6 +17,7 @@
 package audit.models
 
 import assets.BaseTestConstants._
+import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -26,12 +27,14 @@ class ChangedTradingNameAuditModelSpec extends UnitSpec {
 
     "the user is not an agent" should {
 
-      val model = ChangedTradingNameAuditModel(Some(testValidationTradingName), testPrepopTradingName, vrn, isAgent = false, None)
+      val model = ChangedTradingNameAuditModel(Some(testValidationTradingName), testPrepopTradingName, vrn, isAgent = false, None, Status.OK, "formBundle")
       val expectedJson: JsValue = Json.obj(
         "isAgent" -> false,
         "vrn" -> vrn,
         "currentTradingName" -> testValidationTradingName,
-        "requestedTradingName" -> testPrepopTradingName
+        "requestedTradingName" -> testPrepopTradingName,
+        "etmpResponseStatusCode" -> Status.OK,
+        "etmpResponseMessage" -> "formBundle"
       )
 
       "generate the correct audit detail" in {
@@ -41,13 +44,15 @@ class ChangedTradingNameAuditModelSpec extends UnitSpec {
 
     "the user is an agent" should {
 
-      val model = ChangedTradingNameAuditModel(Some(testValidationTradingName), testPrepopTradingName, vrn, isAgent = true, Some(arn))
+      val model = ChangedTradingNameAuditModel(Some(testValidationTradingName), testPrepopTradingName, vrn, isAgent = true, Some(arn), Status.OK, "formBundle")
       val expectedJson: JsValue = Json.obj(
         "isAgent" -> true,
         "agentReferenceNumber" -> arn,
         "vrn" -> vrn,
         "currentTradingName" -> testValidationTradingName,
-        "requestedTradingName" -> testPrepopTradingName
+        "requestedTradingName" -> testPrepopTradingName,
+        "etmpResponseStatusCode" -> Status.OK,
+        "etmpResponseMessage" -> "formBundle"
       )
 
       "generate the correct audit detail" in {
@@ -57,11 +62,13 @@ class ChangedTradingNameAuditModelSpec extends UnitSpec {
 
     "the user does not have a current trading name" should {
 
-      val model = ChangedTradingNameAuditModel(None, testPrepopTradingName, vrn, isAgent = false, None)
+      val model = ChangedTradingNameAuditModel(None, testPrepopTradingName, vrn, isAgent = false, None, Status.OK, "formBundle")
       val expectedJson: JsValue = Json.obj(
         "isAgent" -> false,
         "vrn" -> vrn,
-        "requestedTradingName" -> testPrepopTradingName
+        "requestedTradingName" -> testPrepopTradingName,
+        "etmpResponseStatusCode" -> Status.OK,
+        "etmpResponseMessage" -> "formBundle"
       )
 
       "generate the correct audit detail" in {
