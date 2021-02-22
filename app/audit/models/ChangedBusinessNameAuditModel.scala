@@ -18,7 +18,7 @@ package audit.models
 
 import play.api.libs.json.{Format, JsValue, Json}
 
-case class ChangedBusinessNameAuditModel(currentBusinessName: Option[String],
+case class ChangedBusinessNameAuditModel(currentBusinessName: String,
                                          requestedBusinessName: String,
                                          vrn: String,
                                          isAgent: Boolean,

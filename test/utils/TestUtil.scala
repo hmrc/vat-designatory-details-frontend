@@ -49,6 +49,8 @@ trait TestUtil extends UnitSpec with GuiceOneAppPerSuite with MaterializerSuppor
   val testTradingName = "Test Trading Name"
   val testBusinessName = "Test Business Name"
 
+  val newBusinessName = "New Business Name"
+
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
 
     inFlightOrgDetailsKey -> "false",
@@ -58,7 +60,7 @@ trait TestUtil extends UnitSpec with GuiceOneAppPerSuite with MaterializerSuppor
     request.withSession(prepopulationTradingNameKey -> testTradingName)
 
   lazy val requestWithBusinessName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(prepopulationBusinessNameKey -> testBusinessName)
+    request.withSession(prepopulationBusinessNameKey -> testBusinessName, validationBusinessNameKey -> newBusinessName)
 
   lazy val fakeRequestWithClientsVRN: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(clientVrn -> vrn)

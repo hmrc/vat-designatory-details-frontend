@@ -27,7 +27,7 @@ class ChangedBusinessNameAuditModelSpec extends UnitSpec {
 
     "the user is not an agent" should {
 
-      val model = ChangedBusinessNameAuditModel(Some(testValidationBusinessName), testPrepopBusinessName, vrn, isAgent = false, None, Status.OK, "formBundle")
+      val model = ChangedBusinessNameAuditModel(testValidationBusinessName, testPrepopBusinessName, vrn, isAgent = false, None, Status.OK, "formBundle")
       val expectedJson: JsValue = Json.obj(
         "isAgent" -> false,
         "vrn" -> vrn,
@@ -45,29 +45,13 @@ class ChangedBusinessNameAuditModelSpec extends UnitSpec {
     "the user is an agent" should {
 
       val model = ChangedBusinessNameAuditModel(
-        Some(testValidationBusinessName), testPrepopBusinessName, vrn, isAgent = true, Some(arn), Status.OK, "formBundle"
+        testValidationBusinessName, testPrepopBusinessName, vrn, isAgent = true, Some(arn), Status.OK, "formBundle"
       )
       val expectedJson: JsValue = Json.obj(
         "isAgent" -> true,
         "agentReferenceNumber" -> arn,
         "vrn" -> vrn,
         "currentBusinessName" -> testValidationBusinessName,
-        "requestedBusinessName" -> testPrepopBusinessName,
-        "etmpResponseStatusCode" -> Status.OK,
-        "etmpResponseMessage" -> "formBundle"
-      )
-
-      "generate the correct audit detail" in {
-        model.detail shouldBe expectedJson
-      }
-    }
-
-    "the user does not have a current business name" should {
-
-      val model = ChangedBusinessNameAuditModel(None, testPrepopBusinessName, vrn, isAgent = false, None, Status.OK, "formBundle")
-      val expectedJson: JsValue = Json.obj(
-        "isAgent" -> false,
-        "vrn" -> vrn,
         "requestedBusinessName" -> testPrepopBusinessName,
         "etmpResponseStatusCode" -> Status.OK,
         "etmpResponseMessage" -> "formBundle"

@@ -65,8 +65,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
   def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
     val currentTradingName: Option[String] = user.session.get(validationTradingNameKey) match {
-      case Some("") => None
-      case Some(name) => Some(name)
+      case name@Some(tName) if tName.nonEmpty => name
       case _ => None
     }
 
@@ -93,12 +92,21 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             Redirect(controllers.routes.ChangeSuccessController.tradingName())
               .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
 
-          case Left(ErrorModel(CONFLICT, _)) =>
+          case Left(ErrorModel(CONFLICT, errorMessage)) =>
             logWarn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
             "already in progress. Redirecting user to manage-vat overview page.")
+            auditingService.audit(ChangedTradingNameAuditModel(
+              currentTradingName, prepopTradingName, user.vrn, user.isAgent, user.arn, CONFLICT, errorMessage),
+              Some(routes.CheckYourAnswersController.updateTradingName().url)
+            )
             Redirect(appConfig.manageVatSubscriptionServicePath).addingToSession(inFlightOrgDetailsKey -> "true")
 
-          case Left(_) => errorHandler.showInternalServerError
+          case Left(ErrorModel(status, errorMessage)) =>
+            auditingService.audit(ChangedTradingNameAuditModel(
+              currentTradingName, prepopTradingName, user.vrn, user.isAgent, user.arn, status, errorMessage),
+              Some(routes.CheckYourAnswersController.updateTradingName().url)
+            )
+            errorHandler.showInternalServerError
         }
 
       case _ =>
@@ -127,38 +135,34 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
   def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     if (appConfig.features.businessNameR19_R20Enabled()) {
 
-      val currentBusinessName: Option[String] = user.session.get(validationBusinessNameKey) match {
-        case Some("") => None
-        case Some(name) => Some(name)
-        case _ => None
-      }
+      (user.session.get(validationBusinessNameKey), user.session.get(prepopulationBusinessNameKey)) match {
+        case (Some(currentBusinessName), Some(requestedBusinessName)) =>
 
-      user.session.get(prepopulationBusinessNameKey) match {
-        case Some(businessName) =>
-
-          val updatedBusinessName = UpdateBusinessName(businessName, capacitorEmail = user.session.get(verifiedAgentEmail))
+          val updatedBusinessName = UpdateBusinessName(requestedBusinessName, capacitorEmail = user.session.get(verifiedAgentEmail))
 
           vatSubscriptionService.updateBusinessName(user.vrn, updatedBusinessName) map {
             case Right(successModel) =>
               auditingService.audit(ChangedBusinessNameAuditModel(
-                currentBusinessName,
-                businessName,
-                user.vrn,
-                user.isAgent,
-                user.arn,
-                OK,
-                successModel.formBundle),
+                currentBusinessName, requestedBusinessName, user.vrn, user.isAgent, user.arn, OK, successModel.formBundle),
                 Some(routes.CheckYourAnswersController.updateBusinessName().url)
               )
               Redirect(controllers.routes.ChangeSuccessController.businessName())
               .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
-            case Left(ErrorModel(CONFLICT, _)) =>
+            case Left(ErrorModel(CONFLICT, errorMessage)) =>
               logWarn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +
                 "already in progress. Redirecting user to manage-vat overview page.")
+              auditingService.audit(ChangedBusinessNameAuditModel(
+                currentBusinessName, requestedBusinessName, user.vrn, user.isAgent, user.arn, CONFLICT, errorMessage),
+                Some(routes.CheckYourAnswersController.updateBusinessName().url)
+              )
               Redirect(appConfig.manageVatSubscriptionServicePath)
                 .addingToSession(inFlightOrgDetailsKey -> "true")
 
-            case Left(_) =>
+            case Left(ErrorModel(status, errorMessage)) =>
+              auditingService.audit(ChangedBusinessNameAuditModel(
+                currentBusinessName, requestedBusinessName, user.vrn, user.isAgent, user.arn, status, errorMessage),
+                Some(routes.CheckYourAnswersController.updateBusinessName().url)
+              )
               errorHandler.showInternalServerError
           }
 
