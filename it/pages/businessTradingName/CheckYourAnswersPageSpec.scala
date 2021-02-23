@@ -17,7 +17,7 @@
 package pages.businessTradingName
 
 import common.SessionKeys
-import common.SessionKeys.{businessNameAccessPermittedKey, prepopulationBusinessNameKey, prepopulationTradingNameKey}
+import common.SessionKeys.{businessNameAccessPermittedKey, validationBusinessNameKey, prepopulationBusinessNameKey, prepopulationTradingNameKey}
 import helpers.SessionCookieCrumbler
 import pages.BasePageISpec
 import play.api.http.Status
@@ -130,8 +130,9 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
   "Calling the Check your answers (.updateBusinessName) route" when {
 
-    def update: WSResponse = get(updateBusinessNamePath, Map(prepopulationBusinessNameKey -> newBusinessName, businessNameAccessPermittedKey -> "true")
-      ++ formatInflightChange(Some("false")) ++ insolvencyValue)
+    def update: WSResponse = get(updateBusinessNamePath, Map(
+      validationBusinessNameKey -> "Business Name", prepopulationBusinessNameKey -> newBusinessName, businessNameAccessPermittedKey -> "true"
+    ) ++ formatInflightChange(Some("false")) ++ insolvencyValue)
 
     "the user is a authenticated" when {
 
