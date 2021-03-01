@@ -17,7 +17,7 @@
 @import config.AppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.{LanguageSelect, ReportTechnicalIssue}
 @import views.utils.ServiceNameUtil
-@import views.components.FooterLinks
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.header.Header
 @import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
@@ -27,7 +27,7 @@
       hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
       hmrcLanguageSelect: HmrcLanguageSelect,
       hmrcTimeoutDialog: HmrcTimeoutDialog,
-      footerLinks: FooterLinks,
+      hmrcStandardFooter: HmrcStandardFooter,
       trackingConsentSnippet: TrackingConsentSnippet
       )
 
@@ -122,6 +122,6 @@
   headBlock = Some(head),
   headerBlock = Some(header),
   beforeContentBlock = Some(beforeContentHtml),
-  footerItems = footerLinks.items,
+  footerBlock = Some(hmrcStandardFooter(accessibilityStatementUrl = Some(appConfig.accessibilityLinkUrl))),
   scriptsBlock = Some(scripts)
   )(fullContent)

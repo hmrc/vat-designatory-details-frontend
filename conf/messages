@@ -112,9 +112,3 @@ inFlightChange.list2 = business name
 inFlightChange.list3 = individual name
 inFlightChange.accountDetailsBack.nonAgent = Back to your account details
 inFlightChange.accountDetailsBack.agent = Back to your client’s account details
-
-footerLinks.cookies = Cookies
-footerLinks.accessibility = Accessibility
-footerLinks.privacyPolicy = Privacy policy
-footerLinks.termsAndConditions = Terms and conditions
-footerLinks.help = Help using GOV.UK

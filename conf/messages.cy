@@ -112,9 +112,3 @@ inFlightChange.list2 = enw’r busnes
 inFlightChange.list3 = enw’r unigolyn
 inFlightChange.accountDetailsBack.nonAgent = Yn ôl i fanylion eich cyfrif
 inFlightChange.accountDetailsBack.agent = Yn ôl i fanylion cyfrif eich cleient
-
-footerLinks.cookies = Cwcis
-footerLinks.accessibility = Hygyrchedd
-footerLinks.privacyPolicy = Polisi preifatrwydd
-footerLinks.termsAndConditions = Telerau ac Amodau
-footerLinks.help = Help wrth ddefnyddio GOV.UK
