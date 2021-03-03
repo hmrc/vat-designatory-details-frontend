@@ -65,11 +65,6 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
 
   override val gtmContainer: String = "x"
 
-  override val footerCookiesUrl: String = "/cookies"
-  override val footerPrivacyUrl: String = "/privacy"
-  override val footerTermsConditionsUrl: String = "/terms"
-  override val footerHelpUrl: String = "/help"
-
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
 
   override val features: Features = new Features(runModeConfiguration)

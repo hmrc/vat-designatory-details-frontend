@@ -58,10 +58,6 @@ trait AppConfig {
   def feedbackUrl(redirect: String): String
   val accessibilityLinkUrl: String
   val gtmContainer: String
-  val footerCookiesUrl: String
-  val footerPrivacyUrl: String
-  val footerTermsConditionsUrl: String
-  val footerHelpUrl: String
   val businessNameGuidanceUrl: String
   val features: Features
 }
@@ -138,11 +134,6 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendServiceUrl) + sc.getString(ConfigKeys.vatSummaryAccessibilityUrl)
 
   override val gtmContainer: String = sc.getString(Keys.gtmContainer)
-
-  override val footerPrivacyUrl: String = sc.getString(ConfigKeys.footerPrivacyUrl)
-  override val footerTermsConditionsUrl: String = sc.getString(ConfigKeys.footerTermsConditionsUrl)
-  override val footerHelpUrl: String = sc.getString(ConfigKeys.footerHelpUrl)
-  override val footerCookiesUrl: String = sc.getString(ConfigKeys.footerCookiesUrl)
 
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
 
