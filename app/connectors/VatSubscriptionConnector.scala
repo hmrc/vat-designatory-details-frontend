@@ -19,10 +19,8 @@ package connectors
 import config.AppConfig
 import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
 import javax.inject.{Inject, Singleton}
-import models.User
-import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateTradingName, UpdateOrganisationDetailsSuccess}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateOrganisationDetailsSuccess, UpdateTradingName}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import utils.LoggerUtil.{logDebug, logWarn}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -57,8 +55,7 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
 
   def updateTradingName(vrn: String, orgDetails: UpdateTradingName)
                        (implicit hc: HeaderCarrier,
-                                ec: ExecutionContext,
-                                user: User[_]): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+                                ec: ExecutionContext): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
 
     import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
 

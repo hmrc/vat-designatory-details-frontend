@@ -22,18 +22,15 @@ import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import models.User
-import models.viewModels.ChangeSuccessViewModel
 import play.api.Logger
 import play.api.mvc._
-import services.VatSubscriptionService
 import views.html.businessName.BusinessNameChangeSuccessView
 import views.html.tradingName.TradingNameChangeSuccessView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionService,
-                                        tradingNameSuccessView: TradingNameChangeSuccessView,
+class ChangeSuccessController @Inject()(tradingNameSuccessView: TradingNameChangeSuccessView,
                                         businessNameSuccessView: BusinessNameChangeSuccessView,
                                         errorHandler: ErrorHandler)
                                        (implicit val appConfig: AppConfig,
@@ -56,7 +53,7 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
     if(appConfig.features.businessNameR19_R20Enabled()) {
       user.session.get(businessNameChangeSuccessful) match {
         case Some("true") =>
-          renderBusinessNameView
+          Future.successful(Ok(businessNameSuccessView()))
         case _ =>
           Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
       }
@@ -65,32 +62,20 @@ class ChangeSuccessController @Inject()(vatSubscriptionService: VatSubscriptionS
     }
   }
 
-  private[controllers] def renderTradingNameView(isRemoval: Boolean, isAddition: Boolean)(implicit user: User[_]): Future[Result] =
-
-    vatSubscriptionService.getCustomerInfo(user.vrn).map { vatSubscriptionResponse =>
-      val titleMessageKey: Option[String] = (isAddition, isRemoval) match {
-        case (true, false) => Some("tradingNameChangeSuccess.title.add")
-        case (false, true) => Some("tradingNameChangeSuccess.title.remove")
-        case (false, false) => Some("tradingNameChangeSuccess.title.change")
-        case _ => None
-      }
-      val entityName = vatSubscriptionResponse.fold(_ => None, details => details.entityName)
-      titleMessageKey.fold {
-        Logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank." +
-          "Rendering InternalServerError")
-        authComps.errorHandler.showInternalServerError
-      } { title =>
-        val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, None)
-        Ok(tradingNameSuccessView(viewModel, isRemoval))
-      }
+  private[controllers] def renderTradingNameView(isRemoval: Boolean,
+                                                 isAddition: Boolean)(implicit user: User[_]): Future[Result] = {
+    val titleMessageKey: Option[String] = (isAddition, isRemoval) match {
+       case (true, false) => Some("tradingNameChangeSuccess.title.add")
+       case (false, true) => Some("tradingNameChangeSuccess.title.remove")
+       case (false, false) => Some("tradingNameChangeSuccess.title.change")
+       case _ => None
     }
-
-  private[controllers] def renderBusinessNameView(implicit user: User[_]): Future[Result] =
-    vatSubscriptionService.getCustomerInfo(user.vrn).map { vatSubscriptionResponse =>
-      val entityName = vatSubscriptionResponse.fold(_ => None, details => details.entityName)
-      val contactPreference = vatSubscriptionResponse.fold(_ => None, details => details.contactPreference)
-      val title = "businessNameChangeSuccess.title"
-      val viewModel = ChangeSuccessViewModel(title, user.session.get(verifiedAgentEmail), entityName, contactPreference)
-      Ok(businessNameSuccessView(viewModel))
+    titleMessageKey.fold {
+      Logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank. " +
+        "Rendering InternalServerError")
+      Future.successful(authComps.errorHandler.showInternalServerError)
+    } { title =>
+      Future.successful(Ok(tradingNameSuccessView(title, isRemoval)))
     }
+  }
 }

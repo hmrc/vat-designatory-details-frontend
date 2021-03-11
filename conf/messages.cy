@@ -69,16 +69,11 @@ tradingNameChangeSuccess.title.add = Rydych wedi gofyn am gael ychwanegu enw mas
 
 updateTradingNameSuccess = Os gallwn dderbyn eich cais, byddwn yn diweddaru’r cyfrif TAW gyda’r enw masnachu newydd.
 removeTradingNameSuccess = Byddwn yn tynnu’r enw masnachu o’r cyfrif TAW
-tradingNameSuccess.secondPara = Fel arfer, caiff diweddariadau eu gwneud cyn pen 2 ddiwrnod gwaith. Fodd bynnag, gall y broses gymryd sawl wythnos os bydd angen i ni gynnal gwiriadau ychwanegol.
 
-businessNameChangeSuccess.title = Rydych wedi gofyn am gael newid enw’r busnes
-businessNameChangeSuccess.helpOne.digital.agent1 = Byddwn yn anfon e-bost at
-businessNameChangeSuccess.helpOne.digital.agent2 = cyn pen 2 ddiwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
-businessNameChangeSuccess.helpOne.digital.agent3 = Byddwn hefyd yn cysylltu â’ch cleient gyda diweddariad.
-businessNameChangeSuccess.helpOne.paper.agent = Byddwn yn cysylltu â’ch cleient cyn pen 15 diwrnod gwaith, yn rhoi gwybod iddo a allwn dderbyn eich cais i newid enw’r busnes.
-businessNameChangeSuccess.helpOne.digital = Byddwn yn anfon e-bost atoch cyn pen 2 ddiwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
-businessNameChangeSuccess.helpTwo.digital = Gallwch hefyd wirio’ch negeseuon diogel oddi wrth CThEM i gael diweddariad.
-businessNameChangeSuccess.helpOne.paper = Byddwn yn anfon llythyr i brif leoliad eich busnes cyn pen 15 diwrnod gwaith, yn rhoi gwybod i chi a allwn dderbyn enw newydd y busnes.
+nameChangeSuccess.secondPara = Fel arfer, caiff diweddariadau eu gwneud cyn pen 2 ddiwrnod gwaith. Fodd bynnag, gall y broses gymryd sawl wythnos os bydd angen i ni gynnal gwiriadau ychwanegol.
+
+updateBusinessNameSuccess.title = Rydych wedi gofyn am gael newid enw’r busnes
+updateBusinessNameSuccess = Os gallwn dderbyn eich cais, byddwn yn diweddaru’r cyfrif TAW gyda’r enw masnachu newydd.
 
 sessionTimeout.title = Mae’ch sesiwn wedi’i therfynu
 sessionTimeout.helpOne = I reoli’ch cyfrif TAW, bydd yn rhaid i chi

@@ -18,7 +18,6 @@ package views.tradingName
 
 import assets.BaseTestConstants
 import models.User
-import models.viewModels.ChangeSuccessViewModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ViewBaseSpec
@@ -43,16 +42,15 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an individual is adding a trading name" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
-      lazy val view = injectedView(viewModel, isRemoval = false)(messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(exampleTitle, isRemoval = false)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
-      "have the page title provided by the model" in {
+      "have the correct page title" in {
         elementText(Selectors.title) shouldBe s"$exampleTitle - Business tax account - GOV.UK"
       }
 
-      "have the heading provided by the model" in {
+      "have the correct heading" in {
         elementText(Selectors.pageHeading) shouldBe exampleTitle
       }
 
@@ -80,8 +78,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an individual is removing the trading name" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
-      lazy val view = injectedView(viewModel, isRemoval = true)(messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(exampleTitle, isRemoval = true)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -97,8 +94,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an individual is changing an existing trading name" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, None, None, None)
-      lazy val view = injectedView(viewModel, isRemoval = false)(messages, mockConfig, User("1111111111"))
+      lazy val view = injectedView(exampleTitle, isRemoval = false)(messages, mockConfig, User("1111111111"))
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -114,13 +110,13 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an agent is adding a trading name" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-      lazy val view = injectedView(viewModel, isRemoval = false)(
-        messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+      lazy val view = injectedView(exampleTitle, isRemoval = false)(
+        messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn))
+      )
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
-      "have the page title provided by the model" in {
+      "have the correct page title" in {
         elementText(Selectors.title) shouldBe s"$exampleTitle - Your client’s VAT details - GOV.UK"
       }
 
@@ -140,9 +136,9 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an agent is removing a trading name" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-      lazy val view = injectedView(viewModel, isRemoval = true)(
-        messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+      lazy val view = injectedView(exampleTitle, isRemoval = true)(
+        messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn))
+      )
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
@@ -158,9 +154,9 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
 
     "an agent is changing an existing trading  name" when {
 
-      val viewModel = ChangeSuccessViewModel(exampleTitle, Some("agent@example.com"), Some("TheBusiness"), Some("Digital"))
-      lazy val view = injectedView(viewModel, isRemoval = false)(
-        messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn)))
+      lazy val view = injectedView(exampleTitle, isRemoval = false)(
+        messages, mockConfig, User("1111111111", arn = Some(BaseTestConstants.arn))
+      )
 
       lazy implicit val document: Document = Jsoup.parse(view.body)
 

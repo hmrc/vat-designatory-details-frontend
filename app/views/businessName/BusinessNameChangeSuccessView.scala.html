@@ -14,56 +14,25 @@
  * limitations under the License.
  *@
 
-@import models.viewModels.ChangeSuccessViewModel
-@import common.ContactPreference
-
 @this(mainTemplate: MainTemplate, govukButton: GovukButton)
 
-@(model: ChangeSuccessViewModel)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
+@()(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
 @messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
 @buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}
 
-@mainTemplate(pageTitle = messages(model.pageTitle)) {
+@mainTemplate(pageTitle = messages("updateBusinessNameSuccess.title")) {
 
   <div class="govuk-panel govuk-panel--confirmation">
     <h1 class="govuk-panel__title">
-      @messages(model.pageTitle)
+      @messages("updateBusinessNameSuccess.title")
     </h1>
   </div>
 
   <h2 class="govuk-heading-m">@messages("common.whatHappensNext")</h2>
 
-  @if(user.isAgent) {
-
-    @model.agentEmail match {
-      case Some(email) => {
-        <p class="govuk-body">
-          @messages("businessNameChangeSuccess.helpOne.digital.agent1")
-          <strong class="bold">@email</strong>
-          @messages("businessNameChangeSuccess.helpOne.digital.agent2")
-        </p>
-        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.digital.agent3")</p>
-      }
-      case _ => {
-        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper.agent")</p>
-      }
-    }
-
-  } else {
-    @model.contactPreference  match {
-      case Some(ContactPreference.digital) => {
-        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.digital")</p>
-        <p class="govuk-body">@messages("businessNameChangeSuccess.helpTwo.digital")</p>
-      }
-      case Some(ContactPreference.paper) => {
-        <p class="govuk-body">@messages("businessNameChangeSuccess.helpOne.paper")</p>
-      }
-      case _ => {
-        <p class="govuk-body">@messages("common.helpOne.apiFailure")</p>
-      }
-    }
-  }
+  <p class="govuk-body">@messages("updateBusinessNameSuccess")</p>
+  <p class="govuk-body">@messages("nameChangeSuccess.secondPara")</p>
 
   @govukButton(Button(
     href = Some(appConfig.manageVatSubscriptionServicePath),
