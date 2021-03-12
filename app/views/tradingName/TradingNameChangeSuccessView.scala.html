@@ -14,21 +14,19 @@
  * limitations under the License.
  *@
 
-@import models.viewModels.ChangeSuccessViewModel
-
 @this(mainTemplate: MainTemplate,
       govukButton: GovukButton)
 
-@(model: ChangeSuccessViewModel, isRemoval: Boolean)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
+@(pageTitle: String, isRemoval: Boolean)(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
 
 @messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
 @buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}
 
-@mainTemplate(pageTitle = messages(model.pageTitle)) {
+@mainTemplate(pageTitle = messages(pageTitle)) {
 
 <div class="govuk-panel govuk-panel--confirmation">
     <h1 class="govuk-panel__title">
-        @messages(model.pageTitle)
+        @messages(pageTitle)
     </h1>
 </div>
 
@@ -40,7 +38,7 @@
     <p class="govuk-body">@messages("updateTradingNameSuccess")</p>
   }
 
-  <p class="govuk-body">@messages("tradingNameSuccess.secondPara")</p>
+  <p class="govuk-body">@messages("nameChangeSuccess.secondPara")</p>
 
   @govukButton(Button(
     href = Some(appConfig.manageVatSubscriptionServicePath),

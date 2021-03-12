@@ -26,12 +26,11 @@ import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import models.customerInformation.{UpdateBusinessName, UpdateTradingName}
 import models.errors.ErrorModel
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import models.viewModels.CheckYourAnswersViewModel
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatSubscriptionService
-import views.html.businessTradingName.CheckYourAnswersView
 import utils.LoggerUtil.logWarn
-import play.api.http.Status.OK
+import views.html.businessTradingName.CheckYourAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -20,7 +20,6 @@ import connectors.VatSubscriptionConnector
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
 import javax.inject.{Inject, Singleton}
-import models.User
 import models.customerInformation.{UpdateBusinessName, UpdateTradingName}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -34,8 +33,7 @@ class VatSubscriptionService @Inject()(connector: VatSubscriptionConnector) {
     connector.getCustomerInfo(vrn)
 
   def updateTradingName(vrn: String, orgDetails: UpdateTradingName)
-                   (implicit hc: HeaderCarrier, ec: ExecutionContext,
-                    user: User[_]): Future[UpdateOrganisationDetailsResponse] = {
+                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateOrganisationDetailsResponse] = {
 
     connector.updateTradingName(vrn, orgDetails)
 

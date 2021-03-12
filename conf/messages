@@ -69,16 +69,11 @@ tradingNameChangeSuccess.title.add = You have asked to add a trading name
 
 updateTradingNameSuccess = If we can accept your request, we’ll update the VAT account with the new trading name.
 removeTradingNameSuccess = We will remove the trading name from the VAT account.
-tradingNameSuccess.secondPara = Updates are usually done within 2 working days. However, they can take several weeks if we need to carry out additional checks.
 
-businessNameChangeSuccess.title = You have asked to change the business name
-businessNameChangeSuccess.helpOne.digital.agent1 = We’ll send an email to
-businessNameChangeSuccess.helpOne.digital.agent2 = within 2 working days, telling you whether we can accept the new business name.
-businessNameChangeSuccess.helpOne.digital.agent3 = We’ll also contact your client with an update.
-businessNameChangeSuccess.helpOne.paper.agent = We’ll contact your client within 15 working days, telling them whether we can accept your request to change the business name.
-businessNameChangeSuccess.helpOne.digital = We’ll send you an email within 2 working days, telling you whether we can accept the new business name.
-businessNameChangeSuccess.helpTwo.digital = You can also check your HMRC secure messages for an update.
-businessNameChangeSuccess.helpOne.paper = We’ll send a letter to your principal place of business within 15 working days, telling you whether we can accept the new business name.
+nameChangeSuccess.secondPara = Updates are usually done within 2 working days. However, they can take several weeks if we need to carry out additional checks.
+
+updateBusinessNameSuccess.title = You have asked to change the business name
+updateBusinessNameSuccess = If we can accept your request, we’ll update the VAT account with the new business name.
 
 sessionTimeout.title = Your session has timed out
 sessionTimeout.helpOne = To manage your VAT account, you will have to

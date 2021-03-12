@@ -31,7 +31,6 @@ import scala.concurrent.Future
 class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   val controller: ChangeSuccessController = new ChangeSuccessController(
-    mockVatSubscriptionService,
     inject[TradingNameChangeSuccessView],
     inject[BusinessNameChangeSuccessView],
     mockErrorHandler
@@ -179,42 +178,33 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
       "the businessNameChangeSuccessful session key is 'true'" when {
 
-        "the call to customer info is successful" when {
+        "the user is a principal entity" should {
+          lazy val document = Jsoup.parse(bodyOf(result))
 
-          "the user is a principal entity" should {
-            lazy val result: Future[Result] = {
-              mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-              controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
-            }
-
-            "return 200" in {
-              status(result) shouldBe Status.OK
-            }
+          lazy val result: Future[Result] = {
+            controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
           }
 
-          "the user is an agent" should {
-            lazy val result: Future[Result] = {
-              mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-              controller.businessName(request.withSession(
-                businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
-              ))
-            }
-
-            "return 200" in {
-              mockAgentAuthorised()
-              status(result) shouldBe Status.OK
-            }
+          "return 200" in {
+            status(result) shouldBe Status.OK
           }
 
-          "the call to customer info is unsuccessful" should {
-            lazy val result: Future[Result] = {
-              mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
-              controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
-            }
+          "render the correct heading" in {
+            document.select("h1").text() shouldBe "updateBusinessNameSuccess.title"
+          }
+        }
 
-            "return 200" in {
-              status(result) shouldBe Status.OK
-            }
+        "the user is an agent" should {
+          lazy val result: Future[Result] = {
+            mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
+            controller.businessName(request.withSession(
+              businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
+            ))
+          }
+
+          "return 200" in {
+            mockAgentAuthorised()
+            status(result) shouldBe Status.OK
           }
         }
       }
@@ -245,23 +235,6 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
         status(result) shouldBe NOT_FOUND
       }
-    }
-  }
-
-  "The renderBusinessName function" should {
-
-    lazy val result = {
-      mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-      controller.renderBusinessNameView(user)
-    }
-    lazy val document = Jsoup.parse(bodyOf(result))
-
-    "return 200" in {
-      status(result) shouldBe Status.OK
-    }
-
-    "render the correct heading" in {
-      document.select("h1").text() shouldBe "businessNameChangeSuccess.title"
     }
   }
 }

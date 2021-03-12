@@ -41,7 +41,7 @@ class BusinessNameChangeSuccessPageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.OK),
-            pageTitle(generateDocumentTitle("businessNameChangeSuccess.title"))
+            pageTitle(generateDocumentTitle("updateBusinessNameSuccess.title"))
           )
         }
       }
