@@ -40,7 +40,7 @@ val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.27.2"
 val playJsonJodaVersion        = "2.9.2"
-val bootstrapFrontendVersion   = "3.4.0"
+val bootstrapFrontendVersion   = "4.2.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
