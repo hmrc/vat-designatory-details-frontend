@@ -48,6 +48,7 @@ captureTradingName.para = Ni all eich enwau masnachu fod yn hirach na 160 o gyme
 captureTradingName.error.exceedsMaxLength = Nodwch enw masnachu sy’n 160 o gymeriadau neu lai
 captureTradingName.error.empty = Nodwch enw masnachu
 captureTradingName.error.notChanged = Nodwch enw masnachu newydd
+captureTradingName.error.containsSpecialCharacters = Nodwch enw masnachu nad yw’n cynnwys cymeriadau arbennig na symbolau
 
 whatToDo.title = Beth ydych am ei wneud â’r enw masnachu presennol?
 whatToDo.change = Rwyf am ei newid i rywbeth arall
