@@ -24,13 +24,15 @@ import uk.gov.hmrc.play.mappers.StopOnFirstFail.constraint
 object TradingNameForm {
 
   val maxLength: Int = 160
+  val tradingNameRegex: String = """^[0-9a-zA-Z &`\-\\'\\.^]{1,160}$"""
 
   def tradingNameForm(tradingName: String): Form[String] = Form(
     "trading-name" -> text.verifying(
       StopOnFirstFail(
         constraint[String]("captureTradingName.error.empty", _.length != 0),
         constraint[String]("captureTradingName.error.notChanged", _.toLowerCase != tradingName.toLowerCase),
-        constraint[String]("captureTradingName.error.exceedsMaxLength", _.length <= maxLength)
+        constraint[String]("captureTradingName.error.exceedsMaxLength", _.length <= maxLength),
+        constraint[String]("captureTradingName.error.containsSpecialCharacters", _.matches(tradingNameRegex)),
       )
     )
   )
