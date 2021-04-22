@@ -93,7 +93,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
         "have a list" which {
 
           "has the correct first item" in {
-            elementText(Selectors.listItem(1)) shouldBe "be longer than 160 characters"
+            elementText(Selectors.listItem(1)) shouldBe "be longer than 105 characters"
           }
           "has the correct second item" in {
             elementText(Selectors.listItem(2)) shouldBe "contain certain special characters or symbols"

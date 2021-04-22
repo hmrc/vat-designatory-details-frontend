@@ -23,14 +23,16 @@ import uk.gov.hmrc.play.mappers.StopOnFirstFail.constraint
 
 object BusinessNameForm {
 
-  val maxLength: Int = 160
+  val maxLength: Int = 105
+  val businessNameRegex = "^[0-9a-zA-Z &`\\-\\'\\.^]{1,105}$"
 
   def businessNameForm(businessName: String): Form[String] = Form(
     "business-name" -> text.verifying(
       StopOnFirstFail(
         constraint[String]("captureBusinessName.error.empty", _.length != 0),
         constraint[String]("captureBusinessName.error.notChanged", _.toLowerCase != businessName.toLowerCase),
-        constraint[String]("captureBusinessName.error.exceedsMaxLength", _.length <= maxLength)
+        constraint[String]("captureBusinessName.error.exceedsMaxLength", _.length <= maxLength),
+        constraint[String]("captureBusinessName.error.containsSpecialCharacters", _.matches(businessNameRegex))
       )
     )
   )
