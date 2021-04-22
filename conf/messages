@@ -48,6 +48,7 @@ captureTradingName.para = Trading names cannot be longer than 160 characters
 captureTradingName.error.exceedsMaxLength = Enter a trading name that is 160 characters or less
 captureTradingName.error.empty = Enter a trading name
 captureTradingName.error.notChanged = Enter a new trading name
+captureTradingName.error.containsSpecialCharacters = Enter a trading name that does not contain special characters or symbols
 
 whatToDo.title = What do you want to do with the current trading name?
 whatToDo.change = I want to change it to something else
