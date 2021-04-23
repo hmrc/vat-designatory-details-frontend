@@ -32,7 +32,7 @@ object TradingNameForm {
         constraint[String]("captureTradingName.error.empty", _.length != 0),
         constraint[String]("captureTradingName.error.notChanged", _.toLowerCase != tradingName.toLowerCase),
         constraint[String]("captureTradingName.error.exceedsMaxLength", _.length <= maxLength),
-        constraint[String]("captureTradingName.error.containsSpecialCharacters", _.matches(tradingNameRegex)),
+        constraint[String]("captureTradingName.error.containsSpecialCharacters", _.matches(tradingNameRegex))
       )
     )
   )
