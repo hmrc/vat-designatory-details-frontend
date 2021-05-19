@@ -42,7 +42,7 @@ class ConfirmRemoveTradingNamePageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.OK),
-            pageTitle(generateDocumentTitle("confirmRemove.title", Some(currentTradingName)))
+            pageTitle(generateDocumentTitle("confirmRemove.pageTitle"))
           )
         }
       }

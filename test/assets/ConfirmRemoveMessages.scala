@@ -18,8 +18,7 @@ package assets
 
 object ConfirmRemoveMessages {
 
-  def title(tradingName: String): String =
-    s"Do you want us to remove $tradingName as the trading name? - Business tax account - GOV.UK"
+  val title = "Do you want us to remove your trading name? - Business tax account - GOV.UK"
   def heading(tradingName: String): String =
     s"Do you want us to remove $tradingName as the trading name?"
   val confirm = "Confirm and continue"
@@ -27,7 +26,7 @@ object ConfirmRemoveMessages {
   val no = "No"
   val back = "Back"
   val errorPrefix = "Error: "
-  def errorTitle(tradingName: String): String = errorPrefix + title(tradingName)
+  val errorTitle = errorPrefix + title
   val errorHeading = "There is a problem"
   val errorLinkText = "Select yes if you want us to remove the current trading name"
   val errorText = errorPrefix + errorLinkText
