@@ -27,8 +27,8 @@
 @(form: Form[YesNo], tradingName: String)(implicit messages: Messages, appConfig: AppConfig, request: Request[_])
 
 @mainTemplate(pageTitle =
-        if (form.errors.nonEmpty) messages("common.error.prefixTitle", messages("confirmRemove.title", tradingName))
-        else messages("confirmRemove.title", tradingName)) {
+        if (form.errors.nonEmpty) messages("common.error.prefixTitle", messages("confirmRemove.pageTitle"))
+        else messages("confirmRemove.pageTitle")) {
 
   @govukBackLink(BackLink(
     href = controllers.tradingName.routes.WhatToDoController.show().url,

@@ -50,7 +50,7 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct document title" in {
-        document.title shouldBe ConfirmRemoveMessages.title(testTradingName)
+        document.title shouldBe ConfirmRemoveMessages.title
       }
 
       "have the correct heading" in {
@@ -92,7 +92,7 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct document title" in {
-        document.title shouldBe ConfirmRemoveMessages.errorTitle(testTradingName)
+        document.title shouldBe ConfirmRemoveMessages.errorTitle
       }
 
       "display an error summary" which {

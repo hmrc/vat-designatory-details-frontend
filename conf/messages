@@ -63,6 +63,7 @@ checkYourAnswers.businessName = Business name
 
 confirmRemove.title = Do you want us to remove {0} as the trading name?
 confirmRemove.error = Select yes if you want us to remove the current trading name
+confirmRemove.pageTitle = Do you want us to remove your trading name?
 
 tradingNameChangeSuccess.title.change = You have asked to change the trading name
 tradingNameChangeSuccess.title.remove = You have asked to remove the trading name

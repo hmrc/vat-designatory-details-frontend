@@ -63,6 +63,7 @@ checkYourAnswers.businessName = Enw’r busnes
 
 confirmRemove.title = A ydych am i ni dynnu {0} fel yr enw masnachu?
 confirmRemove.error = Dewiswch ‘Iawn’ os ydych am i ni dynnu’r enw masnachu presennol
+confirmRemove.pageTitle = A ydych am i ni dynnu’ch enw masnachu?
 
 tradingNameChangeSuccess.title.change = Rydych wedi gofyn am gael newid yr enw masnachu
 tradingNameChangeSuccess.title.remove = Rydych wedi gofyn am gael tynnu’r enw masnachu
