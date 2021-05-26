@@ -17,7 +17,7 @@
 @import config.AppConfig
 @import models.viewModels.CheckYourAnswersViewModel
 
-@this(mainTemplate: MainTemplate, govukButton: GovukButton)
+@this(mainTemplate: MainTemplate, govukSummaryList: GovukSummaryList, govukButton: GovukButton)
 
 @(model: CheckYourAnswersViewModel)(implicit messages: Messages,
                                     appConfig: AppConfig,
@@ -25,28 +25,32 @@
 
 @mainTemplate(pageTitle = messages("checkYourAnswers.heading")) {
 
-  <div class="govuk-grid-row govuk-!-margin-left-1 govuk-!-margin-top-7">
-    <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
+<h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
 
-    <dl class="govuk-summary-list">
-      <dt class="govuk-summary-list__key">
-        @messages(model.question)
-      </dt>
-
-      <dd class="govuk-summary-list__value">
-        @model.answer
-      </dd>
-
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href=@model.changeLink>
-        @messages("checkYourAnswers.change")</a>
-      </dd>
-    </dl>
+    @govukSummaryList(SummaryList(
+        rows = Seq(
+        SummaryListRow(
+        key = Key(
+        content = Text(messages(model.question))
+        ),
+    value = Value(
+    content = Text(model.answer)
+    ),
+    actions = Some(Actions(
+        items = Seq(
+            ActionItem(
+            href = model.changeLink,
+            content = Text(messages("checkYourAnswers.change"))
+            )
+           )
+         ))
+        )
+       )
+     ))
 
     @govukButton(Button(
       href = Some(model.continueLink),
       content = Text(messages("checkYourAnswers.confirm"))
     ))
-  </div>
 
 }
