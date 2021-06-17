@@ -30,11 +30,13 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
     val heading = "h1"
     val newTradingName = ".govuk-summary-list__value"
     val firstColumn = ".govuk-summary-list__key"
-    val changeLink = "dd > a"
+    val changeLink = ".govuk-summary-list__actions > a"
+    val changeLinkText = ".govuk-summary-list__actions > a > span:nth-child(1)"
+    val changeLinkHiddenText = ".govuk-summary-list__actions > a > span:nth-child(2)"
     val confirmButton = ".govuk-button"
   }
 
-  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "/continue-link")
+  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "Change the answer", "/continue-link")
 
   "Rendering the Check Your Answer view" when {
 
@@ -62,11 +64,15 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
       "have a link to change the trading name" which {
 
         "has the correct text" in {
-          elementText(Selectors.changeLink) shouldBe "Change"
+          elementText(Selectors.changeLinkText) shouldBe "Change"
         }
 
         "has the correct URL from the viewModel" in {
           element(Selectors.changeLink).attr("href") shouldBe "/change-link"
+        }
+
+        "has hidden text" in {
+          elementText(Selectors.changeLinkHiddenText) shouldBe "Change the answer"
         }
       }
 

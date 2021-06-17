@@ -54,6 +54,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
           question = "checkYourAnswers.tradingName",
           answer = tradingName,
           changeLink = controllers.tradingName.routes.CaptureTradingNameController.show().url,
+          changeLinkHiddenText = "checkYourAnswers.tradingName.edit",
           continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName().url)
         Ok(checkYourAnswersView(viewModel))
       case _ =>
@@ -121,6 +122,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             question = "checkYourAnswers.businessName",
             answer = businessName,
             changeLink = controllers.businessName.routes.CaptureBusinessNameController.show().url,
+            changeLinkHiddenText = "checkYourAnswers.businessName.edit",
             continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName().url)
           Ok(checkYourAnswersView(viewModel))
         case _ =>
