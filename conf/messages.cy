@@ -57,9 +57,11 @@ whatToDo.error = Dewiswch ateb
 
 checkYourAnswers.heading = Gwirio’ch ateb
 checkYourAnswers.tradingName = Enw masnachu
+checkYourAnswers.tradingName.edit = Newid yr enw masnachu
 checkYourAnswers.change = Newid
 checkYourAnswers.confirm = Cadarnhau ac yn eich blaen
 checkYourAnswers.businessName = Enw’r busnes
+checkYourAnswers.businessName.edit = Newid enw’r busnes
 
 confirmRemove.title = A ydych am i ni dynnu {0} fel yr enw masnachu?
 confirmRemove.error = Dewiswch ‘Iawn’ os ydych am i ni dynnu’r enw masnachu presennol

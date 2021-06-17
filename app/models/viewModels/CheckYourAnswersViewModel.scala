@@ -19,4 +19,5 @@ package models.viewModels
 case class CheckYourAnswersViewModel(question: String,
                                      answer: String,
                                      changeLink: String,
+                                     changeLinkHiddenText: String,
                                      continueLink: String)
