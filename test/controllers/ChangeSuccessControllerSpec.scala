@@ -114,7 +114,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       }
 
       "has the correct message key for the title" in {
-        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.add"
+        document.select("h1").text() shouldBe "You have asked to add a trading name"
       }
 
     }
@@ -133,7 +133,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       }
 
       "has the correct message key for the title" in {
-        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.remove"
+        document.select("h1").text() shouldBe "You have asked to remove the trading name"
       }
 
     }
@@ -152,7 +152,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       }
 
       "has the correct message key for the title" in {
-        document.select("h1").text() shouldBe "tradingNameChangeSuccess.title.change"
+        document.select("h1").text() shouldBe "You have asked to change the trading name"
       }
 
     }
@@ -190,7 +190,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
           }
 
           "render the correct heading" in {
-            document.select("h1").text() shouldBe "updateBusinessNameSuccess.title"
+            document.select("h1").text() shouldBe "You have asked to change the business name"
           }
         }
 
