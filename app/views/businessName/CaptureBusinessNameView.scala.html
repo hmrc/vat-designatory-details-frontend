@@ -43,16 +43,19 @@ form: FormWithCSRF)
 </div>
 }
 
-@mainTemplate(
- pageTitle =
-  if(businessNameForm.errors.nonEmpty) messages("common.error.prefixTitle", messages("captureBusinessName.title"))
-  else messages("captureBusinessName.title")
-) {
+@backLink = {
+  @govukBackLink(BackLink(
+    href = appConfig.manageVatSubscriptionServicePath,
+    content = Text(messages("base.back"))
+  ))
+}
 
- @govukBackLink(BackLink(
-  href = appConfig.manageVatSubscriptionServicePath,
-  content = Text(messages("base.back"))
- ))
+@mainTemplate(
+  pageTitle =
+    if(businessNameForm.errors.nonEmpty) messages("common.error.prefixTitle", messages("captureBusinessName.title"))
+    else messages("captureBusinessName.title"),
+  backLinkContent = Some(backLink)
+) {
 
  @if(businessNameForm.hasErrors) {
   @govukErrorSummary(ErrorSummary(

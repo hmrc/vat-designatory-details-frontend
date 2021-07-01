@@ -34,8 +34,9 @@
 @(pageTitle: String,
   serviceName: Option[String] = None,
   showSignOut: Boolean = true,
-  feedbackOnSignOut: Boolean = true
-  )(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
+  feedbackOnSignOut: Boolean = true,
+  backLinkContent: Option[Html] = None
+)(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
 
 @navTitle = @{
   serviceName.fold{
@@ -74,6 +75,7 @@
       En -> appConfig.routeToSwitchLanguage("english").url,
       Cy -> appConfig.routeToSwitchLanguage("cymraeg").url
   ))
+  @backLinkContent
 }
 
 @head = {
@@ -124,4 +126,4 @@
   beforeContentBlock = Some(beforeContentHtml),
   footerBlock = Some(hmrcStandardFooter(accessibilityStatementUrl = Some(appConfig.accessibilityLinkUrl))),
   scriptsBlock = Some(scripts)
-  )(fullContent)
+)(fullContent)

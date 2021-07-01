@@ -35,20 +35,23 @@
 }
 
 @dynamicTitle = @{if(currentTradingName == "") {
-messages("captureTradingName.title")} else {
-messages("captureNewTradingName.title")}
+  messages("captureTradingName.title")} else {
+  messages("captureNewTradingName.title")}
+}
+
+@backLink = {
+  @govukBackLink(BackLink(
+    href = dynamicBackLink,
+    content = Text(messages("base.back"))
+  ))
 }
 
 @mainTemplate(
   pageTitle =
     if(tradingNameForm.errors.nonEmpty) messages("common.error.prefixTitle",
-    dynamicTitle) else dynamicTitle
+    dynamicTitle) else dynamicTitle,
+  backLinkContent = Some(backLink)
 ) {
-
-  @govukBackLink(BackLink(
-    href = dynamicBackLink,
-    content = Text(messages("base.back"))
-  ))
 
   @if(tradingNameForm.hasErrors) {
     @govukErrorSummary(ErrorSummary(

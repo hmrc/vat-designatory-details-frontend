@@ -27,13 +27,16 @@
 
 @(whatToDoForm: Form[ChangeRemove])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@mainTemplate(pageTitle = if(whatToDoForm.hasErrors) messages("common.error.prefixTitle",
-                            messages("whatToDo.title")) else messages("whatToDo.title")) {
-
+@backLink = {
   @govukBackLink(BackLink(
     href = appConfig.manageVatSubscriptionServicePath,
     content = Text(messages("base.back"))
   ))
+}
+
+@mainTemplate(pageTitle = if(whatToDoForm.hasErrors) messages("common.error.prefixTitle",
+                            messages("whatToDo.title")) else messages("whatToDo.title"),
+  backLinkContent = Some(backLink)) {
 
   @if(whatToDoForm.hasErrors) {
     @govukErrorSummary(ErrorSummary(

@@ -26,14 +26,17 @@
 
 @(form: Form[YesNo], tradingName: String)(implicit messages: Messages, appConfig: AppConfig, request: Request[_])
 
-@mainTemplate(pageTitle =
-        if (form.errors.nonEmpty) messages("common.error.prefixTitle", messages("confirmRemove.pageTitle"))
-        else messages("confirmRemove.pageTitle")) {
-
+@backLink = {
   @govukBackLink(BackLink(
     href = controllers.tradingName.routes.WhatToDoController.show().url,
     content = Text(messages("base.back"))
   ))
+}
+
+@mainTemplate(pageTitle =
+        if (form.errors.nonEmpty) messages("common.error.prefixTitle", messages("confirmRemove.pageTitle"))
+        else messages("confirmRemove.pageTitle"),
+  backLinkContent = Some(backLink)) {
 
   @if(form.hasErrors) {
     @govukErrorSummary(ErrorSummary(
