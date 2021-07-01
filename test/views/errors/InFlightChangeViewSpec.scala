@@ -29,10 +29,10 @@ class InFlightChangeViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val heading = "h1"
-    val paragraphOne = "p:nth-child(3)"
-    val paragraphTwo = "p:nth-child(4)"
+    val paragraphOne = ".govuk-body:nth-of-type(1)"
+    val paragraphTwo = ".govuk-body:nth-of-type(2)"
     val backLink = ".govuk-back-link"
-    val accountDetailsBack = "#content > .govuk-link"
+    val accountDetailsBack = "#content .govuk-link"
 
     def listItem(num: Int): String = s"#content > ul > li:nth-child($num)"
   }

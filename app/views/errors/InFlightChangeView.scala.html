@@ -19,12 +19,14 @@
 
 @()(implicit user: User[_], messages: Messages, appConfig: config.AppConfig)
 
-@mainTemplate(pageTitle = messages("inFlightChange.title")) {
-
+@backLink = {
   @govukBackLink(BackLink(
     href = appConfig.manageVatSubscriptionServicePath,
     content = Text(messages("base.back"))
   ))
+}
+
+@mainTemplate(pageTitle = messages("inFlightChange.title"), backLinkContent = Some(backLink)) {
 
   <h1 class="govuk-heading-l">@messages("inFlightChange.title")</h1>
 
@@ -44,10 +46,12 @@
     <li>@messages("inFlightChange.list3")</li>
   </ul>
 
-  <a href="@appConfig.manageVatSubscriptionServicePath" class="govuk-link">
-    @if(user.isAgent) {
-      @messages("inFlightChange.accountDetailsBack.agent")
-    } else {
-      @messages("inFlightChange.accountDetailsBack.nonAgent")
-    }</a>
+  <p class="govuk-body">
+    <a href="@appConfig.manageVatSubscriptionServicePath" class="govuk-link">
+      @if(user.isAgent) {
+        @messages("inFlightChange.accountDetailsBack.agent")
+      } else {
+        @messages("inFlightChange.accountDetailsBack.nonAgent")
+      }</a>
+  </p>
 }
