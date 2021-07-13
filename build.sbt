@@ -23,8 +23,8 @@ import uk.gov.hmrc.SbtAutoBuildPlugin
 
 val appName = "vat-designatory-details-frontend"
 
-val govUkFrontendVersion       = "0.77.0-play-26"
-val hmrcUkFrontendVersion      = "0.76.0-play-26"
+val govUkFrontendVersion       = "0.80.0-play-26"
+val hmrcUkFrontendVersion      = "0.80.0-play-26"
 val playPartialsVersion        = "8.1.0-play-26"
 val playUiVersion              = "9.6.0-play-26"
 val playLanguageVersion        = "5.1.0-play-26"
