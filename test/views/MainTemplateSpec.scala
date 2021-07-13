@@ -27,7 +27,7 @@ class MainTemplateSpec extends ViewBaseSpec {
 
   object Selectors {
     val navTitle = ".govuk-header__link--service-name"
-    val signOutLink = "#navigation > li > a"
+    val signOutLink = ".hmrc-sign-out-nav__link"
     val firstListLink = "li > a"
   }
 

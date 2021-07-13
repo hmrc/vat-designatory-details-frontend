@@ -4,11 +4,6 @@ base.confirmAndContinue = Cadarnhau ac yn eich blaen
 base.finish = Gorffen
 base.pageTitle = {0} - {1} - GOV.UK
 
-banner.newService = Gwasanaeth newydd yw hwn – bydd eich
-banner.feedback = adborth
-banner.feedbackImprove = yn ein helpu i’w wella.
-banner.phaseName = BETA
-
 common.clientService = Cyfrif Treth Busnes
 common.agentService = Manylion TAW eich cleient
 common.vat = TAW
