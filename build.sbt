@@ -24,9 +24,8 @@ import uk.gov.hmrc.SbtAutoBuildPlugin
 val appName = "vat-designatory-details-frontend"
 
 val govUkFrontendVersion       = "0.80.0-play-26"
-val hmrcUkFrontendVersion      = "0.80.0-play-26"
+val hmrcUkFrontendVersion      = "0.83.0-play-26"
 val playPartialsVersion        = "8.1.0-play-26"
-val playUiVersion              = "9.6.0-play-26"
 val playLanguageVersion        = "5.1.0-play-26"
 val playWhiteListFilterVersion = "3.4.0-play-26"
 val scalaTestPlusVersion       = "3.1.3"
@@ -38,7 +37,7 @@ val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.27.2"
 val playJsonJodaVersion        = "2.9.2"
-val bootstrapFrontendVersion   = "5.4.0"
+val bootstrapFrontendVersion   = "5.7.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -75,7 +74,6 @@ val compile = Seq(
   ws,
   "uk.gov.hmrc"       %% "bootstrap-frontend-play-26" % bootstrapFrontendVersion,
   "uk.gov.hmrc"       %% "play-language"              % playLanguageVersion,
-  "uk.gov.hmrc"       %% "play-ui"                    % playUiVersion,
   "uk.gov.hmrc"       %% "play-partials"              % playPartialsVersion,
   "uk.gov.hmrc"       %% "play-whitelist-filter"      % playWhiteListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-govuk"        % govUkFrontendVersion,
