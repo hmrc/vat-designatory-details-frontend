@@ -43,6 +43,10 @@ class MainTemplateSpec extends ViewBaseSpec {
         "show the correct page title" in {
           elementText(Selectors.navTitle) shouldBe "Business tax account"
         }
+
+        "have the correct service URL" in {
+          element(".govuk-header__link--service-name").attr("href") shouldBe mockConfig.btaHomeUrl
+        }
       }
 
       "the user is an agent" should {
@@ -54,6 +58,11 @@ class MainTemplateSpec extends ViewBaseSpec {
 
         }
 
+        "have the correct service URL" in {
+          element(".govuk-header__link--service-name").attr("href") shouldBe mockConfig.vatAgentClientLookupHubPath
+        }
+      }
+
         "the user is not known" should {
           lazy val view = injectedView(pageTitle = "Test")(Html("Test"))(request, messages, mockConfig)
           lazy implicit val document: Document = Jsoup.parse(view.body)
@@ -61,8 +70,12 @@ class MainTemplateSpec extends ViewBaseSpec {
           "have no nav title" in {
             elementText(Selectors.navTitle) shouldBe "VAT"
           }
+
+          "have the correct service URL" in {
+            element(".govuk-header__link--service-name").attr("href") shouldBe ""
+          }
         }
-      }
+
     }
 
     "given a service name" should {

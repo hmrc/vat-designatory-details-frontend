@@ -46,9 +46,11 @@ trait AppConfig {
   val signInContinueUrl: String
   val govUkCommercialSoftware: String
   val vatAgentClientLookupServicePath: String
+  val vatAgentClientLookupHubPath: String
   val vatAgentClientLookupUnauthorisedForClient: String
   val vatSubscriptionHost: String
   val manageVatSubscriptionServicePath: String
+  val btaHomeUrl: String
   val feedbackFormPartialUrl: String
   val contactFrontendService: String
   val contactFormServiceIdentifier: String
@@ -118,10 +120,14 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
 
   private val vatAgentClientLookupServiceUrl: String = sc.getString(Keys.vatAgentClientLookupServiceUrl)
   override val vatAgentClientLookupServicePath: String = vatAgentClientLookupServiceUrl + sc.getString(Keys.vatAgentClientLookupServicePath)
+  override val vatAgentClientLookupHubPath: String = vatAgentClientLookupServiceUrl + sc.getString(Keys.vatAgentClientLookupHubPath)
   override val vatAgentClientLookupUnauthorisedForClient: String =
     vatAgentClientLookupServiceUrl +
       sc.getString(Keys.vatAgentClientLookupUnauthorisedForClient) +
       s"?redirectUrl=${SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl}"
+
+
+  override lazy val btaHomeUrl: String = sc.getString(ConfigKeys.btaHost) + sc.getString(ConfigKeys.btaHomeUrl)
 
   override lazy val timeoutPeriod: Int = sc.getInt(Keys.timeoutPeriod)
   override lazy val timeoutCountdown: Int = sc.getInt(Keys.timeoutCountdown)

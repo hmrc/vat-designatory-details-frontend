@@ -35,9 +35,12 @@ object ConfigKeys {
   val allowListShutterPage: String = "allowList.shutter-page-url"
   val vatAgentClientLookupServiceUrl: String = "vat-agent-client-lookup-frontend.url"
   val vatAgentClientLookupServicePath: String = "vat-agent-client-lookup-frontend.path"
+  val vatAgentClientLookupHubPath: String = "vat-agent-client-lookup-frontend.agentHub"
   val vatAgentClientLookupUnauthorisedForClient: String = "vat-agent-client-lookup-frontend.unauthorisedForClient"
   val manageVatSubscriptionServiceUrl: String = "manage-vat-subscription-frontend.url"
   val manageVatSubscriptionServicePath: String = "manage-vat-subscription-frontend.path"
+  val btaHost: String = "business-tax-account.host"
+  val btaHomeUrl: String = "business-tax-account.url"
 
   val businessNameR19_R20Feature: String = "features.businessNameR19_R20.enabled"
 
