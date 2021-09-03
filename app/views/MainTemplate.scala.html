@@ -85,6 +85,7 @@
 @header = {
   @hmrcStandardHeader(
     serviceName = Some(navTitle),
+    serviceUrl = ServiceNameUtil.generateServiceUrl,
     signOutUrl =
       if(showSignOut) Some(routes.SignOutController.signOut(feedbackOnSignOut).url)
       else None,

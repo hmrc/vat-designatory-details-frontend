@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import play.core.PlayVersion
 import play.sbt.routes.RoutesKeys
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
-import uk.gov.hmrc.SbtAutoBuildPlugin
 
 val appName = "vat-designatory-details-frontend"
 
@@ -37,7 +35,7 @@ val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.27.2"
 val playJsonJodaVersion        = "2.9.2"
-val bootstrapFrontendVersion   = "5.7.0"
+val bootstrapFrontendVersion   = "5.12.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -118,7 +116,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     Keys.fork in Test := true,
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.12.14",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
