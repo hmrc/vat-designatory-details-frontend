@@ -21,8 +21,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val govUkFrontendVersion       = "0.80.0-play-26"
-val hmrcUkFrontendVersion      = "0.83.0-play-26"
+val hmrcUkFrontendVersion      = "1.4.0-play-26"
 val playPartialsVersion        = "8.1.0-play-26"
 val playLanguageVersion        = "5.1.0-play-26"
 val playWhiteListFilterVersion = "3.4.0-play-26"
@@ -62,7 +61,7 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimum := 95,
+    ScoverageKeys.coverageMinimumStmtTotal := 95,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -74,7 +73,6 @@ val compile = Seq(
   "uk.gov.hmrc"       %% "play-language"              % playLanguageVersion,
   "uk.gov.hmrc"       %% "play-partials"              % playPartialsVersion,
   "uk.gov.hmrc"       %% "play-whitelist-filter"      % playWhiteListFilterVersion,
-  "uk.gov.hmrc"       %% "play-frontend-govuk"        % govUkFrontendVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,
   "com.typesafe.play" %% "play-json-joda"             % playJsonJodaVersion
 )
@@ -99,7 +97,6 @@ def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {
 
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
-  "uk.gov.hmrc.govukfrontend.views.html.helpers._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
 )
