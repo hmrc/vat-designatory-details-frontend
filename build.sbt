@@ -21,8 +21,8 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion      = "1.4.0-play-26"
-val playPartialsVersion        = "8.1.0-play-26"
+val hmrcUkFrontendVersion      = "1.10.0-play-26"
+val playPartialsVersion        = "8.2.0-play-26"
 val playLanguageVersion        = "5.1.0-play-26"
 val playWhiteListFilterVersion = "3.4.0-play-26"
 val scalaTestPlusVersion       = "3.1.3"
@@ -34,7 +34,7 @@ val mockitoVersion             = "2.28.2"
 val scalaMockVersion           = "3.6.0"
 val wiremockVersion            = "2.27.2"
 val playJsonJodaVersion        = "2.9.2"
-val bootstrapFrontendVersion   = "5.12.0"
+val bootstrapFrontendVersion   = "5.14.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -47,17 +47,12 @@ lazy val coverageSettings: Seq[Setting[_]] = {
   val excludedPackages = Seq(
     "<empty>",
     ".*Reverse.*",
-    ".*standardError*.*",
-    ".*govuk_wrapper*.*",
-    ".*main_template*.*",
-    "uk.gov.hmrc.BuildInfo",
     "app.*",
     "prod.*",
     "config.*",
     "testOnly.*",
-    ".*feedback*.*",
-    "views.*",
-    "partials.*")
+    "views.*"
+  )
 
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
