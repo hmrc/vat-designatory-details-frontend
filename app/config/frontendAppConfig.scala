@@ -136,7 +136,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override def feedbackUrl(redirect: String): String = s"$contactFrontendService/contact/beta-feedback?service=$contactFormServiceIdentifier" +
     s"&backUrl=${SafeRedirectUrl(host + redirect).encodedUrl}"
 
-  override lazy val accessibilityLinkUrl: String = sc.getString(ConfigKeys.accessibilityStatementHost) + sc.getString(Keys.accessibilityStatementUrl)
+  override lazy val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendHost) + sc.getString(Keys.accessibilityStatementUrl)
 
   override val gtmContainer: String = sc.getString(Keys.gtmContainer)
 

@@ -41,6 +41,7 @@ object ConfigKeys {
   val manageVatSubscriptionServicePath: String = "manage-vat-subscription-frontend.path"
   val vatSummaryFrontendHost: String = "vat-summary-frontend.host"
   val vatSummaryFrontendUrl: String = "vat-summary-frontend.url"
+  val accessibilityStatementUrl: String = "vat-summary-frontend.accessibilityUrl"
 
   val businessNameR19_R20Feature: String = "features.businessNameR19_R20.enabled"
 
@@ -55,9 +56,6 @@ object ConfigKeys {
   val timeoutCountdown: String = "timeout.countdown"
 
   val contactHmrc: String = "contact-hmrc.url"
-
-  val accessibilityStatementHost: String = "accessibility-statement.host"
-  val accessibilityStatementUrl: String = "accessibility-statement.url"
 
   val gtmContainer: String = "tracking-consent-frontend.gtm.container"
 }
