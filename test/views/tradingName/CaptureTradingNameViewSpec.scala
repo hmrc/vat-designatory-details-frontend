@@ -53,7 +53,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
           "have the correct document title" in {
-            document.title shouldBe "What is the new trading name? - Business tax account - GOV.UK"
+            document.title shouldBe "What is the new trading name? - Manage your VAT account - GOV.UK"
           }
 
           "have a back link" which {
@@ -93,7 +93,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
           "have the correct document title" in {
-            document.title shouldBe "What is the trading name? - Business tax account - GOV.UK"
+            document.title shouldBe "What is the trading name? - Manage your VAT account - GOV.UK"
           }
 
           "have the correct page heading" in {
@@ -118,7 +118,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
         implicit lazy val document: Document = Jsoup.parse(view.body)
 
         "have the correct title" in {
-          document.title shouldBe "Error: What is the trading name? - Business tax account - GOV.UK"
+          document.title shouldBe "Error: What is the trading name? - Manage your VAT account - GOV.UK"
         }
 
         "display the error summary" which {

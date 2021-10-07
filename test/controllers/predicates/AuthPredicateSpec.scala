@@ -185,7 +185,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       }
 
       "render the Not Signed Up page" in {
-        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "You can not use this service yet - Business tax account - GOV.UK"
+        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "You can not use this service yet - Manage your VAT account - GOV.UK"
       }
     }
   }

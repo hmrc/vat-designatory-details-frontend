@@ -36,7 +36,7 @@ class NotFoundViewSpec extends ViewBaseSpec {
     lazy implicit val document: Document = Jsoup.parse(view.body)
 
     "have the correct document title" in {
-      document.title shouldBe "Page not found - Business tax account - GOV.UK"
+      document.title shouldBe "Page not found - Manage your VAT account - GOV.UK"
     }
 
     "have the correct page heading" in {

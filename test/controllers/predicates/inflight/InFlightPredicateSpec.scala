@@ -76,7 +76,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "show the 'change pending' error page" in {
-            messages(document.title) shouldBe "You cannot request another change now - Business tax account - GOV.UK"
+            messages(document.title) shouldBe "You cannot request another change now - Manage your VAT account - GOV.UK"
           }
 
           "not call the VatSubscriptionService" in {
@@ -119,7 +119,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "show the 'change pending' error page" in {
-            messages(document.title) shouldBe "You cannot request another change now - Business tax account - GOV.UK"
+            messages(document.title) shouldBe "You cannot request another change now - Manage your VAT account - GOV.UK"
           }
         }
 
@@ -171,7 +171,7 @@ class InFlightPredicateSpec extends MockAuth {
           }
 
           "show the 'change pending' error page" in {
-            messages(document.title) shouldBe "You cannot request another change now - Business tax account - GOV.UK"
+            messages(document.title) shouldBe "You cannot request another change now - Manage your VAT account - GOV.UK"
           }
 
           "not call the VatSubscriptionService" in {

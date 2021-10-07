@@ -19,7 +19,7 @@ package assets
 object UpdateBusinessNameViewMessages {
 
   val viewPageTitle = "You have asked to change the business name"
-  val pageTitleIndividual = s"$viewPageTitle - Business tax account - GOV.UK"
+  val pageTitleIndividual = s"$viewPageTitle - Manage your VAT account - GOV.UK"
   val pageTitleAgent = s"$viewPageTitle - Your client’s VAT details - GOV.UK"
   val secondHeading = "What happens next"
   val firstParagraph = "If we can accept your request, we’ll update the VAT account with the new business name."

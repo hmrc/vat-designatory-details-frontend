@@ -31,14 +31,14 @@ class ServiceNameUtilSpec extends TestUtil {
 
     "given a User who is not an Agent" should {
 
-      "return the client service name Business tax account" in {
-        ServiceNameUtil.generateHeader(user, messages) shouldBe "Business tax account"
+      "return the client service name Manage your VAT account" in {
+        ServiceNameUtil.generateHeader(user, messages) shouldBe "Manage your VAT account"
       }
     }
 
     "NOT given a user" should {
 
-      "return the client service name Business tax account" in {
+      "return the client service name Manage your VAT account" in {
         ServiceNameUtil.generateHeader(request, messages) shouldBe "VAT"
       }
     }
@@ -57,7 +57,7 @@ class ServiceNameUtilSpec extends TestUtil {
     "given a User who is not an Agent" should {
 
       "return the BTA home URL" in {
-        ServiceNameUtil.generateServiceUrl(user, mockConfig) shouldBe Some(mockConfig.btaHomeUrl  )
+        ServiceNameUtil.generateServiceUrl(user, mockConfig) shouldBe Some(mockConfig.vatSummaryFrontendUrl)
       }
     }
 

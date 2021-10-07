@@ -18,7 +18,7 @@ package assets
 
 object ConfirmRemoveMessages {
 
-  val title = "Do you want us to remove your trading name? - Business tax account - GOV.UK"
+  val title = "Do you want us to remove your trading name? - Manage your VAT account - GOV.UK"
   def heading(tradingName: String): String =
     s"Do you want us to remove $tradingName as the trading name?"
   val confirm = "Confirm and continue"
