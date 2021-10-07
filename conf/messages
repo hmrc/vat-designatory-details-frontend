@@ -4,7 +4,7 @@ base.confirmAndContinue = Confirm and continue
 base.finish = Finish
 base.pageTitle = {0} - {1} - GOV.UK
 
-common.clientService = Business tax account
+common.clientService = Manage your VAT account
 common.agentService = Your client’s VAT details
 common.vat = VAT
 common.continue = Continue

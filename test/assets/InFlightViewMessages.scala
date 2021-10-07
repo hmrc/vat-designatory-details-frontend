@@ -19,7 +19,7 @@ package assets
 object InFlightViewMessages {
 
   val backLink = "Back"
-  val title = "You cannot request another change now - Business tax account - GOV.UK"
+  val title = "You cannot request another change now - Manage your VAT account - GOV.UK"
   val titleAgent = "You cannot request another change now - Your client’s VAT details - GOV.UK"
   val heading = "You cannot request another change now"
   val para1 = "There is already a change pending on this account. We can only accept one change of name request at a time."

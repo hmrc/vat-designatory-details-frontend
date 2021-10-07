@@ -51,7 +51,7 @@ class WhatToDoViewSpec extends ViewBaseSpec {
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
         "have the correct document title" in {
-          document.title shouldBe "What do you want to do with the current trading name? - Business tax account - GOV.UK"
+          document.title shouldBe "What do you want to do with the current trading name? - Manage your VAT account - GOV.UK"
         }
 
         "have a back link" which {
@@ -106,7 +106,7 @@ class WhatToDoViewSpec extends ViewBaseSpec {
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
         "have the correct document title" in {
-          document.title shouldBe "Error: What do you want to do with the current trading name? - Business tax account - GOV.UK"
+          document.title shouldBe "Error: What do you want to do with the current trading name? - Manage your VAT account - GOV.UK"
         }
 
         "display the error summary" in {

@@ -4,7 +4,7 @@ base.confirmAndContinue = Cadarnhau ac yn eich blaen
 base.finish = Gorffen
 base.pageTitle = {0} - {1} - GOV.UK
 
-common.clientService = Cyfrif Treth Busnes
+common.clientService = Rheoli eich cyfrif TAW
 common.agentService = Manylion TAW eich cleient
 common.vat = TAW
 common.continue = Yn eich blaen

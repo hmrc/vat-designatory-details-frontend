@@ -55,7 +55,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
         lazy implicit val document: Document = Jsoup.parse(view.body)
 
         "have the correct document title" in {
-          document.title shouldBe "Change the business name - Business tax account - GOV.UK"
+          document.title shouldBe "Change the business name - Manage your VAT account - GOV.UK"
         }
 
         "have a back link" which {
@@ -125,7 +125,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
         implicit lazy val document: Document = Jsoup.parse(view.body)
 
         "have the correct title" in {
-          document.title shouldBe "Error: Change the business name - Business tax account - GOV.UK"
+          document.title shouldBe "Error: Change the business name - Manage your VAT account - GOV.UK"
         }
 
         "display the error summary" which {

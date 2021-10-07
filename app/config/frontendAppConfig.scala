@@ -50,7 +50,7 @@ trait AppConfig {
   val vatAgentClientLookupUnauthorisedForClient: String
   val vatSubscriptionHost: String
   val manageVatSubscriptionServicePath: String
-  val btaHomeUrl: String
+  val vatSummaryFrontendUrl: String
   val feedbackFormPartialUrl: String
   val contactFrontendService: String
   val contactFormServiceIdentifier: String
@@ -126,8 +126,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
       sc.getString(Keys.vatAgentClientLookupUnauthorisedForClient) +
       s"?redirectUrl=${SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl}"
 
-
-  override lazy val btaHomeUrl: String = sc.getString(ConfigKeys.btaHost) + sc.getString(ConfigKeys.btaHomeUrl)
+  override lazy val vatSummaryFrontendUrl: String = sc.getString(Keys.vatSummaryFrontendHost) + sc.getString(Keys.vatSummaryFrontendUrl)
 
   override lazy val timeoutPeriod: Int = sc.getInt(Keys.timeoutPeriod)
   override lazy val timeoutCountdown: Int = sc.getInt(Keys.timeoutCountdown)
@@ -137,7 +136,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override def feedbackUrl(redirect: String): String = s"$contactFrontendService/contact/beta-feedback?service=$contactFormServiceIdentifier" +
     s"&backUrl=${SafeRedirectUrl(host + redirect).encodedUrl}"
 
-  override val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendServiceUrl) + sc.getString(ConfigKeys.vatSummaryAccessibilityUrl)
+  override lazy val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendHost) + sc.getString(Keys.accessibilityStatementUrl)
 
   override val gtmContainer: String = sc.getString(Keys.gtmContainer)
 

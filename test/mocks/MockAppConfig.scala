@@ -42,7 +42,7 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val vatAgentClientLookupServicePath: String = ""
   override val vatAgentClientLookupHubPath: String = ""
   override val manageVatSubscriptionServicePath: String = "mockManageVatOverviewUrl"
-  override val btaHomeUrl: String = "/bta-home"
+  override val vatSummaryFrontendUrl: String = ""
 
   override def routeToSwitchLanguage: String => Call =
     (lang: String) => controllers.routes.LanguageController.switchToLanguage(lang)

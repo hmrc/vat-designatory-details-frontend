@@ -47,7 +47,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
       lazy implicit val document: Document = Jsoup.parse(view.body)
 
       "have the correct page title" in {
-        elementText(Selectors.title) shouldBe s"$exampleTitle - Business tax account - GOV.UK"
+        elementText(Selectors.title) shouldBe s"$exampleTitle - Manage your VAT account - GOV.UK"
       }
 
       "have the correct heading" in {
