@@ -18,16 +18,17 @@ package config.filters
 
 import akka.stream.Materializer
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Call, RequestHeader, Result}
-import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
+import uk.gov.hmrc.allowlist.AkamaiAllowlistFilter
 
 import scala.concurrent.Future
 
 @Singleton
-class AllowListFilter @Inject()(val appConfig: AppConfig, implicit val mat: Materializer) extends AkamaiWhitelistFilter {
+class AllowListFilter @Inject()(val appConfig: AppConfig, implicit val mat: Materializer) extends AkamaiAllowlistFilter {
 
-  override lazy val whitelist: Seq[String] = appConfig.allowListedIps
+  override lazy val allowlist: Seq[String] = appConfig.allowListedIps
   override lazy val destination: Call = Call("GET", appConfig.shutterPage)
   override lazy val excludedPaths: Seq[Call] = appConfig.allowListExcludedPaths
 
