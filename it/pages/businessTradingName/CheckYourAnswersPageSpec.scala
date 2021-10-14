@@ -80,7 +80,7 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.SEE_OTHER),
-            redirectURI(controllers.routes.ChangeSuccessController.tradingName().url)
+            redirectURI(controllers.routes.ChangeSuccessController.tradingName.url)
           )
         }
 
@@ -151,7 +151,7 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.SEE_OTHER),
-            redirectURI(controllers.routes.ChangeSuccessController.businessName().url)
+            redirectURI(controllers.routes.ChangeSuccessController.businessName.url)
           )
         }
 

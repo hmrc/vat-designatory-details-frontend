@@ -92,7 +92,7 @@ class WhatToDoViewSpec extends ViewBaseSpec {
         }
 
         "have the correct form action" in {
-          element(Selectors.form).attr("action") shouldBe controllers.tradingName.routes.WhatToDoController.submit().url
+          element(Selectors.form).attr("action") shouldBe controllers.tradingName.routes.WhatToDoController.submit.url
         }
 
         "have the continue button" in {

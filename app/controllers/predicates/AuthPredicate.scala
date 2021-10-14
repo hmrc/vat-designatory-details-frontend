@@ -19,17 +19,16 @@ package controllers.predicates
 import common.{EnrolmentKeys, SessionKeys}
 import config.AppConfig
 import models.User
-import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.{AuthorisationException, Enrolments, NoActiveSession}
 import uk.gov.hmrc.auth.core.retrieve._
-import utils.LoggerUtil.{logDebug, logWarn}
+import utils.LoggerUtil
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthPredicate(authComps: AuthPredicateComponents)
-  extends AuthBasePredicate(authComps.mcc) with ActionBuilder[User, AnyContent] with ActionFunction[Request, User] {
+  extends AuthBasePredicate(authComps.mcc) with ActionBuilder[User, AnyContent] with ActionFunction[Request, User] with LoggerUtil {
 
   override val parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
   override implicit val messagesApi: MessagesApi = authComps.messagesApi
@@ -48,15 +47,15 @@ class AuthPredicate(authComps: AuthPredicateComponents)
           case (false, enrolments) => checkVatEnrolment(enrolments, block)
         }
       case _ =>
-        logWarn("[AuthPredicate][invokeBlock] - Missing affinity group")
+        logger.warn("[AuthPredicate][invokeBlock] - Missing affinity group")
         Future.successful(authComps.errorHandler.showInternalServerError)
     } recover {
       case _: NoActiveSession =>
-        logDebug("[AuthPredicate][invokeBlock] - No active session, rendering Session Timeout view")
+        logger.debug("[AuthPredicate][invokeBlock] - No active session, rendering Session Timeout view")
         Unauthorized(authComps.sessionTimeoutView())
 
       case _: AuthorisationException =>
-        logWarn("[AuthPredicate][invokeBlock] - Unauthorised exception, rendering standard error view")
+        logger.warn("[AuthPredicate][invokeBlock] - Unauthorised exception, rendering standard error view")
         authComps.errorHandler.showInternalServerError
     }
   }
@@ -64,11 +63,11 @@ class AuthPredicate(authComps: AuthPredicateComponents)
   private[AuthPredicate] def checkAgentEnrolment[A](enrolments: Enrolments, block: User[A] => Future[Result])
                                                    (implicit request: Request[A]) =
     if (enrolments.enrolments.exists(_.key == EnrolmentKeys.agentEnrolmentId)) {
-      logDebug("[AuthPredicate][checkAgentEnrolment] - Authenticating as agent")
+      logger.debug("[AuthPredicate][checkAgentEnrolment] - Authenticating as agent")
       authComps.authenticateAsAgentWithClient.invokeBlock(request, block)
     } else {
-      logDebug(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment. Enrolments: $enrolments")
-      logWarn(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment.")
+      logger.debug(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment. Enrolments: $enrolments")
+      logger.warn(s"[AuthPredicate][checkAgentEnrolment] - Agent without HMRC-AS-AGENT enrolment.")
       Future.successful(Forbidden(authComps.unauthorisedAgentView()))
     }
 
@@ -81,18 +80,18 @@ class AuthPredicate(authComps: AuthPredicateComponents)
         case Some("false") => block(user)
         case _ => authComps.vatSubscriptionService.getCustomerInfo(user.vrn).flatMap {
           case Right(details) if details.isInsolventWithoutAccess =>
-            Logger.debug("[AuthPredicate][checkVatEnrolment] - User is insolvent and not continuing to trade")
+            logger.debug("[AuthPredicate][checkVatEnrolment] - User is insolvent and not continuing to trade")
             Future.successful(Forbidden(authComps.notSignedUpView()).addingToSession(SessionKeys.insolventWithoutAccessKey -> "true"))
           case Right(_) =>
-            Logger.debug("[AuthPredicate][checkVatEnrolment] - Authenticated as principle")
+            logger.debug("[AuthPredicate][checkVatEnrolment] - Authenticated as principle")
             block(user).map(result => result.addingToSession(SessionKeys.insolventWithoutAccessKey -> "false"))
           case _ =>
-            Logger.warn("[AuthPredicate][checkVatEnrolment] - Failure obtaining insolvency status from Customer Info API")
+            logger.warn("[AuthPredicate][checkVatEnrolment] - Failure obtaining insolvency status from Customer Info API")
             Future.successful(authComps.errorHandler.showInternalServerError)
           }
         }
     } else {
-      logDebug(s"[AuthPredicate][checkVatEnrolment] - Non-agent without HMRC-MTD-VAT enrolment. $enrolments")
+      logger.debug(s"[AuthPredicate][checkVatEnrolment] - Non-agent without HMRC-MTD-VAT enrolment. $enrolments")
       Future.successful(Forbidden(authComps.notSignedUpView()))
     }
 }

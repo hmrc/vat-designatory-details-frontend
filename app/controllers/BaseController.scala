@@ -32,10 +32,10 @@ abstract class BaseController(implicit val mcc: MessagesControllerComponents,
   val routePrefix = "/vat-through-software/account/designatory"
 
   val inFlightTradingNamePredicate = new InFlightPredicate(
-    inFlightComps, routePrefix + controllers.tradingName.routes.WhatToDoController.show().url, businessNameJourney = false
+    inFlightComps, routePrefix + controllers.tradingName.routes.WhatToDoController.show.url, businessNameJourney = false
   )
 
   val businessNameAccessPredicate = new InFlightPredicate(
-    inFlightComps, routePrefix + controllers.businessName.routes.CaptureBusinessNameController.show().url, businessNameJourney = true
+    inFlightComps, routePrefix + controllers.businessName.routes.CaptureBusinessNameController.show.url, businessNameJourney = true
   )
 }

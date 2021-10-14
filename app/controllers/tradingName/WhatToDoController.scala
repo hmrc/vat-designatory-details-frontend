@@ -40,7 +40,7 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
-  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def show(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     val validationTradingName: Future[Option[String]] = user.session.get(validationTradingNameKey) match {
       case Some(tradingName) => Future.successful(Some(tradingName))
       case _ =>
@@ -51,13 +51,13 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
     }
     validationTradingName.map {
       case Some("") =>
-        Redirect(routes.CaptureTradingNameController.show()).addingToSession(validationTradingNameKey -> "")
+        Redirect(routes.CaptureTradingNameController.show).addingToSession(validationTradingNameKey -> "")
       case Some(value) => Ok(whatToDoView(whatToDoForm)).addingToSession(validationTradingNameKey -> value)
       case None => authComps.errorHandler.showInternalServerError
     }
   }
 
-  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def submit(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(_) =>
         whatToDoForm.bindFromRequest.fold(
@@ -65,8 +65,8 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
             BadRequest(whatToDoView(errorForm))
           },
           {
-            case Change => Redirect(routes.CaptureTradingNameController.show())
-            case Remove => Redirect(routes.ConfirmRemoveTradingNameController.show())
+            case Change => Redirect(routes.CaptureTradingNameController.show)
+            case Remove => Redirect(routes.ConfirmRemoveTradingNameController.show)
           }
         )
       case None => authComps.errorHandler.showInternalServerError

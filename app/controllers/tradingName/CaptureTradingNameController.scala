@@ -38,18 +38,18 @@ class CaptureTradingNameController @Inject()(val errorHandler: ErrorHandler,
                                              authComps: AuthPredicateComponents,
                                              inFlightComps: InFlightPredicateComponents) extends BaseController {
 
-  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def show(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(validationTradingName) =>
         val prepopulationTradingName = user.session.get(prepopulationTradingNameKey).getOrElse(validationTradingName)
         Ok(captureTradingNameView(
           tradingNameForm(validationTradingName).fill(prepopulationTradingName), validationTradingName)
         )
-      case _ => Redirect(routes.WhatToDoController.show())
+      case _ => Redirect(routes.WhatToDoController.show)
     }
   }
 
-  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def submit(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     val validationTradingName: Option[String] = user.session.get(validationTradingNameKey)
 
     validationTradingName match {
@@ -58,7 +58,7 @@ class CaptureTradingNameController @Inject()(val errorHandler: ErrorHandler,
           Future.successful(BadRequest(captureTradingNameView(errorForm, validation)))
         },
         tradingName => {
-          Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.showTradingName())
+          Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.showTradingName)
             .addingToSession(prepopulationTradingNameKey -> tradingName))
         }
       )

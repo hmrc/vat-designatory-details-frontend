@@ -45,7 +45,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the user is a principal entity" should {
         lazy val result: Future[Result] = {
           mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-          controller.tradingName(request.withSession(
+          controller.tradingName()(request.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
           ))
         }
@@ -58,7 +58,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the user is an agent" should {
         lazy val result: Future[Result] = {
           mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-          controller.tradingName(request.withSession(
+          controller.tradingName()(request.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test",
             clientVrn -> "111111111"
           ))
@@ -73,7 +73,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the call to CustomerInfo returns an error" should {
         lazy val result: Future[Result] = {
           mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
-          controller.tradingName(request.withSession(
+          controller.tradingName()(request.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
           ))
         }
@@ -86,14 +86,14 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
     "one or more of the expected session keys is missing" should {
 
-      lazy val result: Future[Result] = controller.tradingName(request)
+      lazy val result: Future[Result] = controller.tradingName()(request)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER
       }
 
       "redirect the user to the capture trading name controller" in {
-        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
       }
     }
   }
@@ -107,7 +107,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         controller.renderTradingNameView(isRemoval = false, isAddition = true)(user)
       }
 
-      lazy val document = Jsoup.parse(bodyOf(result))
+      lazy val document = Jsoup.parse(contentAsString(result))
 
       "return 200" in {
         status(result) shouldBe Status.OK
@@ -126,7 +126,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         controller.renderTradingNameView(isRemoval = true, isAddition = false)(user)
       }
 
-      lazy val document = Jsoup.parse(bodyOf(result))
+      lazy val document = Jsoup.parse(contentAsString(result))
 
       "return 200" in {
         status(result) shouldBe Status.OK
@@ -145,7 +145,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         controller.renderTradingNameView(isRemoval = false, isAddition = false)(user)
       }
 
-      lazy val document = Jsoup.parse(bodyOf(result))
+      lazy val document = Jsoup.parse(contentAsString(result))
 
       "return 200" in {
         status(result) shouldBe Status.OK
@@ -179,10 +179,10 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the businessNameChangeSuccessful session key is 'true'" when {
 
         "the user is a principal entity" should {
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           lazy val result: Future[Result] = {
-            controller.businessName(request.withSession(businessNameChangeSuccessful -> "true"))
+            controller.businessName()(request.withSession(businessNameChangeSuccessful -> "true"))
           }
 
           "return 200" in {
@@ -197,7 +197,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         "the user is an agent" should {
           lazy val result: Future[Result] = {
             mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-            controller.businessName(request.withSession(
+            controller.businessName()(request.withSession(
               businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
             ))
           }
@@ -211,14 +211,14 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
       "the businessNameChangeSuccessful session key is not populated" should {
 
-        lazy val result: Future[Result] = controller.businessName(request)
+        lazy val result: Future[Result] = controller.businessName()(request)
 
         "return 303" in {
           status(result) shouldBe Status.SEE_OTHER
         }
 
         "redirect the user to the capture business name controller" in {
-          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show.url)
         }
       }
     }
@@ -230,7 +230,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         lazy val result: Future[Result] = {
           mockConfig.features.businessNameR19_R20Enabled(false)
           mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-          controller.businessName(request)
+          controller.businessName()(request)
         }
 
         status(result) shouldBe NOT_FOUND

@@ -16,8 +16,9 @@
 
 package controllers.predicates.inflight
 
-import common.SessionKeys.{inFlightOrgDetailsKey, businessNameAccessPermittedKey}
+import common.SessionKeys.{businessNameAccessPermittedKey, inFlightOrgDetailsKey}
 import config.{AppConfig, ErrorHandler}
+
 import javax.inject.{Inject, Singleton}
 import models.User
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -25,7 +26,7 @@ import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.mvc.Results.{Conflict, Redirect}
 import services.VatSubscriptionService
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.LoggerUtil.{logDebug, logWarn}
+import utils.LoggerUtil
 import views.html.errors.InFlightChangeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +38,7 @@ class InFlightPredicateComponents @Inject()(val vatSubscriptionService: VatSubsc
                                             val inFlightChangeView: InFlightChangeView)
                                            (implicit val appConfig: AppConfig,
                                             val ec: ExecutionContext,
-                                            val messagesApi: MessagesApi) extends I18nSupport {
+                                            val messagesApi: MessagesApi) extends I18nSupport with LoggerUtil {
 
   def getCustomerInfoCall[A](vrn: String, redirectURL: String, businessNameJourney: Boolean)
                             (implicit hc: HeaderCarrier, request: User[A]): Future[Either[Result, User[A]]] =
@@ -56,14 +57,14 @@ class InFlightPredicateComponents @Inject()(val vatSubscriptionService: VatSubsc
               businessNameAccessPermittedKey -> accessToBusinessNameJourney.toString
             ))
           case _ =>
-            logDebug("[InFlightPredicateComponents][getCustomerInfoCall] - Redirecting user to the start of the journey.")
+            logger.debug("[InFlightPredicateComponents][getCustomerInfoCall] - Redirecting user to the start of the journey.")
             Left(Redirect(redirectLocation).addingToSession(
               inFlightOrgDetailsKey -> "false",
               businessNameAccessPermittedKey -> accessToBusinessNameJourney.toString
             ))
         }
       case Left(error) =>
-        logWarn("[InFlightPredicateComponents][getCustomerInfoCall] - " +
+        logger.warn("[InFlightPredicateComponents][getCustomerInfoCall] - " +
           s"The call to the GetCustomerInfo API failed. Error: ${error.message}")
         Left(errorHandler.showInternalServerError)
     }

@@ -21,20 +21,21 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion      = "1.10.0-play-26"
-val playPartialsVersion        = "8.2.0-play-26"
-val playLanguageVersion        = "5.1.0-play-26"
-val playWhiteListFilterVersion = "3.4.0-play-26"
-val scalaTestPlusVersion       = "3.1.3"
-val hmrcTestVersion            = "3.10.0-play-26"
-val scalatestVersion           = "3.0.9"
-val pegdownVersion             = "1.6.0"
-val jsoupVersion               = "1.13.1"
-val mockitoVersion             = "2.28.2"
-val scalaMockVersion           = "3.6.0"
-val wiremockVersion            = "2.27.2"
-val playJsonJodaVersion        = "2.9.2"
-val bootstrapFrontendVersion   = "5.14.0"
+val hmrcUkFrontendVersion       = "1.19.0-play-28"
+val playPartialsVersion         = "8.2.0-play-28"
+val playLanguageVersion         = "5.1.0-play-28"
+val playAllowListFilterVersion  = "1.0.0-play-28"
+val scalaTestPlusVersion        = "5.1.0"
+val scalatestVersion            = "3.1.4"
+val pegdownVersion              = "1.6.0"
+val jsoupVersion                = "1.13.1"
+val mockitoVersion              = "2.28.2"
+val scalaMockVersion            = "3.6.0"
+val wiremockVersion             = "2.26.3"
+val playJsonJodaVersion         = "2.9.2"
+val bootstrapFrontendVersion    = "5.15.0"
+val scalatestplusMockitoVersion = "1.0.0-M2"
+val flexmarkVersion             = "0.36.8"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -64,23 +65,24 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 
 val compile = Seq(
   ws,
-  "uk.gov.hmrc"       %% "bootstrap-frontend-play-26" % bootstrapFrontendVersion,
+  "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapFrontendVersion,
   "uk.gov.hmrc"       %% "play-language"              % playLanguageVersion,
   "uk.gov.hmrc"       %% "play-partials"              % playPartialsVersion,
-  "uk.gov.hmrc"       %% "play-whitelist-filter"      % playWhiteListFilterVersion,
+  "uk.gov.hmrc"       %% "play-allowlist-filter"      % playAllowListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,
   "com.typesafe.play" %% "play-json-joda"             % playJsonJodaVersion
 )
 
 def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
-  "uk.gov.hmrc"             %% "hmrctest"                     % hmrcTestVersion       % scope,
-  "org.scalatest"           %% "scalatest"                    % scalatestVersion      % scope,
-  "org.scalatestplus.play"  %% "scalatestplus-play"           % scalaTestPlusVersion  % scope,
-  "org.scalamock"           %% "scalamock-scalatest-support"  % scalaMockVersion      % scope,
-  "org.pegdown"             %  "pegdown"                      % pegdownVersion        % scope,
-  "org.jsoup"               %  "jsoup"                        % jsoupVersion          % scope,
-  "org.mockito"             %  "mockito-core"                 % mockitoVersion        % scope,
-  "com.github.tomakehurst"  %  "wiremock-jre8"                % wiremockVersion       % scope
+  "org.scalatest"           %% "scalatest"                    % scalatestVersion            % scope,
+  "org.scalatestplus.play"  %% "scalatestplus-play"           % scalaTestPlusVersion        % scope,
+  "org.scalamock"           %% "scalamock-scalatest-support"  % scalaMockVersion            % scope,
+  "org.pegdown"             %  "pegdown"                      % pegdownVersion              % scope,
+  "org.jsoup"               %  "jsoup"                        % jsoupVersion                % scope,
+  "org.mockito"             %  "mockito-core"                 % mockitoVersion              % scope,
+  "com.github.tomakehurst"  %  "wiremock-jre8"                % wiremockVersion             % scope,
+  "org.scalatestplus"       %% "scalatestplus-mockito"        % scalatestplusMockitoVersion % scope,
+  "com.vladsch.flexmark"    % "flexmark-all"                  % flexmarkVersion             % scope
 )
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {

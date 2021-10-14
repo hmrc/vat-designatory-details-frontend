@@ -70,7 +70,7 @@ class WhatToDoPageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.SEE_OTHER),
-            redirectURI(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+            redirectURI(controllers.tradingName.routes.CaptureTradingNameController.show.url)
           )
         }
       }
@@ -85,7 +85,7 @@ class WhatToDoPageSpec extends BasePageISpec {
 
           result should have(
             httpStatus(Status.SEE_OTHER),
-            redirectURI(controllers.tradingName.routes.ConfirmRemoveTradingNameController.show().url)
+            redirectURI(controllers.tradingName.routes.ConfirmRemoveTradingNameController.show.url)
           )
         }
       }

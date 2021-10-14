@@ -17,9 +17,11 @@
 package models.customerInformation
 
 import assets.CustomerInfoConstants._
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class CustomerInformationSpec extends UnitSpec {
+class CustomerInformationSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
 
   "CustomerInformation" should {

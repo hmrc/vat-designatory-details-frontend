@@ -64,12 +64,12 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
           lazy val result = {
             mockConfig.features.businessNameR19_R20Enabled(true)
-            target().show(request.withSession(
+            target().show()(request.withSession(
               validationBusinessNameKey -> testValidationBusinessName,
               businessNameAccessPermittedKey -> "true"))
           }
 
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           "return 200" in {
             status(result) shouldBe Status.OK
@@ -89,13 +89,13 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
           lazy val result = {
             mockConfig.features.businessNameR19_R20Enabled(true)
-            target().show(request.withSession(
+            target().show()(request.withSession(
               validationBusinessNameKey -> testValidationBusinessName,
               prepopulationBusinessNameKey -> testValidBusinessName,
               businessNameAccessPermittedKey -> "true")
             )
           }
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           "return 200" in {
             status(result) shouldBe Status.OK
@@ -115,11 +115,11 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
           lazy val result = {
             mockConfig.features.businessNameR19_R20Enabled(true)
-            target(Right(fullCustomerInfoModel)).show(request
+            target(Right(fullCustomerInfoModel)).show()(request
               .withSession(businessNameAccessPermittedKey -> "true"))
           }
 
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           "return 200" in {
             status(result) shouldBe Status.OK
@@ -138,7 +138,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
         "there is no business name in session and the user doesn't have a business name" when {
 
         lazy val result = {
-          target(Right(customerInfoNoBusinessName)).show(request
+          target(Right(customerInfoNoBusinessName)).show()(request
             .withSession(businessNameAccessPermittedKey -> "true"))
         }
 
@@ -159,7 +159,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
       "a user is does not have a valid enrolment" should {
 
-        lazy val result = controller.show(request)
+        lazy val result = controller.show()(request)
 
         "return 403" in {
           mockIndividualWithoutEnrolment()
@@ -174,10 +174,10 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
       "a user is not logged in" should {
 
-        lazy val result = controller.show(request)
+        lazy val result = controller.show()(request)
 
         "return 401" in {
-          mockMissingBearerToken()
+          mockMissingBearerToken()()
           status(result) shouldBe Status.UNAUTHORIZED
         }
 
@@ -194,7 +194,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockConfig.features.businessNameR19_R20Enabled(false)
-          target(Right(fullCustomerInfoModel)).show(request
+          target(Right(fullCustomerInfoModel)).show()(request
             .withSession(businessNameAccessPermittedKey -> "true"))
         }
 
@@ -217,14 +217,14 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
             lazy val result = {
               mockConfig.features.businessNameR19_R20Enabled(true)
-              controller.submit(request
+              controller.submit()(request
                 .withFormUrlEncodedBody("business-name" -> testValidBusinessName)
                 .withSession(validationBusinessNameKey -> testValidationBusinessName, businessNameAccessPermittedKey -> "true"))
             }
 
             "redirect to the confirm business name view" in {
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.showBusinessName().url)
+              redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.showBusinessName.url)
             }
 
             "add the new business name to the session" in {
@@ -234,7 +234,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
           "the form is unsuccessfully submitted" should {
 
-            lazy val result = controller.submit(request
+            lazy val result = controller.submit()(request
               .withFormUrlEncodedBody("business-name" -> testInvalidBusinessName)
               .withSession(validationBusinessNameKey -> testValidationBusinessName, businessNameAccessPermittedKey -> "true"))
 
@@ -255,7 +255,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
         "there is no business name in session" when {
 
-          lazy val result = controller.submit(request
+          lazy val result = controller.submit()(request
             .withFormUrlEncodedBody("business-name" -> testValidBusinessName)
             .withSession(businessNameAccessPermittedKey -> "true"))
 
@@ -276,7 +276,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
       "a user is does not have a valid enrolment" should {
 
-        lazy val result = controller.submit(request)
+        lazy val result = controller.submit()(request)
 
         "return 403" in {
           mockIndividualWithoutEnrolment()
@@ -291,10 +291,10 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
       "a user is not logged in" should {
 
-        lazy val result = controller.submit(request)
+        lazy val result = controller.submit()(request)
 
         "return 401" in {
-          mockMissingBearerToken()
+          mockMissingBearerToken()()
           status(result) shouldBe Status.UNAUTHORIZED
         }
 
@@ -311,7 +311,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockConfig.features.businessNameR19_R20Enabled(false)
-          target(Right(fullCustomerInfoModel)).show(request
+          target(Right(fullCustomerInfoModel)).show()(request
             .withSession(businessNameAccessPermittedKey -> "true"))
         }
 

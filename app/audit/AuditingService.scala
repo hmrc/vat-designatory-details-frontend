@@ -26,12 +26,12 @@ import uk.gov.hmrc.play.audit.AuditExtensions
 import uk.gov.hmrc.play.audit.http.connector.{AuditResult, AuditConnector}
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.{Disabled, Failure, Success}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.LoggerUtil.logDebug
+import utils.LoggerUtil
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AuditingService @Inject()(auditConnector: AuditConnector){
+class AuditingService @Inject()(auditConnector: AuditConnector) extends LoggerUtil {
 
   implicit val dateTimeJsReader: Reads[DateTime] = JodaReads.jodaDateReads("yyyyMMddHHmmss")
   implicit val dateTimeWriter: Writes[DateTime] = JodaWrites.jodaDateWrites("dd/MM/yyyy HH:mm:ss")
@@ -42,7 +42,7 @@ class AuditingService @Inject()(auditConnector: AuditConnector){
 
   def audit(auditModel: AuditModel, path: Option[String] = None)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
     val extendedDataEvent = toExtendedDataEvent(appName, auditModel, path.fold(referrer(hc))(x => x))
-    logDebug(s"Splunk Audit Event:\n\n${Json.toJson(extendedDataEvent)}")
+    logger.debug(s"Splunk Audit Event:\n\n${Json.toJson(extendedDataEvent)}")
     handleAuditResult(auditConnector.sendExtendedEvent(extendedDataEvent))
   }
 
@@ -61,10 +61,10 @@ class AuditingService @Inject()(auditConnector: AuditConnector){
 
   private def handleAuditResult(auditResult: Future[AuditResult])(implicit ec: ExecutionContext): Unit = auditResult.map {
     case Success =>
-      logDebug("Splunk Audit Successful")
+      logger.debug("Splunk Audit Successful")
     case Failure(err, _) =>
-      logDebug(s"Splunk Audit Error, message: $err")
+      logger.debug(s"Splunk Audit Error, message: $err")
     case Disabled =>
-      logDebug(s"Auditing Disabled")
+      logger.debug(s"Auditing Disabled")
   }
 }

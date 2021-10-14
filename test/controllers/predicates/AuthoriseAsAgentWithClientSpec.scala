@@ -71,7 +71,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
 
     "the agent has no enrolments" should {
 
-      lazy val result = await(target(fakeRequestWithClientsVRN))
+      lazy val result = target(fakeRequestWithClientsVRN)
 
       "return Internal Server Error (500)" in {
         mockAgentWithoutAffinity()
@@ -79,14 +79,14 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
       }
 
       "render the Internal Server Error page" in {
-        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "There is a problem with the service - VAT - GOV.UK"
+        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "There is a problem with the service - VAT - GOV.UK"
       }
     }
 
     "there is no client VRN in session" should {
 
       mockAgentAuthorised()
-      lazy val result = await(target(request))
+      lazy val result = target(request)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER

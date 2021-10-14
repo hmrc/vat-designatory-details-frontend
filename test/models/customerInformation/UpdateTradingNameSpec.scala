@@ -17,10 +17,12 @@
 package models.customerInformation
 
 import assets.CustomerInfoConstants._
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateTradingNameSpec extends UnitSpec {
+class UpdateTradingNameSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "UpdateOrganisationDetails" when {
 

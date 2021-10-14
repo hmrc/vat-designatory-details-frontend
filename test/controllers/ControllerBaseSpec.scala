@@ -19,6 +19,7 @@ package controllers
 import mocks.MockAuth
 import play.api.http.Status
 import play.api.mvc.{Action, AnyContent}
+import play.api.test.Helpers.{status, _}
 import play.api.test.Injecting
 
 trait ControllerBaseSpec extends MockAuth with Injecting {
@@ -28,7 +29,7 @@ trait ControllerBaseSpec extends MockAuth with Injecting {
     "the user is not authenticated" should {
 
       "return 401 (Unauthorised)" in {
-        mockMissingBearerToken()
+        mockMissingBearerToken()()
         val result = controllerAction(request)
         status(result) shouldBe Status.UNAUTHORIZED
       }

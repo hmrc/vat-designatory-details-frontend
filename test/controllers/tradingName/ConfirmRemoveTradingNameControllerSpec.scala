@@ -48,7 +48,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
     "there is a validation trading name in session that is not empty ('remove' journey)" should {
 
-      lazy val result = target().show(request.withSession(validationTradingNameKey -> "ABC Trading"))
+      lazy val result = target().show()(request.withSession(validationTradingNameKey -> "ABC Trading"))
 
       "return 200" in {
         status(result) shouldBe OK
@@ -62,27 +62,27 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
     "there is a validation trading name in session that is empty ('add' journey)" should {
 
-      lazy val result = target().show(request.withSession(validationTradingNameKey -> ""))
+      lazy val result = target().show()(request.withSession(validationTradingNameKey -> ""))
 
       "return 303" in {
         status(result) shouldBe SEE_OTHER
       }
 
       "redirect to the capture trading name page" in {
-        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
       }
     }
 
     "there is not a validation trading name in session" should {
 
-      lazy val result = target().show(request)
+      lazy val result = target().show()(request)
 
       "return 303" in {
         status(result) shouldBe SEE_OTHER
       }
 
       "redirect to the capture trading name page" in {
-        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
       }
     }
   }
@@ -95,7 +95,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
       "the form is bound as a Yes" should {
 
-        lazy val result = target().submit(request
+        lazy val result = target().submit()(request
           .withSession(validationTradingNameKey -> "ABC Trading")
           .withFormUrlEncodedBody(yesNo -> yes))
 
@@ -104,13 +104,13 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect to the update trading name method" in {
-          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName().url)
+          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName.url)
         }
       }
 
       "the form is bound as a No" should {
 
-        lazy val result = target().submit(request
+        lazy val result = target().submit()(request
           .withSession(validationTradingNameKey -> "ABC Trading")
           .withFormUrlEncodedBody(yesNo -> YesNoForm.no))
 
@@ -126,7 +126,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
     "the form is bound with errors" should {
 
-      lazy val result = target().submit(request
+      lazy val result = target().submit()(request
         .withSession(validationTradingNameKey -> "ABC Trading")
         .withFormUrlEncodedBody(yesNo -> ""))
 
@@ -142,7 +142,7 @@ class ConfirmRemoveTradingNameControllerSpec extends ControllerBaseSpec {
 
     "there is not a validation trading name in session" should {
 
-      lazy val result = target().submit(request)
+      lazy val result = target().submit()(request)
 
       "return 500" in {
         status(result) shouldBe INTERNAL_SERVER_ERROR
