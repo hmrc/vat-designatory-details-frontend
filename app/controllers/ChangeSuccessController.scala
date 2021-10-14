@@ -20,10 +20,11 @@ import common.SessionKeys._
 import config.{AppConfig, ErrorHandler}
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
+
 import javax.inject.{Inject, Singleton}
 import models.User
-import play.api.Logger
 import play.api.mvc._
+import utils.LoggerUtil
 import views.html.businessName.BusinessNameChangeSuccessView
 import views.html.tradingName.TradingNameChangeSuccessView
 
@@ -36,26 +37,26 @@ class ChangeSuccessController @Inject()(tradingNameSuccessView: TradingNameChang
                                        (implicit val appConfig: AppConfig,
                                         mcc: MessagesControllerComponents,
                                         authComps: AuthPredicateComponents,
-                                        inFlightComps: InFlightPredicateComponents) extends BaseController {
+                                        inFlightComps: InFlightPredicateComponents) extends BaseController with LoggerUtil {
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
-  def tradingName: Action[AnyContent] = authPredicate.async { implicit user =>
+  def tradingName(): Action[AnyContent] = authPredicate.async { implicit user =>
     (user.session.get(tradingNameChangeSuccessful), user.session.get(validationTradingNameKey), user.session.get(prepopulationTradingNameKey)) match {
       case (Some("true"), Some(validationValue), Some(prePopValue)) =>
         renderTradingNameView(isRemoval = prePopValue == "", isAddition = validationValue == "")
       case _ =>
-        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show()))
+        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show))
     }
   }
 
-  def businessName: Action[AnyContent] = authPredicate.async { implicit user =>
+  def businessName(): Action[AnyContent] = authPredicate.async { implicit user =>
     if(appConfig.features.businessNameR19_R20Enabled()) {
       user.session.get(businessNameChangeSuccessful) match {
         case Some("true") =>
           Future.successful(Ok(businessNameSuccessView()))
         case _ =>
-          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
+          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show))
       }
     } else {
       Future.successful(errorHandler.showNotFoundError)
@@ -71,7 +72,7 @@ class ChangeSuccessController @Inject()(tradingNameSuccessView: TradingNameChang
        case _ => None
     }
     titleMessageKey.fold {
-      Logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank. " +
+      logger.warn("[ChangeSuccessController][renderView] - validation and prePop session values were both blank. " +
         "Rendering InternalServerError")
       Future.successful(authComps.errorHandler.showInternalServerError)
     } { title =>

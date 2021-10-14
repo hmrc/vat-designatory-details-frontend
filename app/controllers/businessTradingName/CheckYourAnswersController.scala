@@ -29,7 +29,7 @@ import models.errors.ErrorModel
 import models.viewModels.CheckYourAnswersViewModel
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatSubscriptionService
-import utils.LoggerUtil.logWarn
+import utils.LoggerUtil
 import views.html.businessTradingName.CheckYourAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,22 +43,22 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
                                             inFlightComps: InFlightPredicateComponents,
                                             appConfig: AppConfig,
                                             auditingService: AuditingService
-                                           ) extends BaseController {
+                                           ) extends BaseController with LoggerUtil {
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
-  def showTradingName: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def showTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(prepopulationTradingNameKey) match {
       case Some(tradingName) =>
         val viewModel = CheckYourAnswersViewModel(
           question = "checkYourAnswers.tradingName",
           answer = tradingName,
-          changeLink = controllers.tradingName.routes.CaptureTradingNameController.show().url,
+          changeLink = controllers.tradingName.routes.CaptureTradingNameController.show.url,
           changeLinkHiddenText = "checkYourAnswers.tradingName.edit",
-          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName().url)
+          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName.url)
         Ok(checkYourAnswersView(viewModel))
       case _ =>
-        Redirect(controllers.tradingName.routes.CaptureTradingNameController.show())
+        Redirect(controllers.tradingName.routes.CaptureTradingNameController.show)
     }
   }
 
@@ -87,46 +87,46 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
               user.arn,
               OK,
               successModel.formBundle),
-              Some(routes.CheckYourAnswersController.updateTradingName().url)
+              Some(routes.CheckYourAnswersController.updateTradingName.url)
             )
-            Redirect(controllers.routes.ChangeSuccessController.tradingName())
+            Redirect(controllers.routes.ChangeSuccessController.tradingName)
               .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
 
           case Left(ErrorModel(CONFLICT, errorMessage)) =>
-            logWarn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
+            logger.warn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
             "already in progress. Redirecting user to manage-vat overview page.")
             auditingService.audit(ChangedTradingNameAuditModel(
               currentTradingName, prepopTradingName, user.vrn, user.isAgent, user.arn, CONFLICT, errorMessage),
-              Some(routes.CheckYourAnswersController.updateTradingName().url)
+              Some(routes.CheckYourAnswersController.updateTradingName.url)
             )
             Redirect(appConfig.manageVatSubscriptionServicePath).addingToSession(inFlightOrgDetailsKey -> "true")
 
           case Left(ErrorModel(status, errorMessage)) =>
             auditingService.audit(ChangedTradingNameAuditModel(
               currentTradingName, prepopTradingName, user.vrn, user.isAgent, user.arn, status, errorMessage),
-              Some(routes.CheckYourAnswersController.updateTradingName().url)
+              Some(routes.CheckYourAnswersController.updateTradingName.url)
             )
             errorHandler.showInternalServerError
         }
 
       case _ =>
-        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show()))
+        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show))
     }
   }
 
-  def showBusinessName: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
+  def showBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
     if (appConfig.features.businessNameR19_R20Enabled()) {
       user.session.get(prepopulationBusinessNameKey) match {
         case Some(businessName) =>
           val viewModel = CheckYourAnswersViewModel(
             question = "checkYourAnswers.businessName",
             answer = businessName,
-            changeLink = controllers.businessName.routes.CaptureBusinessNameController.show().url,
+            changeLink = controllers.businessName.routes.CaptureBusinessNameController.show.url,
             changeLinkHiddenText = "checkYourAnswers.businessName.edit",
-            continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName().url)
+            continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName.url)
           Ok(checkYourAnswersView(viewModel))
         case _ =>
-          Redirect(controllers.businessName.routes.CaptureBusinessNameController.show())
+          Redirect(controllers.businessName.routes.CaptureBusinessNameController.show)
       }
     } else {
       errorHandler.showNotFoundError
@@ -145,16 +145,16 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             case Right(successModel) =>
               auditingService.audit(ChangedBusinessNameAuditModel(
                 currentBusinessName, requestedBusinessName, user.vrn, user.isAgent, user.arn, OK, successModel.formBundle),
-                Some(routes.CheckYourAnswersController.updateBusinessName().url)
+                Some(routes.CheckYourAnswersController.updateBusinessName.url)
               )
-              Redirect(controllers.routes.ChangeSuccessController.businessName())
+              Redirect(controllers.routes.ChangeSuccessController.businessName)
               .addingToSession(businessNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
             case Left(ErrorModel(CONFLICT, errorMessage)) =>
-              logWarn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +
+              logger.warn("[CheckYourAnswersController][updateBusinessName] - There is an organisation details update request " +
                 "already in progress. Redirecting user to manage-vat overview page.")
               auditingService.audit(ChangedBusinessNameAuditModel(
                 currentBusinessName, requestedBusinessName, user.vrn, user.isAgent, user.arn, CONFLICT, errorMessage),
-                Some(routes.CheckYourAnswersController.updateBusinessName().url)
+                Some(routes.CheckYourAnswersController.updateBusinessName.url)
               )
               Redirect(appConfig.manageVatSubscriptionServicePath)
                 .addingToSession(inFlightOrgDetailsKey -> "true")
@@ -162,13 +162,13 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             case Left(ErrorModel(status, errorMessage)) =>
               auditingService.audit(ChangedBusinessNameAuditModel(
                 currentBusinessName, requestedBusinessName, user.vrn, user.isAgent, user.arn, status, errorMessage),
-                Some(routes.CheckYourAnswersController.updateBusinessName().url)
+                Some(routes.CheckYourAnswersController.updateBusinessName.url)
               )
               errorHandler.showInternalServerError
           }
 
         case _ =>
-          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show()))
+          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show))
       }
     } else {
       Future.successful(errorHandler.showNotFoundError)

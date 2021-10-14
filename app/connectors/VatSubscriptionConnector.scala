@@ -21,13 +21,13 @@ import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
 import javax.inject.{Inject, Singleton}
 import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateOrganisationDetailsSuccess, UpdateTradingName}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import utils.LoggerUtil.{logDebug, logWarn}
+import utils.LoggerUtil
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class VatSubscriptionConnector @Inject()(http: HttpClient,
-                                         appConfig: AppConfig) {
+                                         appConfig: AppConfig) extends LoggerUtil {
 
   private[connectors] def getCustomerInfoUrl(vrn: String): String =
     s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/full-information"
@@ -45,10 +45,10 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
 
     http.GET[HttpGetResult[CustomerInformation]](getCustomerInfoUrl(vrn)).map {
       case customerInfo@Right(_) =>
-        logDebug(s"[VatSubscriptionConnector][getCustomerInfo] successfully received customer info response")
+        logger.debug(s"[VatSubscriptionConnector][getCustomerInfo] successfully received customer info response")
         customerInfo
       case httpError@Left(error) =>
-        logWarn("[VatSubscriptionConnector][getCustomerInfo] received error - " + error.message)
+        logger.warn("[VatSubscriptionConnector][getCustomerInfo] received error - " + error.message)
         httpError
     }
   }

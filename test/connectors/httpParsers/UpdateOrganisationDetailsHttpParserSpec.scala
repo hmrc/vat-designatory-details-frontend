@@ -20,13 +20,15 @@ import assets.UpdateTradingNameConstants._
 import assets.CustomerInfoConstants.invalidJsonError
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads._
 import models.errors.ErrorModel
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateOrganisationDetailsHttpParserSpec extends UnitSpec {
+class UpdateOrganisationDetailsHttpParserSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "read" when {
     "the response status is OK" should {

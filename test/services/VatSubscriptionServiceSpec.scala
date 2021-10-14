@@ -22,6 +22,7 @@ import utils.TestUtil
 import models.User
 import models.customerInformation.{UpdateBusinessName, UpdateOrganisationDetailsSuccess}
 import play.api.mvc.AnyContentAsEmpty
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 
 import scala.concurrent.Future
 

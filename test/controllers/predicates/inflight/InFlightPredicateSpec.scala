@@ -31,6 +31,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -68,8 +69,8 @@ class InFlightPredicateSpec extends MockAuth {
 
         "the inflight indicator is set to 'true'" should {
 
-          lazy val result = await(inflightTradingNamePredicate.refine(inflightRequest("true"))).left.get
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val result = Future.successful(await(inflightTradingNamePredicate.refine(inflightRequest("true"))).left.get)
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           "return 409" in {
             status(result) shouldBe Status.CONFLICT
@@ -106,9 +107,9 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup()
-            await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get)
           }
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           "return 409" in {
             status(result) shouldBe Status.CONFLICT
@@ -127,7 +128,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(minCustomerInfoModel))
-            await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get)
           }
 
           "return 303" in {
@@ -147,7 +148,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "error")))
-            await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightTradingNamePredicate.refine(userWithoutSession)).left.get)
           }
 
           "return 500" in {
@@ -163,8 +164,9 @@ class InFlightPredicateSpec extends MockAuth {
 
         "the inflight indicator is set to 'true'" should {
 
-          lazy val result = await(inflightBusinessNamePredicate.refine(inflightRequestWithAccess("true", "true"))).left.get
-          lazy val document = Jsoup.parse(bodyOf(result))
+          lazy val result = Future.successful(await(inflightBusinessNamePredicate
+            .refine(inflightRequestWithAccess("true", "true"))).left.get)
+          lazy val document = Jsoup.parse(contentAsString(result))
 
           "return 409" in {
             status(result) shouldBe Status.CONFLICT
@@ -199,7 +201,8 @@ class InFlightPredicateSpec extends MockAuth {
 
         lazy val result = {
           setup(Right(minCustomerInfoModel))
-          await(inflightBusinessNamePredicate.refine(inflightRequestWithAccess("false", "false"))).left.get
+          Future.successful(await(inflightBusinessNamePredicate
+            .refine(inflightRequestWithAccess("false", "false"))).left.get)
         }
 
         "return 303" in {
@@ -217,7 +220,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending))
-            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get)
           }
 
           "return 303" in {
@@ -241,7 +244,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending.copy(partyType = Some("F"))))
-            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get)
           }
 
           "return 303" in {
@@ -265,7 +268,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending.copy(organisationName = None)))
-            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get)
           }
 
           "return 303" in {
@@ -289,7 +292,7 @@ class InFlightPredicateSpec extends MockAuth {
 
           lazy val result = {
             setup(Right(customerInfoNoPending.copy(nameIsReadOnly = Some(true))))
-            await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get
+            Future.successful(await(inflightBusinessNamePredicate.refine(userWithoutSession)).left.get)
           }
 
           "return 303" in {

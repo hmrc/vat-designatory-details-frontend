@@ -29,6 +29,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import stubs.VatSubscriptionStub
 import uk.gov.hmrc.http.HeaderCarrier
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 
 import scala.concurrent.ExecutionContext
 

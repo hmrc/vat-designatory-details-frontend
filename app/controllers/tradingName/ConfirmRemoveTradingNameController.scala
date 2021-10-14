@@ -38,16 +38,16 @@ class ConfirmRemoveTradingNameController @Inject()(confirmRemoveTradingNameView:
 
   val yesNoForm: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error")
 
-  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def show(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(tradingName) if tradingName.nonEmpty =>
         Future.successful(Ok(confirmRemoveTradingNameView(yesNoForm, tradingName)))
       case _ =>
-        Future.successful(Redirect(routes.CaptureTradingNameController.show().url))
+        Future.successful(Redirect(routes.CaptureTradingNameController.show.url))
     }
   }
 
-  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def submit(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(tradingName) =>
         yesNoForm.bindFromRequest.fold(
@@ -55,7 +55,7 @@ class ConfirmRemoveTradingNameController @Inject()(confirmRemoveTradingNameView:
             BadRequest(confirmRemoveTradingNameView(errorForm, tradingName))
           },
           {
-            case Yes => Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName())
+            case Yes => Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName)
               .addingToSession(prepopulationTradingNameKey -> "")
             case No => Redirect(appConfig.manageVatSubscriptionServicePath)
           }

@@ -43,11 +43,11 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
       "the user's current trading name is retrieved from session" should {
 
-        lazy val result = controller.show(request.withSession(
+        lazy val result = controller.show()(request.withSession(
           common.SessionKeys.validationTradingNameKey -> testValidationTradingName)
         )
 
-        lazy val document = Jsoup.parse(bodyOf(result))
+        lazy val document = Jsoup.parse(contentAsString(result))
 
         "return 200" in {
           status(result) shouldBe Status.OK
@@ -66,11 +66,11 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
     "the previous form value is retrieved from session" should {
 
-      lazy val result = controller.show(request.withSession(
+      lazy val result = controller.show()(request.withSession(
         common.SessionKeys.validationTradingNameKey -> testValidationTradingName,
         common.SessionKeys.prepopulationTradingNameKey -> testValidTradingName)
       )
-      lazy val document = Jsoup.parse(bodyOf(result))
+      lazy val document = Jsoup.parse(contentAsString(result))
 
       "return 200" in {
         status(result) shouldBe Status.OK
@@ -88,20 +88,20 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
     "there is no trading name in session" when {
 
-      lazy val result = controller.show(request)
+      lazy val result = controller.show()(request)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER
       }
 
       "redirect to the WhatToDoController show action" in {
-        redirectLocation(result) shouldBe Some(routes.WhatToDoController.show().url)
+        redirectLocation(result) shouldBe Some(routes.WhatToDoController.show.url)
       }
     }
 
     "a user is does not have a valid enrolment" should {
 
-      lazy val result = controller.show(request)
+      lazy val result = controller.show()(request)
 
       "return 403" in {
         mockIndividualWithoutEnrolment()
@@ -116,10 +116,10 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
     "a user is not logged in" should {
 
-      lazy val result = controller.show(request)
+      lazy val result = controller.show()(request)
 
       "return 401" in {
-        mockMissingBearerToken()
+        mockMissingBearerToken()()
         status(result) shouldBe Status.UNAUTHORIZED
       }
 
@@ -139,13 +139,13 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
         "the form is successfully submitted" should {
 
-          lazy val result = controller.submit(request
+          lazy val result = controller.submit()(request
             .withFormUrlEncodedBody("trading-name" -> testValidTradingName)
             .withSession(common.SessionKeys.validationTradingNameKey -> testValidationTradingName))
 
           "redirect to the confirm trading name view" in {
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.showTradingName().url)
+            redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.showTradingName.url)
           }
 
           "add the new trading name to the session" in {
@@ -155,7 +155,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
         "the form is unsuccessfully submitted" should {
 
-          lazy val result = controller.submit(request
+          lazy val result = controller.submit()(request
             .withFormUrlEncodedBody("trading-name" -> testInvalidTradingName)
             .withSession(common.SessionKeys.validationTradingNameKey -> testValidationTradingName))
 
@@ -172,7 +172,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
       "there is no trading name in session" when {
 
-        lazy val result = controller.submit(request)
+        lazy val result = controller.submit()(request)
 
         "render the error view" in {
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -187,7 +187,7 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
     "a user is does not have a valid enrolment" should {
 
-      lazy val result = controller.submit(request)
+      lazy val result = controller.submit()(request)
 
       "return 403" in {
         mockIndividualWithoutEnrolment()
@@ -202,10 +202,10 @@ class CaptureTradingNameControllerSpec extends ControllerBaseSpec {
 
     "a user is not logged in" should {
 
-      lazy val result = controller.submit(request)
+      lazy val result = controller.submit()(request)
 
       "return 401" in {
-        mockMissingBearerToken()
+        mockMissingBearerToken()()
         status(result) shouldBe Status.UNAUTHORIZED
       }
 

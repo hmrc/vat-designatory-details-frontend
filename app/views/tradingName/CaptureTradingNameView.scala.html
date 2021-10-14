@@ -30,7 +30,7 @@
 @dynamicBackLink = @{if(currentTradingName == "") {
     appConfig.manageVatSubscriptionServicePath
   } else {
-    controllers.tradingName.routes.WhatToDoController.show().url
+    controllers.tradingName.routes.WhatToDoController.show.url
   }
 }
 

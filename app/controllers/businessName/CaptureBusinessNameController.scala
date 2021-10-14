@@ -40,7 +40,7 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
 
   implicit val ec: ExecutionContext = authComps.executionContext
 
-  def show: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+  def show(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     if (appConfig.features.businessNameR19_R20Enabled()) {
       val validationBusinessName: Future[Option[String]] = user.session.get(validationBusinessNameKey) match {
         case Some(businessName) => Future.successful(Some(businessName))
@@ -63,7 +63,7 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
     }
   }
 
-  def submit: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+  def submit(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     if (appConfig.features.businessNameR19_R20Enabled()) {
       val validationBusinessName: Option[String] = user.session.get(validationBusinessNameKey)
 
@@ -73,7 +73,7 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
             Future.successful(BadRequest(captureBusinessNameView(errorForm)))
           },
           businessName => {
-            Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.showBusinessName())
+            Future.successful(Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.showBusinessName)
               .addingToSession(prepopulationBusinessNameKey -> businessName))
           }
         )

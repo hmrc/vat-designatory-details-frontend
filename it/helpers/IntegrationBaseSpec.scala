@@ -28,6 +28,7 @@ import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.test.Injecting
 import play.api.{Application, Environment, Mode}
 import stubs.AuthStub
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 
 trait IntegrationBaseSpec extends CustomMatchers with GuiceOneServerPerSuite with WireMockHelper
   with BeforeAndAfterAll with Injecting {

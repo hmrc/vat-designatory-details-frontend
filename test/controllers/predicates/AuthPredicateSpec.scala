@@ -63,7 +63,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
         }
 
         "render the Unauthorised Agent page" in {
-          messages(Jsoup.parse(bodyOf(result)).title) shouldBe
+          messages(Jsoup.parse(contentAsString(result)).title) shouldBe
             "You can not use this service yet - Your client’s VAT details - GOV.UK"
         }
       }
@@ -79,7 +79,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
 
     "a no active session result is returned from Auth" should {
 
-      lazy val result = await(authPredicate(agent))
+      lazy val result = authPredicate(agent)
 
       "return Unauthorised (401)" in {
         mockMissingBearerToken()
@@ -87,13 +87,13 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       }
 
       "render the Unauthorised page" in {
-        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "Your session has timed out - Your client’s VAT details - GOV.UK"
+        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "Your session has timed out - Your client’s VAT details - GOV.UK"
       }
     }
 
     "an authorisation exception is returned from Auth" should {
 
-      lazy val result = await(authPredicate(agent))
+      lazy val result = authPredicate(agent)
 
       "return Internal Server Error (500)" in {
         mockAuthorisationException()
@@ -101,7 +101,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       }
 
       "render the Unauthorised page" in {
-        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "There is a problem with the service - Your client’s VAT details - GOV.UK"
+        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "There is a problem with the service - Your client’s VAT details - GOV.UK"
       }
     }
   }
@@ -177,7 +177,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
 
     "they do NOT have an active HMRC-MTD-VAT enrolment" should {
 
-      lazy val result = await(authPredicate(user))
+      lazy val result = authPredicate(user)
 
       "return Forbidden (403)" in {
         mockIndividualWithoutEnrolment()
@@ -185,7 +185,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       }
 
       "render the Not Signed Up page" in {
-        messages(Jsoup.parse(bodyOf(result)).title) shouldBe "You can not use this service yet - Manage your VAT account - GOV.UK"
+        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "You can not use this service yet - Manage your VAT account - GOV.UK"
       }
     }
   }

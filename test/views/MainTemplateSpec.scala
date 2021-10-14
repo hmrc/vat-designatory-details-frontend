@@ -26,7 +26,7 @@ class MainTemplateSpec extends ViewBaseSpec {
   val injectedView: MainTemplate = inject[MainTemplate]
 
   object Selectors {
-    val navTitle = ".govuk-header__link--service-name"
+    val navTitle = ".hmrc-header__service-name"
     val signOutLink = ".hmrc-sign-out-nav__link"
     val firstListLink = "li > a"
   }
@@ -45,7 +45,7 @@ class MainTemplateSpec extends ViewBaseSpec {
         }
 
         "have the correct service URL" in {
-          element(".govuk-header__link--service-name").attr("href") shouldBe mockConfig.vatSummaryFrontendUrl
+          element(Selectors.navTitle).attr("href") shouldBe mockConfig.vatSummaryFrontendUrl
         }
       }
 
@@ -59,7 +59,7 @@ class MainTemplateSpec extends ViewBaseSpec {
         }
 
         "have the correct service URL" in {
-          element(".govuk-header__link--service-name").attr("href") shouldBe mockConfig.vatAgentClientLookupHubPath
+          element(Selectors.navTitle).attr("href") shouldBe mockConfig.vatAgentClientLookupHubPath
         }
       }
 
@@ -72,7 +72,7 @@ class MainTemplateSpec extends ViewBaseSpec {
           }
 
           "have the correct service URL" in {
-            element(".govuk-header__link--service-name").attr("href") shouldBe ""
+            element(Selectors.navTitle).attr("href") shouldBe ""
           }
         }
 

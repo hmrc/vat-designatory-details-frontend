@@ -49,7 +49,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         "show the Check your answer page" in {
           mockConfig.features.businessNameR19_R20Enabled(true)
           mockIndividualAuthorised()
-          val result = controller.showTradingName(requestWithTradingName)
+          val result = controller.showTradingName()(requestWithTradingName)
 
           status(result) shouldBe OK
         }
@@ -59,7 +59,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockIndividualAuthorised()
-          controller.showTradingName(request)
+          controller.showTradingName()(request)
         }
 
         "return 303" in {
@@ -67,7 +67,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect the user to enter a new trading name" in {
-          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
         }
       }
 
@@ -75,7 +75,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "return forbidden (403)" in {
           mockIndividualWithoutEnrolment()
-          val result = controller.showTradingName(requestWithTradingName)
+          val result = controller.showTradingName()(requestWithTradingName)
 
           status(result) shouldBe FORBIDDEN
         }
@@ -102,7 +102,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect to the trading name changed success page" in {
-          redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName().url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
         }
       }
 
@@ -146,7 +146,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       }
 
       "redirect the user to the capture trading name page" in {
-        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show().url)
+        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
       }
     }
 
@@ -171,7 +171,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "show the Check your answer page" in {
           mockIndividualAuthorised()
-          val result = controller.showBusinessName(requestWithBusinessName.withSession(
+          val result = controller.showBusinessName()(requestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true"))
 
           status(result) shouldBe OK
@@ -182,7 +182,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockIndividualAuthorised()
-          controller.showBusinessName(request.withSession(
+          controller.showBusinessName()(request.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
@@ -191,7 +191,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect the user to enter a new business name" in {
-          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show.url)
         }
       }
 
@@ -199,7 +199,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "return forbidden (403)" in {
           mockIndividualWithoutEnrolment()
-          val result = controller.showBusinessName(requestWithBusinessName)
+          val result = controller.showBusinessName()(requestWithBusinessName)
 
           status(result) shouldBe FORBIDDEN
         }
@@ -211,7 +211,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "return not found (404)" in {
         mockConfig.features.businessNameR19_R20Enabled(false)
         mockIndividualAuthorised()
-        val result = controller.showBusinessName(requestWithBusinessName.withSession(
+        val result = controller.showBusinessName()(requestWithBusinessName.withSession(
           businessNameAccessPermittedKey -> "true"))
 
         status(result) shouldBe NOT_FOUND
@@ -245,7 +245,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           }
 
           "redirect to the business name changed success page" in {
-            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.businessName().url)
+            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.businessName.url)
           }
         }
       }
@@ -297,7 +297,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "redirect the user to the capture business name page" in {
-          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show().url)
+          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show.url)
         }
       }
 

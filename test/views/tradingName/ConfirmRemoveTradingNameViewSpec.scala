@@ -77,7 +77,7 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
 
         "should have the correct href" in {
           element(Selectors.backLink).attr("href") shouldBe
-            controllers.tradingName.routes.WhatToDoController.show().url
+            controllers.tradingName.routes.WhatToDoController.show.url
         }
       }
 
