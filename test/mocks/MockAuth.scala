@@ -31,6 +31,7 @@ import audit.AuditingService
 import controllers.predicates.inflight.InFlightPredicateComponents
 import views.html.errors.{InFlightChangeView, NotSignedUpView, SessionTimeoutView}
 import views.html.errors.agent.UnauthorisedAgentView
+import views.html.errors.UserInsolventErrorView
 
 import scala.concurrent.Future
 
@@ -46,6 +47,7 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
   val inFlightChangeView: InFlightChangeView = inject[InFlightChangeView]
   val unauthorisedAgentView: UnauthorisedAgentView = inject[UnauthorisedAgentView]
   val notSignedUpView: NotSignedUpView = inject[NotSignedUpView]
+  val userInsolventErrorView: UserInsolventErrorView = inject[UserInsolventErrorView]
 
   lazy val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
@@ -73,6 +75,7 @@ trait MockAuth extends TestUtil with BeforeAndAfterEach with MockitoSugar with M
     mockAuthAsAgentWithClient,
     sessionTimeoutView,
     unauthorisedAgentView,
+    userInsolventErrorView,
     notSignedUpView,
     mockConfig,
     ec,

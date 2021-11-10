@@ -62,6 +62,7 @@ trait AppConfig {
   val gtmContainer: String
   val businessNameGuidanceUrl: String
   val features: Features
+  val btaHomeUrl: String
 }
 
 @Singleton
@@ -143,4 +144,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
 
   override val features: Features = new Features(configuration)
+
+  override lazy val btaHomeUrl: String =
+    sc.getString(Keys.businessTaxAccountHost) + sc.getString(Keys.businessTaxAccountUrl)
 }
