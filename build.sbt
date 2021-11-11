@@ -21,6 +21,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
+val silencerVersion = "1.7.6"
 val hmrcUkFrontendVersion       = "1.19.0-play-28"
 val playPartialsVersion         = "8.2.0-play-28"
 val playLanguageVersion         = "5.1.0-play-28"
@@ -105,6 +106,16 @@ lazy val microservice = Project(appName, file("."))
   .settings(coverageSettings: _*)
   .settings(playSettings: _*)
   .settings(majorVersion := 1)
+  .settings(
+    // ***************
+    // Use the silencer plugin to suppress warnings
+    // You may turn it on for `views` too to suppress warnings from unused imports in compiled twirl templates, but this will hide other warnings.
+    scalacOptions += "-P:silencer:pathFilters=routes;views",
+    libraryDependencies ++= Seq(
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
+      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    )
+  )
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
