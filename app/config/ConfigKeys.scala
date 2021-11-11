@@ -59,7 +59,6 @@ object ConfigKeys {
 
   val gtmContainer: String = "tracking-consent-frontend.gtm.container"
 
-  val businessTaxAccount: String = "business-tax-account"
   val businessTaxAccountHost: String = "business-tax-account.host"
   val businessTaxAccountUrl: String = "business-tax-account.homeUrl"
 }
