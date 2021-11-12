@@ -58,4 +58,7 @@ object ConfigKeys {
   val contactHmrc: String = "contact-hmrc.url"
 
   val gtmContainer: String = "tracking-consent-frontend.gtm.container"
+
+  val businessTaxAccountHost: String = "business-tax-account.host"
+  val businessTaxAccountUrl: String = "business-tax-account.homeUrl"
 }

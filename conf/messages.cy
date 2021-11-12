@@ -36,6 +36,10 @@ unauthorised.agent.title = Ni allwch ddefnyddio’r gwasanaeth hwn eto
 unauthorised.agent.instructions = I ddefnyddio’r gwasanaeth hwn, bydd angen i chi
 unauthorised.agent.instructions2 = agor cyfrif gwasanaethau asiantau
 
+insolventError.title = Mae’n ddrwg gennym - ni allwch gael mynediad at y gwasanaeth hwn
+insolventError.message = Mae’ch busnes wedi’i ddatgan yn ansolfent.
+insolventError.buttonText = Ewch i’ch cyfrif treth busnes
+
 captureTradingName.title = Beth yw’r enw masnachu?
 captureNewTradingName.title = Beth yw’r enw masnachu newydd?
 captureTradingName.removeTradingName.linkText = Dileu’r enw masnachu

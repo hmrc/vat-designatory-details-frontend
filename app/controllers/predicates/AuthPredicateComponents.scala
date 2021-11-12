@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.MessagesApi
 import play.api.mvc.MessagesControllerComponents
 import services.{EnrolmentsAuthService, VatSubscriptionService}
-import views.html.errors.{NotSignedUpView, SessionTimeoutView}
+import views.html.errors.{NotSignedUpView, SessionTimeoutView, UserInsolventErrorView}
 import views.html.errors.agent.UnauthorisedAgentView
 
 import scala.concurrent.ExecutionContext
@@ -34,6 +34,7 @@ class AuthPredicateComponents @Inject()(val enrolmentsAuthService: EnrolmentsAut
                                         val authenticateAsAgentWithClient: AuthoriseAsAgentWithClient,
                                         val sessionTimeoutView: SessionTimeoutView,
                                         val unauthorisedAgentView: UnauthorisedAgentView,
+                                        val userInsolventErrorView: UserInsolventErrorView,
                                         val notSignedUpView: NotSignedUpView,
                                         val appConfig: AppConfig,
                                         val executionContext: ExecutionContext,

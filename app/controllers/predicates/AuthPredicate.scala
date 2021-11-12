@@ -76,12 +76,13 @@ class AuthPredicate(authComps: AuthPredicateComponents)
     if (enrolments.enrolments.exists(_.key == EnrolmentKeys.vatEnrolmentId)) {
       val user = User(enrolments)
       request.session.get(SessionKeys.insolventWithoutAccessKey) match {
-        case Some("true") => Future.successful(Forbidden(authComps.notSignedUpView()))
+        case Some("true") => Future.successful(Forbidden(authComps.userInsolventErrorView()(user,request2Messages,appConfig)))
         case Some("false") => block(user)
         case _ => authComps.vatSubscriptionService.getCustomerInfo(user.vrn).flatMap {
           case Right(details) if details.isInsolventWithoutAccess =>
             logger.debug("[AuthPredicate][checkVatEnrolment] - User is insolvent and not continuing to trade")
-            Future.successful(Forbidden(authComps.notSignedUpView()).addingToSession(SessionKeys.insolventWithoutAccessKey -> "true"))
+            Future.successful(Forbidden(authComps.userInsolventErrorView()(user,request2Messages,appConfig))
+              .addingToSession(SessionKeys.insolventWithoutAccessKey -> "true"))
           case Right(_) =>
             logger.debug("[AuthPredicate][checkVatEnrolment] - Authenticated as principle")
             block(user).map(result => result.addingToSession(SessionKeys.insolventWithoutAccessKey -> "false"))
