@@ -19,18 +19,22 @@
 @()(implicit user : User[_], messages: Messages, appConfig: config.AppConfig)
 
 @mainTemplate(pageTitle = messages("insolventError.title")) {
-<h1 class="govuk-heading-l" id="insolvent-without-access-heading">@messages("insolventError.title")</h1>
+   <h1 class="govuk-heading-l" id="insolvent-without-access-heading">
+        @messages("insolventError.title")
+   </h1>
 
-<p class="govuk-body" id="insolvent-without-access-body">@messages("insolventError.message")</p>
+   <p class="govuk-body" id="insolvent-without-access-body">
+    @messages("insolventError.message")
+   </p>
 
-<p class="govuk-body" id="sign-out">
-    <a class="govuk-link" id="sign-out-link" href="@routes.SignOutController.signOut(feedbackOnSignOut = false)">
+   <p class="govuk-body" id="sign-out">
+     <a class="govuk-link" id="sign-out-link" href="@routes.SignOutController.signOut(feedbackOnSignOut = false)">
         @messages("base.signOut")
-    </a>
-</p>
+     </a>
+   </p>
 
-@govukButton(Button(
-content = Text(messages("insolventError.buttonText")),
-href = Some(appConfig.btaHomeUrl),
-))
+  @govukButton(Button(
+    content = Text(messages("insolventError.buttonText")),
+   href = Some(appConfig.btaHomeUrl),
+  ))
 }

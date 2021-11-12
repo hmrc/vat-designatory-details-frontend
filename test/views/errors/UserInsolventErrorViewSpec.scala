@@ -26,7 +26,7 @@ class UserInsolventErrorSpec extends ViewBaseSpec {
 
   val userInsolvent: UserInsolventErrorView = inject[UserInsolventErrorView]
 
-  "Rendering the unauthorised page" should {
+  "Rendering the insolvent view page" should {
 
     object Selectors {
       val pageHeading = "#insolvent-without-access-heading"
@@ -54,7 +54,7 @@ class UserInsolventErrorSpec extends ViewBaseSpec {
       element(Selectors.signOutLink).attr("href") shouldBe "/vat-through-software/account/designatory/sign-out?feedbackOnSignOut=false"
     }
 
-    "the sign out link should have the correct text" in {
+    "have a sign out link with the correct text" in {
       elementText(Selectors.signOutLink) shouldBe UserInsolventMessages.signOutLink
     }
 
