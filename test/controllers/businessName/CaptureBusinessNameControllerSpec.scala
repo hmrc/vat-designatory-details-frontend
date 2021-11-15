@@ -16,7 +16,7 @@
 
 package controllers.businessName
 
-import assets.CustomerInfoConstants.{customerInfoNoBusinessName, customerInfoNoPending, fullCustomerInfoModel}
+import assets.CustomerInfoConstants.{customerInfoNoBusinessName, customerInfoNoPending, fullCustomerInfoModel, invalidJsonError}
 import common.SessionKeys
 import common.SessionKeys.{businessNameAccessPermittedKey, prepopulationBusinessNameKey, validationBusinessNameKey}
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
@@ -137,10 +137,31 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
         "there is no business name in session and the user doesn't have a business name" when {
 
-        lazy val result = {
-          target(Right(customerInfoNoBusinessName)).show()(request
-            .withSession(businessNameAccessPermittedKey -> "true"))
+          lazy val result = {
+            target(Right(customerInfoNoBusinessName)).show()(requestWithoutExistingBusinessName
+              .withSession(businessNameAccessPermittedKey -> "true"))
+          }
+
+          "return 500" in {
+            status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+          }
+
+          "render the error view" in {
+            status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+          }
+
+          "return HTML" in {
+            contentType(result) shouldBe Some("text/html")
+            charset(result) shouldBe Some("utf-8")
+          }
         }
+
+        "there is no business name in session and the user's organisation details can't be retrieved" when {
+
+          lazy val result = {
+            target(Left(invalidJsonError)).show()(request
+              .withSession(businessNameAccessPermittedKey -> "true"))
+          }
 
           "return 500" in {
             status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -311,7 +332,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockConfig.features.businessNameR19_R20Enabled(false)
-          target(Right(fullCustomerInfoModel)).show()(request
+          target(Right(fullCustomerInfoModel)).submit()(request
             .withSession(businessNameAccessPermittedKey -> "true"))
         }
 

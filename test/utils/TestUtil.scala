@@ -51,7 +51,8 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
   val testTradingName = "Test Trading Name"
   val testBusinessName = "Test Business Name"
 
-  val newBusinessName = "New Business Name"
+  val oldBusinessName = "Old Business Name"
+  val oldTradingName = "Old trading name"
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
 
@@ -61,8 +62,17 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
   lazy val requestWithTradingName: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(prepopulationTradingNameKey -> testTradingName)
 
+  lazy val requestWithoutTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    request.withSession(prepopulationTradingNameKey -> "")
+
+  lazy val requestWithoutExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    request.withSession(prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "")
+
   lazy val requestWithBusinessName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(prepopulationBusinessNameKey -> testBusinessName, validationBusinessNameKey -> newBusinessName)
+    request.withSession(prepopulationBusinessNameKey -> testBusinessName, validationBusinessNameKey -> oldBusinessName)
+
+  lazy val requestWithoutExistingBusinessName: FakeRequest[AnyContentAsEmpty.type] =
+    request.withSession(validationBusinessNameKey -> "")
 
   lazy val fakeRequestWithClientsVRN: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(clientVrn -> vrn)
