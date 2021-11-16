@@ -80,17 +80,17 @@ object CustomerInformation {
   private val insolvencyTypePath = JsPath \ "customerDetails" \ "insolvencyType"
 
   implicit val reads: Reads[CustomerInformation] = (
-    pendingChangesPath.readNullable[PendingChanges].orElse(Reads.pure(None)) and
-    firstNamePath.readNullable[String].orElse(Reads.pure(None)) and
-    lastNamePath.readNullable[String].orElse(Reads.pure(None)) and
-    organisationNamePath.readNullable[String].orElse(Reads.pure(None)) and
-    tradingNamePath.readNullable[String].orElse(Reads.pure(None)) and
-    contactPreferencePath.readNullable[String].orElse(Reads.pure(None)) and
-    changeIndicatorsPath.readNullable[ChangeIndicators].orElse(Reads.pure(None)) and
-    nameIsReadOnlyPath.readNullable[Boolean].orElse(Reads.pure(None)) and
-    partyTypePath.readNullable[String].orElse(Reads.pure(None)) and
+    pendingChangesPath.readNullable[PendingChanges] and
+    firstNamePath.readNullable[String] and
+    lastNamePath.readNullable[String] and
+    organisationNamePath.readNullable[String] and
+    tradingNamePath.readNullable[String] and
+    contactPreferencePath.readNullable[String] and
+    changeIndicatorsPath.readNullable[ChangeIndicators] and
+    nameIsReadOnlyPath.readNullable[Boolean] and
+    partyTypePath.readNullable[String] and
     isInsolventPath.read[Boolean] and
-    continueToTradePath.readNullable[Boolean].orElse(Reads.pure(None)) and
-    insolvencyTypePath.readNullable[String].orElse(Reads.pure(None))
+    continueToTradePath.readNullable[Boolean] and
+    insolvencyTypePath.readNullable[String]
   )(CustomerInformation.apply _)
 }
