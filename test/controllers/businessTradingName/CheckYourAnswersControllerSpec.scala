@@ -85,68 +85,115 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
   "Calling updateTradingName() in CheckYourAnswersController" when {
 
-    insolvencyCheck(controller.updateTradingName())
+    "the user has an existing trading name" when {
 
-    "there is a trading name in session" when {
+      insolvencyCheck(controller.updateTradingName())
 
-      "the trading name has been updated successfully" should {
+      "there is a non-empty trading name in session" when {
+
+        "the trading name has been updated successfully" should {
+
+          lazy val result = {
+            mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(
+              Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
+            controller.updateTradingName()(requestWithTradingName)
+          }
+
+          "return 303" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "redirect to the trading name changed success page" in {
+            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
+          }
+        }
+
+        "VatSubscriptionService returns a conflict" should {
+
+          lazy val result = {
+            mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(CONFLICT, "bad things"))))
+            controller.updateTradingName()(requestWithTradingName)
+          }
+
+          "return 303" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "redirect to manage-vat" in {
+            redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
+          }
+        }
+
+        "VatSubscriptionService returns an error" should {
+
+          lazy val result = {
+            mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again"))))
+            controller.updateTradingName()(requestWithTradingName)
+          }
+
+          "return 500" in {
+            status(result) shouldBe INTERNAL_SERVER_ERROR
+          }
+        }
+      }
+
+      "there is an empty trading name in session" when {
+
+        "the trading name has been removed successfully" should {
+
+          lazy val result = {
+            mockUpdateTradingName(vrn, UpdateTradingName(None, None))(
+              Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
+            controller.updateTradingName()(requestWithoutTradingName)
+          }
+
+          "return 303" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "redirect to the trading name changed success page" in {
+            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
+          }
+        }
+
+      }
+
+      "there isn't a trading name in session" should {
 
         lazy val result = {
-          mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(
-            Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
-          controller.updateTradingName()(requestWithTradingName)
+          controller.updateTradingName()(request)
         }
 
         "return 303" in {
           status(result) shouldBe SEE_OTHER
         }
 
-        "redirect to the trading name changed success page" in {
-          redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
-        }
-      }
-
-      "VatSubscriptionService returns a conflict" should {
-
-        lazy val result = {
-          mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(CONFLICT, "bad things"))))
-          controller.updateTradingName()(requestWithTradingName)
-        }
-
-        "return 303" in {
-          status(result) shouldBe SEE_OTHER
-        }
-
-        "redirect to manage-vat" in {
-          redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
-        }
-      }
-
-      "VatSubscriptionService returns an error" should {
-
-        lazy val result = {
-          mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again"))))
-          controller.updateTradingName()(requestWithTradingName)
-        }
-
-        "return 500" in {
-          status(result) shouldBe INTERNAL_SERVER_ERROR
+        "redirect the user to the capture trading name page" in {
+          redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
         }
       }
     }
 
-    "there isn't a trading name in session" should {
+    "the user doesn't have an existing trading name" when {
 
-      lazy val result = {
-        controller.updateTradingName()(request)
-      }
+      "there is a non-empty trading name in session" when {
 
-      "return 303" in {
-        status(result) shouldBe SEE_OTHER
-      }
+        "the trading name has been updated successfully" should {
 
-      "redirect the user to the capture trading name page" in {
-        redirectLocation(result) shouldBe Some(controllers.tradingName.routes.CaptureTradingNameController.show.url)
+          lazy val result = {
+            mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(
+              Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
+            controller.updateTradingName()(requestWithoutExistingTradingName)
+          }
+
+          "return 303" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "redirect to the trading name changed success page" in {
+            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
+          }
+        }
       }
     }
 

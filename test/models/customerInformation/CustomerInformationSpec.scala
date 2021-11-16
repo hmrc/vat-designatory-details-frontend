@@ -120,12 +120,19 @@ class CustomerInformationSpec extends AnyWordSpecLike with Matchers with OptionV
       }
     }
 
-    "return true when the user is insolvent and not continuing to trade" in {
-      customerInfoInsolvent.isInsolventWithoutAccess shouldBe true
-    }
+    "when the insolvency type is not 07, 08, 09, 10, 12, 13, 14 or 15" should {
 
-    "return false when the user is insolvent but is continuing to trade" in {
-      customerInfoInsolvent.copy(continueToTrade = Some(true)).isInsolventWithoutAccess shouldBe false
+      "return true when the user is insolvent and not continuing to trade" in {
+        customerInfoInsolvent.isInsolventWithoutAccess shouldBe true
+      }
+
+      "return false when the user is insolvent but is continuing to trade" in {
+        customerInfoInsolvent.copy(continueToTrade = Some(true)).isInsolventWithoutAccess shouldBe false
+      }
+
+      "return false when the user is insolvent and doesn't have a continueToTrade value" in {
+        customerInfoInsolvent.copy(continueToTrade = None).isInsolventWithoutAccess shouldBe false
+      }
     }
 
     "return false when the user is not insolvent, regardless of the continueToTrade flag" in {
