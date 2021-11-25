@@ -75,7 +75,7 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
     request.withSession(validationBusinessNameKey -> "")
 
   lazy val fakeRequestWithClientsVRN: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(clientVrn -> vrn)
+    request.withSession(mtdVatvcClientVrn -> vrn)
 
   lazy val insolventRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withSession(SessionKeys.insolventWithoutAccessKey -> "true")

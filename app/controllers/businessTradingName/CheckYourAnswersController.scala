@@ -74,7 +74,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
 
         val orgDetails = UpdateTradingName(
           tradingName = if(prepopTradingName.nonEmpty) Some(prepopTradingName) else None,
-          capacitorEmail = user.session.get(verifiedAgentEmail)
+          capacitorEmail = user.session.get(mtdVatvcVerifiedAgentEmail)
         )
 
         vatSubscriptionService.updateTradingName(user.vrn, orgDetails) map {
@@ -139,7 +139,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
       (user.session.get(validationBusinessNameKey), user.session.get(prepopulationBusinessNameKey)) match {
         case (Some(currentBusinessName), Some(requestedBusinessName)) =>
 
-          val updatedBusinessName = UpdateBusinessName(requestedBusinessName, capacitorEmail = user.session.get(verifiedAgentEmail))
+          val updatedBusinessName = UpdateBusinessName(requestedBusinessName, capacitorEmail = user.session.get(mtdVatvcVerifiedAgentEmail))
 
           vatSubscriptionService.updateBusinessName(user.vrn, updatedBusinessName) map {
             case Right(successModel) =>

@@ -17,9 +17,9 @@
 package common
 
 object SessionKeys {
-  val clientVrn: String = "CLIENT_VRN"
-  val verifiedAgentEmail: String = "verifiedAgentEmail"
-  val mtdVatAgentClientName: String = "mtdVatAgentClientName"
+  val mtdVatvcClientVrn: String = "mtdVatvcClientVrn"
+  val mtdVatvcVerifiedAgentEmail: String = "mtdVatvcVerifiedAgentEmail"
+  val mtdVatvcAgentClientName: String = "mtdVatvcAgentClientName"
 
   val validationTradingNameKey: String = "vatDesignatoryValidationTradingName"
   val prepopulationTradingNameKey: String = "vatDesignatoryPrepopulationTradingName"
