@@ -60,7 +60,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
           mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
           controller.tradingName()(request.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test",
-            clientVrn -> "111111111"
+            mtdVatvcClientVrn -> "111111111"
           ))
         }
 
@@ -198,7 +198,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
           lazy val result: Future[Result] = {
             mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
             controller.businessName()(request.withSession(
-              businessNameChangeSuccessful -> "true", clientVrn -> "111111111"
+              businessNameChangeSuccessful -> "true", mtdVatvcClientVrn -> "111111111"
             ))
           }
 
