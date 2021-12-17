@@ -24,7 +24,7 @@ import utils.StopOnFirstFail.constraint
 object TradingNameForm {
 
   val maxLength: Int = 160
-  val tradingNameRegex: String = """^[0-9a-zA-Z &`\-\\'\\.^]{1,160}$"""
+  val tradingNameRegex = """^[-A-Za-z0-9 '’‘()[\\]{}<>!«»\"?\/\\\\+=%#*&$€£_@¥.,:;]{1,160}$"""
 
   def tradingNameForm(tradingName: String): Form[String] = Form(
     "trading-name" -> text.verifying(
