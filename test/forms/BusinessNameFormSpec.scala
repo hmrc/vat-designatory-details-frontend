@@ -29,7 +29,7 @@ class BusinessNameFormSpec extends TestUtil {
     val unchangedErrorMessage: String = "captureBusinessName.error.notChanged"
     val specialCharsErrorMessage: String = "captureBusinessName.error.containsSpecialCharacters"
 
-    val testBusinessName = "Valid` & Business-' Name."
+    val testBusinessName = """Valid Business Name '’‘-(){}<>!«»"?\/+=%#*&$€£_@¥.,:;&"""
 
     "validate that testBusinessName is valid" in {
       val actual = businessNameForm("").bind(Map("business-name" -> testBusinessName))
@@ -58,7 +58,7 @@ class BusinessNameFormSpec extends TestUtil {
     }
 
     "validate the business name does not contain special characters" in {
-      val errors = businessNameForm("" ).bind(Map("business-name" -> ("%" + testBusinessName))).errors
+      val errors = businessNameForm("" ).bind(Map("business-name" -> ("~" + testBusinessName))).errors
       errors should contain(FormError("business-name", specialCharsErrorMessage))
     }
   }
