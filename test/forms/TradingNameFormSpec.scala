@@ -29,7 +29,7 @@ class TradingNameFormSpec extends TestUtil {
     val unchangedErrorMessage: String = "captureTradingName.error.notChanged"
     val specialCharsErrorMessage: String = "captureTradingName.error.containsSpecialCharacters"
 
-    val testTradingName = "Valid & Trading' Name.-'’‘()<>!«»?+=%#*&$€£_@¥.,:;"
+    val testTradingName = """Valid & Trading' Name.-'’‘()<>!«»?+=%#*&$€£_@/\"¥.,:;{}"""
 
     "validate that testTradingName is valid" in {
       val actual = tradingNameForm("").bind(Map("trading-name" -> testTradingName))
