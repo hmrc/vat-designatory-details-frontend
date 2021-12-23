@@ -58,7 +58,6 @@ trait AppConfig {
   val timeoutCountdown: Int
   val contactHmrcUrl: String
   def feedbackUrl(redirect: String): String
-  val accessibilityLinkUrl: String
   val gtmContainer: String
   val businessNameGuidanceUrl: String
   val features: Features
@@ -136,8 +135,6 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
 
   override def feedbackUrl(redirect: String): String = s"$contactFrontendService/contact/beta-feedback?service=$contactFormServiceIdentifier" +
     s"&backUrl=${SafeRedirectUrl(host + redirect).encodedUrl}"
-
-  override lazy val accessibilityLinkUrl: String = sc.getString(ConfigKeys.vatSummaryFrontendHost) + sc.getString(Keys.accessibilityStatementUrl)
 
   override val gtmContainer: String = sc.getString(Keys.gtmContainer)
 
