@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "1.26.0-play-28"
-val playPartialsVersion         = "8.2.0-play-28"
+val hmrcUkFrontendVersion       = "1.31.0-play-28"
 val playLanguageVersion         = "5.1.0-play-28"
 val playAllowListFilterVersion  = "1.0.0-play-28"
 val scalaTestPlusVersion        = "5.1.0"
@@ -33,7 +32,7 @@ val mockitoVersion              = "2.28.2"
 val scalaMockVersion            = "3.6.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "5.16.0"
+val bootstrapFrontendVersion    = "5.18.0"
 val scalatestplusMockitoVersion = "1.0.0-M2"
 val flexmarkVersion             = "0.36.8"
 
@@ -67,7 +66,6 @@ val compile = Seq(
   ws,
   "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapFrontendVersion,
   "uk.gov.hmrc"       %% "play-language"              % playLanguageVersion,
-  "uk.gov.hmrc"       %% "play-partials"              % playPartialsVersion,
   "uk.gov.hmrc"       %% "play-allowlist-filter"      % playAllowListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,
   "com.typesafe.play" %% "play-json-joda"             % playJsonJodaVersion
