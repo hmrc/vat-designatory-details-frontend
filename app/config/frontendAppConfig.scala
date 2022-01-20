@@ -29,7 +29,6 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
   val appName: String
-  val assetsPrefix: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   val agentServicesGovUkGuidance: String
@@ -52,8 +51,6 @@ trait AppConfig {
   val manageVatSubscriptionServicePath: String
   val vatSummaryFrontendUrl: String
   val feedbackFormPartialUrl: String
-  val contactFrontendService: String
-  val contactFormServiceIdentifier: String
   val timeoutPeriod: Int
   val timeoutCountdown: Int
   val contactHmrcUrl: String
@@ -69,13 +66,11 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
 
   override lazy val appName: String = sc.getString("appName")
 
-  override lazy val contactFormServiceIdentifier = "VATC"
-  override lazy val contactFrontendService: String = sc.getString(Keys.contactFrontendService)
+  private lazy val contactFormServiceIdentifier: String = sc.getString(Keys.contactFrontendIdentifier)
+  private lazy val contactFrontendService: String = sc.getString(Keys.contactFrontendService)
   override lazy val feedbackFormPartialUrl: String = s"$contactFrontendService/contact/beta-feedback/form"
   override lazy val reportAProblemPartialUrl = s"$contactFrontendService/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactFrontendService/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-
-  override lazy val assetsPrefix: String = sc.getString(Keys.assetsUrl) + sc.getString(Keys.assetsVersion)
 
   override lazy val agentServicesGovUkGuidance: String = sc.getString(Keys.govUkSetupAgentServices)
 

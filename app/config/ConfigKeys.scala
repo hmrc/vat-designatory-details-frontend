@@ -17,10 +17,8 @@
 package config
 
 object ConfigKeys {
-  val assetsUrl: String = "assets.url"
-  val assetsVersion: String = "assets.version"
-
   val contactFrontendService: String = "contact-frontend.url"
+  val contactFrontendIdentifier: String = "contact-frontend.serviceId"
 
   val govUkSetupAgentServices: String = "govuk.guidance.setupAgentServices.url"
   val govUkCommercialSoftware: String = "govuk.software.commercialSoftware.url"

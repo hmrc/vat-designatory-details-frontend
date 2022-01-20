@@ -21,20 +21,20 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "1.31.0-play-28"
+val hmrcUkFrontendVersion       = "2.0.0-play-28"
 val playLanguageVersion         = "5.1.0-play-28"
 val playAllowListFilterVersion  = "1.0.0-play-28"
 val scalaTestPlusVersion        = "5.1.0"
-val scalatestVersion            = "3.1.4"
+val scalatestVersion            = "3.2.10"
 val pegdownVersion              = "1.6.0"
 val jsoupVersion                = "1.13.1"
 val mockitoVersion              = "2.28.2"
 val scalaMockVersion            = "3.6.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "5.18.0"
+val bootstrapFrontendVersion    = "5.19.0"
 val scalatestplusMockitoVersion = "1.0.0-M2"
-val flexmarkVersion             = "0.36.8"
+val flexmarkVersion             = "0.62.2"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -108,10 +108,9 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     Keys.fork in Test := true,
-    scalaVersion := "2.12.14",
+    scalaVersion := "2.12.15",
     libraryDependencies ++= appDependencies,
-    retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
+    retrieveManaged := true
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
