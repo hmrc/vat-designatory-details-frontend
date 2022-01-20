@@ -85,6 +85,10 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
         "has the correct URL" in {
           element(Selectors.confirmButton).attr("href") shouldBe "/continue-link"
         }
+
+        "has the prevent double click attribute" in {
+          element(Selectors.confirmButton).hasAttr("preventDoubleClick = true")
+        }
       }
     }
 
