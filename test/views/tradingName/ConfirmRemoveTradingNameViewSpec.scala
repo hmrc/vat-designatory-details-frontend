@@ -61,6 +61,10 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
         elementText(Selectors.continueButton) shouldBe ConfirmRemoveMessages.confirm
       }
 
+      "have the prevent double click attribute on the continue" in {
+      element(Selectors.continueButton).hasAttr("data-prevent-double-click") shouldBe true
+    }
+
       "display the Yes option" in {
         elementText(Selectors.yesOption) shouldBe ConfirmRemoveMessages.yes
       }
