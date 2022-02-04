@@ -9,19 +9,19 @@ POST        /new-trading-name                      controllers.tradingName.Captu
 
 # confirm trading name
 GET         /confirm-new-trading-name              controllers.businessTradingName.CheckYourAnswersController.showTradingName
-GET         /update-trading-name                   controllers.businessTradingName.CheckYourAnswersController.updateTradingName
+POST        /confirm-new-trading-name              controllers.businessTradingName.CheckYourAnswersController.updateTradingName
 
 # confirm business name
 GET         /confirm-new-business-name             controllers.businessTradingName.CheckYourAnswersController.showBusinessName
-GET         /update-business-name                  controllers.businessTradingName.CheckYourAnswersController.updateBusinessName
+POST        /confirm-new-business-name             controllers.businessTradingName.CheckYourAnswersController.updateBusinessName
 
 # change successful
 GET         /trading-name-confirmation             controllers.ChangeSuccessController.tradingName
 GET         /business-name-confirmation            controllers.ChangeSuccessController.businessName
 
 # remove trading name
-GET         /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.show
-POST        /remove-trading-name                   controllers.tradingName.ConfirmRemoveTradingNameController.submit
+GET         /remove-trading-name                   controllers.businessTradingName.CheckYourAnswersController.showConfirmTradingNameRemoval
+POST        /remove-trading-name                   controllers.businessTradingName.CheckYourAnswersController.removeTradingName
 
 GET         /change-remove-trading-name            controllers.tradingName.WhatToDoController.show
 POST        /change-remove-trading-name            controllers.tradingName.WhatToDoController.submit

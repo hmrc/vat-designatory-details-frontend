@@ -66,7 +66,7 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
           },
           {
             case Change => Redirect(routes.CaptureTradingNameController.show)
-            case Remove => Redirect(routes.ConfirmRemoveTradingNameController.show)
+            case Remove => Redirect(controllers.businessTradingName.routes.CheckYourAnswersController.showConfirmTradingNameRemoval)
           }
         )
       case None => authComps.errorHandler.showInternalServerError

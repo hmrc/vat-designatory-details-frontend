@@ -26,16 +26,14 @@ import stubs.VatSubscriptionStub
 
 class CheckYourAnswersPageSpec extends BasePageISpec {
 
-  val tradingNamePath = "/confirm-new-trading-name"
-  val updateTradingNamePath = "/update-trading-name"
-  val businessNamePath = "/confirm-new-business-name"
-  val updateBusinessNamePath = "/update-business-name"
+  val updateTradingNamePath = "/confirm-new-trading-name"
+  val updateBusinessNamePath = "/confirm-new-business-name"
   val newTradingName = "New Trading Name"
   val newBusinessName = "New Business Name"
 
   "Calling the Check your answers (.show trading name) route" when {
 
-    def show: WSResponse = get(tradingNamePath, Map(prepopulationTradingNameKey -> newTradingName)
+    def show: WSResponse = get(updateTradingNamePath, Map(prepopulationTradingNameKey -> newTradingName)
       ++ formatInflightChange(Some("false")) ++ insolvencyValue)
 
     "the user is a authenticated" when {
@@ -59,9 +57,9 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
   "Calling the Check your answers (.updateTradingName) route" when {
 
-    def update: WSResponse = get(updateTradingNamePath, Map(
+    def update: WSResponse = post(updateTradingNamePath, Map(
       prepopulationTradingNameKey -> newTradingName) ++ formatInflightChange(Some("false")) ++ insolvencyValue
-    )
+    )(Map())
 
     "the user is authenticated" when {
 
@@ -104,7 +102,7 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
   "Calling the Check your answers (.show business name) route" when {
 
-    def show: WSResponse = get(businessNamePath, Map(prepopulationBusinessNameKey -> newTradingName)
+    def show: WSResponse = get(updateBusinessNamePath, Map(prepopulationBusinessNameKey -> newBusinessName)
       ++ formatInflightChange(Some("false"))
       ++ formatBusinessNameAccess
       ++ insolvencyValue)
@@ -130,9 +128,9 @@ class CheckYourAnswersPageSpec extends BasePageISpec {
 
   "Calling the Check your answers (.updateBusinessName) route" when {
 
-    def update: WSResponse = get(updateBusinessNamePath, Map(
+    def update: WSResponse = post(updateBusinessNamePath, Map(
       validationBusinessNameKey -> "Business Name", prepopulationBusinessNameKey -> newBusinessName, businessNameAccessPermittedKey -> "true"
-    ) ++ formatInflightChange(Some("false")) ++ insolvencyValue)
+    ) ++ formatInflightChange(Some("false")) ++ insolvencyValue)(Map())
 
     "the user is a authenticated" when {
 

@@ -50,7 +50,7 @@
     ))
   }
 
-  @formWithCSRF(action = controllers.tradingName.routes.ConfirmRemoveTradingNameController.submit) {
+  @formWithCSRF(action = controllers.businessTradingName.routes.CheckYourAnswersController.removeTradingName) {
 
     @govukRadios(Radios(
       fieldset = Some(Fieldset(

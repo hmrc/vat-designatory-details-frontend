@@ -146,8 +146,8 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
           status(result) shouldBe Status.SEE_OTHER
         }
 
-        "redirect to the ConfirmRemoveTradingNameController show action" in {
-          redirectLocation(result) shouldBe Some(routes.ConfirmRemoveTradingNameController.show.url)
+        "redirect to the CheckYourAnswersController showConfirmTradingNameRemoval action" in {
+          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.showConfirmTradingNameRemoval.url)
         }
       }
 

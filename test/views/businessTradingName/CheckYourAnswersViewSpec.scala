@@ -19,6 +19,7 @@ package views.businessTradingName
 import models.viewModels.CheckYourAnswersViewModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.mvc.Call
 import views.ViewBaseSpec
 import views.html.businessTradingName.CheckYourAnswersView
 
@@ -36,7 +37,7 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
     val confirmButton = ".govuk-button"
   }
 
-  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "Change the answer", "/continue-link")
+  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "Change the answer", Call("POST", "/continue-link"))
 
   "Rendering the Check Your Answer view" when {
 
@@ -80,10 +81,6 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
 
         "has the correct text" in {
           elementText(Selectors.confirmButton) shouldBe "Confirm and continue"
-        }
-
-        "has the correct URL" in {
-          element(Selectors.confirmButton).attr("href") shouldBe "/continue-link"
         }
       }
     }

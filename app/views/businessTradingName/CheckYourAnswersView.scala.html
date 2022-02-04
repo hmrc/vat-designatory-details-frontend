@@ -17,7 +17,12 @@
 @import config.AppConfig
 @import models.viewModels.CheckYourAnswersViewModel
 
-@this(mainTemplate: MainTemplate, govukSummaryList: GovukSummaryList, govukButton: GovukButton)
+@this(mainTemplate: MainTemplate,
+      govukSummaryList: GovukSummaryList,
+      govukBackLink: GovukBackLink,
+      govukButton: GovukButton,
+      formWithCSRF: FormWithCSRF
+)
 
 @(model: CheckYourAnswersViewModel)(implicit messages: Messages,
                                     appConfig: AppConfig,
@@ -25,33 +30,36 @@
 
 @mainTemplate(pageTitle = messages("checkYourAnswers.heading")) {
 
-<h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
+    @formWithCSRF(action = model.continueLink) {
 
-    @govukSummaryList(SummaryList(
-        rows = Seq(
-        SummaryListRow(
-        key = Key(
-        content = Text(messages(model.question))
-        ),
-    value = Value(
-    content = Text(model.answer)
-    ),
-    actions = Some(Actions(
-        items = Seq(
-            ActionItem(
-            href = model.changeLink,
-            content = HtmlContent(s"""<span aria-hidden="true">${messages("checkYourAnswers.change")}</span>"""),
-            visuallyHiddenText = Some(messages(model.changeLinkHiddenText))
+        <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
+
+        @govukSummaryList(SummaryList(
+            rows = Seq(
+                SummaryListRow(
+                    key = Key(
+                        content = Text(messages(model.question))
+                    ),
+                    value = Value(
+                        content = Text(model.answer)
+                    ),
+                    actions = Some(Actions(
+                        items = Seq(
+                            ActionItem(
+                                href = model.changeLink,
+                                content = HtmlContent(s"""<span aria-hidden="true">${messages("checkYourAnswers.change")}</span>"""),
+                                visuallyHiddenText = Some(messages(model.changeLinkHiddenText))
+                            )
+                        )
+                    ))
+                )
             )
-           )
-         ))
-        )
-       )
-     ))
+        ))
 
-    @govukButton(Button(
-      href = Some(model.continueLink),
-      content = Text(messages("checkYourAnswers.confirm"))
-    ))
+        @govukButton(Button(
+            content = Text(messages("checkYourAnswers.confirm"))
+        ))
+
+    }
 
 }
