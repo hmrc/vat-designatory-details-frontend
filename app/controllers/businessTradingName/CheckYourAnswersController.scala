@@ -110,11 +110,6 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
 
   def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
-//    val currentTradingName: Option[String] = user.session.get(validationTradingNameKey) match {
-//      case name@Some(tName) if tName.nonEmpty => name
-//      case _ => None
-//    }
-
     user.session.get(prepopulationTradingNameKey) match {
       case Some(prepopTradingName) =>
 
