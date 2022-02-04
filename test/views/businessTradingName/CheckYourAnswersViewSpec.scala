@@ -82,6 +82,10 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
         "has the correct text" in {
           elementText(Selectors.confirmButton) shouldBe "Confirm and continue"
         }
+
+        "has the prevent double click attribute" in {
+          element(Selectors.confirmButton).hasAttr("data-prevent-double-click") shouldBe true
+        }
       }
     }
 
