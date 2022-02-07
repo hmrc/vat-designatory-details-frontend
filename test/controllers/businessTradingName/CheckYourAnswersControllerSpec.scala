@@ -18,6 +18,7 @@ package controllers.businessTradingName
 
 import assets.BaseTestConstants.vrn
 import audit.AuditingService
+import common.SessionKeys
 import common.SessionKeys.{businessNameAccessPermittedKey, validationTradingNameKey}
 import controllers.ControllerBaseSpec
 import forms.YesNoForm
@@ -106,6 +107,18 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           "redirect to the trading name changed success page" in {
             redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
           }
+
+          "add tradingNameChangeSuccessful to session" in {
+            session(result).get(SessionKeys.tradingNameChangeSuccessful) shouldBe Some("true")
+          }
+
+          "add inFlightOrgDetailsKey to session" in {
+            session(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+          }
+
+          "add prepopulationTradingNameKey to session" in {
+            session(result).get(SessionKeys.prepopulationTradingNameKey) shouldBe Some("Test Trading Name")
+          }
         }
 
         "VatSubscriptionService returns a conflict" should {
@@ -122,6 +135,10 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           "redirect to manage-vat" in {
             redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
           }
+
+          "add inFlightOrgDetailsKey to session" in {
+            session(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+          }
         }
 
         "VatSubscriptionService returns an error" should {
@@ -135,27 +152,6 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
             status(result) shouldBe INTERNAL_SERVER_ERROR
           }
         }
-      }
-
-      "there is an empty trading name in session" when {
-
-        "the trading name has been removed successfully" should {
-
-          lazy val result = {
-            mockUpdateTradingName(vrn, UpdateTradingName(None, None))(
-              Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
-            controller.updateTradingName()(requestWithoutNewTradingName)
-          }
-
-          "return 303" in {
-            status(result) shouldBe SEE_OTHER
-          }
-
-          "redirect to the trading name changed success page" in {
-            redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
-          }
-        }
-
       }
 
       "there isn't a trading name in session" should {
@@ -192,6 +188,18 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
           "redirect to the trading name changed success page" in {
             redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
+          }
+
+          "add tradingNameChangeSuccessful to session" in {
+            session(result).get(SessionKeys.tradingNameChangeSuccessful) shouldBe Some("true")
+          }
+
+          "add inFlightOrgDetailsKey to session" in {
+            session(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+          }
+
+          "add prepopulationTradingNameKey to session" in {
+            session(result).get(SessionKeys.prepopulationTradingNameKey) shouldBe Some("Test Trading Name")
           }
         }
       }
@@ -271,6 +279,18 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         "redirect to the Change success controller action" in {
           redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.tradingName.url)
         }
+
+        "add tradingNameChangeSuccessful to session" in {
+          session(result).get(SessionKeys.tradingNameChangeSuccessful) shouldBe Some("true")
+        }
+
+        "add inFlightOrgDetailsKey to session" in {
+          session(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+        }
+
+        "add prepopulationTradingNameKey to session" in {
+          session(result).get(SessionKeys.prepopulationTradingNameKey) shouldBe Some("")
+        }
       }
 
       "the form is bound as a No" should {
@@ -331,6 +351,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "show the Check your answer page" in {
           mockIndividualAuthorised()
+          mockConfig.features.businessNameR19_R20Enabled(true)
           val result = controller.showBusinessName()(requestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true"))
 
@@ -342,6 +363,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockIndividualAuthorised()
+          mockConfig.features.businessNameR19_R20Enabled(true)
           controller.showBusinessName()(request.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
@@ -359,6 +381,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         "return forbidden (403)" in {
           mockIndividualWithoutEnrolment()
+          mockConfig.features.businessNameR19_R20Enabled(true)
           val result = controller.showBusinessName()(requestWithBusinessName)
 
           status(result) shouldBe FORBIDDEN
@@ -383,6 +406,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
     "the business name feature switch is on" when {
 
+      mockConfig.features.businessNameR19_R20Enabled(true)
       insolvencyCheck(controller.updateBusinessName())
 
       "there is a business name in session" when {
@@ -407,12 +431,21 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           "redirect to the business name changed success page" in {
             redirectLocation(result) shouldBe Some(controllers.routes.ChangeSuccessController.businessName.url)
           }
+
+          "add businessChangeSuccessful" in {
+            session(result).get(SessionKeys.businessNameChangeSuccessful) shouldBe Some("true")
+          }
+
+          "add inFlightOrgDetailsKey to session" in {
+            session(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+          }
         }
       }
 
       "VatSubscriptionService returns a conflict" should {
 
         lazy val result = {
+          mockConfig.features.businessNameR19_R20Enabled(true)
           mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
             Future(Left(ErrorModel(CONFLICT, "bad things")))
           )
@@ -427,11 +460,16 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         "redirect to manage-vat" in {
           redirectLocation(result) shouldBe Some(mockConfig.manageVatSubscriptionServicePath)
         }
+
+        "add tinFlightOrgDetailsKey to session" in {
+          session(result).get(SessionKeys.inFlightOrgDetailsKey) shouldBe Some("true")
+        }
       }
 
       "VatSubscriptionService returns an error" should {
 
         lazy val result = {
+          mockConfig.features.businessNameR19_R20Enabled(true)
           mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
             Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again")))
           )
@@ -464,6 +502,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "the user is not authorised" should {
 
         "return forbidden (403)" in {
+          mockConfig.features.businessNameR19_R20Enabled(true)
           mockIndividualWithoutEnrolment()
           val result = controller.updateBusinessName()(requestWithBusinessName)
 

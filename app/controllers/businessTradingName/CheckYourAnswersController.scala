@@ -114,7 +114,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
       case Some(prepopTradingName) =>
 
         val orgDetails = UpdateTradingName(
-          tradingName = if(prepopTradingName.nonEmpty) Some(prepopTradingName) else None,
+          tradingName = Some(prepopTradingName),
           capacitorEmail = user.session.get(mtdVatvcVerifiedAgentEmail)
         )
         performTradingNameUpdate(orgDetails, routes.CheckYourAnswersController.updateTradingName.url)
