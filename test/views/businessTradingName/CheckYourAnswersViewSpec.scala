@@ -19,6 +19,7 @@ package views.businessTradingName
 import models.viewModels.CheckYourAnswersViewModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.mvc.Call
 import views.ViewBaseSpec
 import views.html.businessTradingName.CheckYourAnswersView
 
@@ -36,7 +37,7 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
     val confirmButton = ".govuk-button"
   }
 
-  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "Change the answer", "/continue-link")
+  val viewModel = CheckYourAnswersViewModel("journeyName", "answer", "/change-link", "Change the answer", Call("POST", "/continue-link"))
 
   "Rendering the Check Your Answer view" when {
 
@@ -76,14 +77,18 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
         }
       }
 
+      "have a form with the correct action" in {
+        element("form").attr("action") shouldBe "/continue-link"
+      }
+
       "have a continue button" which {
 
         "has the correct text" in {
           elementText(Selectors.confirmButton) shouldBe "Confirm and continue"
         }
 
-        "has the correct URL" in {
-          element(Selectors.confirmButton).attr("href") shouldBe "/continue-link"
+        "has the prevent double click attribute" in {
+          element(Selectors.confirmButton).hasAttr("data-prevent-double-click") shouldBe true
         }
       }
     }

@@ -17,6 +17,7 @@
 package controllers.tradingName
 
 import assets.CustomerInfoConstants.fullCustomerInfoModel
+import common.SessionKeys
 import common.SessionKeys.validationTradingNameKey
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import controllers.ControllerBaseSpec
@@ -63,6 +64,10 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
         verify(mockVatSubscriptionService, never())
           .getCustomerInfo(any[String])(any[HeaderCarrier], any[ExecutionContext])
       }
+
+      "add the validation trading name key to session" in {
+        session(result).get(SessionKeys.validationTradingNameKey) shouldBe Some("ABC Trading")
+      }
     }
 
     "there is a validation trading name in session that is empty ('add' journey)" should {
@@ -81,6 +86,10 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
         verify(mockVatSubscriptionService, never())
           .getCustomerInfo(any[String])(any[HeaderCarrier], any[ExecutionContext])
       }
+
+      "add the validation trading name key to session" in {
+        session(result).get(SessionKeys.validationTradingNameKey) shouldBe Some("")
+      }
     }
 
     "there is not a validation trading name in session" when {
@@ -96,6 +105,10 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
         "return HTML" in {
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
+        }
+
+        "add the validation trading name key to session" in {
+          session(result).get(SessionKeys.validationTradingNameKey) shouldBe Some("PepsiMac")
         }
       }
 
@@ -146,8 +159,8 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
           status(result) shouldBe Status.SEE_OTHER
         }
 
-        "redirect to the ConfirmRemoveTradingNameController show action" in {
-          redirectLocation(result) shouldBe Some(routes.ConfirmRemoveTradingNameController.show.url)
+        "redirect to the CheckYourAnswersController showConfirmTradingNameRemoval action" in {
+          redirectLocation(result) shouldBe Some(controllers.businessTradingName.routes.CheckYourAnswersController.showConfirmTradingNameRemoval.url)
         }
       }
 

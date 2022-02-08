@@ -23,20 +23,27 @@ import config.{AppConfig, ErrorHandler}
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
+import controllers.tradingName.routes
+import forms.YesNoForm
+import models.{No, User, Yes, YesNo}
+
 import javax.inject.{Inject, Singleton}
 import models.customerInformation.{UpdateBusinessName, UpdateTradingName}
 import models.errors.ErrorModel
 import models.viewModels.CheckYourAnswersViewModel
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.VatSubscriptionService
 import utils.LoggerUtil
 import views.html.businessTradingName.CheckYourAnswersView
+import views.html.tradingName.ConfirmRemoveTradingNameView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
                                             checkYourAnswersView: CheckYourAnswersView,
+                                            confirmRemoveTradingNameView: ConfirmRemoveTradingNameView,
                                             vatSubscriptionService: VatSubscriptionService)(
                                             implicit val authComps: AuthPredicateComponents,
                                             mcc: MessagesControllerComponents,
@@ -46,6 +53,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
                                            ) extends BaseController with LoggerUtil {
 
   implicit val ec: ExecutionContext = mcc.executionContext
+  val yesNoForm: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error")
 
   def showTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(prepopulationTradingNameKey) match {
@@ -55,62 +63,94 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
           answer = tradingName,
           changeLink = controllers.tradingName.routes.CaptureTradingNameController.show.url,
           changeLinkHiddenText = "checkYourAnswers.tradingName.edit",
-          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName.url)
+          continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateTradingName)
         Ok(checkYourAnswersView(viewModel))
       case _ =>
         Redirect(controllers.tradingName.routes.CaptureTradingNameController.show)
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  private[controllers] def performTradingNameUpdate(updateTradingNameModel: UpdateTradingName, pageUrl: String)(implicit user: User[_]): Future[Result] = {
+    val existingTradingName = user.session.get(validationTradingNameKey)
+    val newTradingName = updateTradingNameModel.tradingName.getOrElse("")
+    vatSubscriptionService.updateTradingName(user.vrn, updateTradingNameModel).map {
+      case Right(successModel) =>
+        auditingService.audit(
+          ChangedTradingNameAuditModel(
+            existingTradingName,
+            newTradingName,
+            user.vrn,
+            user.isAgent,
+            user.arn,
+            OK,
+            successModel.formBundle
+          ),
+          Some(pageUrl)
+        )
+        Redirect(controllers.routes.ChangeSuccessController.tradingName)
+          .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true", prepopulationTradingNameKey -> newTradingName)
 
-    val currentTradingName: Option[String] = user.session.get(validationTradingNameKey) match {
-      case name@Some(tName) if tName.nonEmpty => name
-      case _ => None
+      case Left(ErrorModel(CONFLICT, errorMessage)) =>
+        logger.warn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
+          "already in progress. Redirecting user to manage-vat overview page.")
+        auditingService.audit(ChangedTradingNameAuditModel(
+          existingTradingName, newTradingName, user.vrn, user.isAgent, user.arn, CONFLICT, errorMessage),
+          Some(routes.CheckYourAnswersController.updateTradingName.url)
+        )
+        Redirect(appConfig.manageVatSubscriptionServicePath).addingToSession(inFlightOrgDetailsKey -> "true")
+
+      case Left(ErrorModel(status, errorMessage)) =>
+        auditingService.audit(ChangedTradingNameAuditModel(
+          existingTradingName, newTradingName, user.vrn, user.isAgent, user.arn, status, errorMessage),
+          Some(routes.CheckYourAnswersController.updateTradingName.url)
+        )
+        errorHandler.showInternalServerError
     }
+  }
+
+  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
     user.session.get(prepopulationTradingNameKey) match {
       case Some(prepopTradingName) =>
 
         val orgDetails = UpdateTradingName(
-          tradingName = if(prepopTradingName.nonEmpty) Some(prepopTradingName) else None,
+          tradingName = Some(prepopTradingName),
           capacitorEmail = user.session.get(mtdVatvcVerifiedAgentEmail)
         )
-
-        vatSubscriptionService.updateTradingName(user.vrn, orgDetails) map {
-          case Right(successModel) =>
-            auditingService.audit(ChangedTradingNameAuditModel(
-              currentTradingName,
-              prepopTradingName,
-              user.vrn,
-              user.isAgent,
-              user.arn,
-              OK,
-              successModel.formBundle),
-              Some(routes.CheckYourAnswersController.updateTradingName.url)
-            )
-            Redirect(controllers.routes.ChangeSuccessController.tradingName)
-              .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true")
-
-          case Left(ErrorModel(CONFLICT, errorMessage)) =>
-            logger.warn("[CheckYourAnswersController][updateTradingName] - There is an organisation details update request " +
-            "already in progress. Redirecting user to manage-vat overview page.")
-            auditingService.audit(ChangedTradingNameAuditModel(
-              currentTradingName, prepopTradingName, user.vrn, user.isAgent, user.arn, CONFLICT, errorMessage),
-              Some(routes.CheckYourAnswersController.updateTradingName.url)
-            )
-            Redirect(appConfig.manageVatSubscriptionServicePath).addingToSession(inFlightOrgDetailsKey -> "true")
-
-          case Left(ErrorModel(status, errorMessage)) =>
-            auditingService.audit(ChangedTradingNameAuditModel(
-              currentTradingName, prepopTradingName, user.vrn, user.isAgent, user.arn, status, errorMessage),
-              Some(routes.CheckYourAnswersController.updateTradingName.url)
-            )
-            errorHandler.showInternalServerError
-        }
+        performTradingNameUpdate(orgDetails, routes.CheckYourAnswersController.updateTradingName.url)
 
       case _ =>
         Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show))
+    }
+  }
+
+  def showConfirmTradingNameRemoval(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+    user.session.get(validationTradingNameKey) match {
+      case Some(tradingName) if tradingName.nonEmpty =>
+        Future.successful(Ok(confirmRemoveTradingNameView(yesNoForm, tradingName)))
+      case _ =>
+        Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show.url))
+    }
+  }
+
+  def removeTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+    user.session.get(validationTradingNameKey) match {
+      case Some(tradingName) =>
+        yesNoForm.bindFromRequest.fold(
+          errorForm => {
+           Future.successful(BadRequest(confirmRemoveTradingNameView(errorForm, tradingName)))
+          },
+          {
+            case Yes => performTradingNameUpdate(
+              UpdateTradingName(
+                None, user.session.get(mtdVatvcVerifiedAgentEmail)
+              ),
+              controllers.businessTradingName.routes.CheckYourAnswersController.removeTradingName.url
+            )
+            case No => Future.successful(Redirect(appConfig.manageVatSubscriptionServicePath))
+          }
+        )
+      case None => Future.successful(authComps.errorHandler.showInternalServerError)
     }
   }
 
@@ -123,7 +163,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             answer = businessName,
             changeLink = controllers.businessName.routes.CaptureBusinessNameController.show.url,
             changeLinkHiddenText = "checkYourAnswers.businessName.edit",
-            continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName.url)
+            continueLink = controllers.businessTradingName.routes.CheckYourAnswersController.updateBusinessName)
           Ok(checkYourAnswersView(viewModel))
         case _ =>
           Redirect(controllers.businessName.routes.CaptureBusinessNameController.show)

@@ -59,11 +59,14 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
     inFlightOrgDetailsKey -> "false",
     insolventWithoutAccessKey -> "false")
 
-  lazy val requestWithTradingName: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val requestWithNewTradingName: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(prepopulationTradingNameKey -> testTradingName)
 
-  lazy val requestWithoutTradingName: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val requestWithoutNewTradingName: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(prepopulationTradingNameKey -> "")
+
+  lazy val requestWithOnlyExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    request.withSession(validationTradingNameKey -> oldTradingName)
 
   lazy val requestWithoutExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
     request.withSession(prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "")
