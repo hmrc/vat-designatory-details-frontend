@@ -77,6 +77,10 @@ class CheckYourAnswersViewSpec extends ViewBaseSpec {
         }
       }
 
+      "have a form with the correct action" in {
+        element("form").attr("action") shouldBe "/continue-link"
+      }
+
       "have a continue button" which {
 
         "has the correct text" in {
