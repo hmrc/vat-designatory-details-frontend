@@ -137,6 +137,10 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
           "has the correct link" in {
             element(Selectors.errorSummaryLink).attr("href") shouldBe "#business-name"
           }
+
+          "retain the value that the user has entered " in {
+            element(".govuk-input").attr("value") shouldBe "Test Business Name"
+          }
         }
       }
 

@@ -82,7 +82,7 @@
         classes = "govuk-label--m",
         content = Text(messages("captureBusinessName.textBox"))
       ),
-      value = businessNameForm.value,
+      value = businessNameForm("business-name").value,
       classes = "govuk-input--width-20",
       attributes = Map("maxlength" -> (maxLength + 1).toString),
       errorMessage = businessNameForm("business-name").error.map( error =>
