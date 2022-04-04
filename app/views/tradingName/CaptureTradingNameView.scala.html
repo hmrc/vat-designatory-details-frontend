@@ -74,7 +74,7 @@
         isPageHeading = true,
         classes = "govuk-label--l",
         content = Text(dynamicTitle)),
-      value = tradingNameForm.value,
+      value = tradingNameForm("trading-name").value,
       hint = Some(Hint(
           content = Text(messages("captureTradingName.para"))
       )),

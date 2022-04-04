@@ -130,6 +130,10 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
           "has the correct link" in {
             element(Selectors.errorSummaryLink).attr("href") shouldBe "#trading-name"
           }
+
+          "retain the value that the user has entered " in {
+            element(".govuk-input").attr("value") shouldBe "Test Trading Name"
+          }
         }
       }
     }
