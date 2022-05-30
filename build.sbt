@@ -32,7 +32,7 @@ val mockitoVersion              = "2.28.2"
 val scalaMockVersion            = "3.6.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "5.20.0"
+val bootstrapFrontendVersion    = "5.24.0"
 val scalatestplusMockitoVersion = "1.0.0-M2"
 val flexmarkVersion             = "0.62.2"
 

@@ -30,6 +30,7 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.HeaderCarrier
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
+import play.api.test.Helpers.CONTENT_TYPE
 import views.html.errors.StandardErrorView
 
 import scala.concurrent.ExecutionContext
@@ -54,8 +55,9 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
   val oldBusinessName = "Old Business Name"
   val oldTradingName = "Old trading name"
 
-  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
-
+  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/path")
+    .withHeaders(CONTENT_TYPE -> "application/x-www-form-urlencoded")
+    .withSession(
     inFlightOrgDetailsKey -> "false",
     insolventWithoutAccessKey -> "false")
 
