@@ -39,7 +39,7 @@ class ServiceNameUtilSpec extends TestUtil {
     "NOT given a user" should {
 
       "return the client service name Manage your VAT account" in {
-        ServiceNameUtil.generateHeader(request, messages) shouldBe "VAT"
+        ServiceNameUtil.generateHeader(postRequest, messages) shouldBe "VAT"
       }
     }
 
@@ -64,7 +64,7 @@ class ServiceNameUtilSpec extends TestUtil {
     "not given a User" should {
 
       "return None" in {
-        ServiceNameUtil.generateServiceUrl(request, mockConfig) shouldBe None
+        ServiceNameUtil.generateServiceUrl(postRequest, mockConfig) shouldBe None
       }
     }
   }

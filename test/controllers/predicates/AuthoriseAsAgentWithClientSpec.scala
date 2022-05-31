@@ -86,7 +86,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
     "there is no client VRN in session" should {
 
       mockAgentAuthorised()
-      lazy val result = target(request)
+      lazy val result = target(postRequest)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER

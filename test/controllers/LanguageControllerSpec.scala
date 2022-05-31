@@ -27,7 +27,7 @@ class LanguageControllerSpec extends ControllerBaseSpec {
 
     "providing the parameter 'english'" should {
 
-      val result = controller.switchToLanguage("english")(request)
+      val result = controller.switchToLanguage("english")(getRequest)
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -40,7 +40,7 @@ class LanguageControllerSpec extends ControllerBaseSpec {
 
     "providing the parameter 'cymraeg'" should {
 
-      val result = controller.switchToLanguage("cymraeg")(request)
+      val result = controller.switchToLanguage("cymraeg")(getRequest)
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -53,8 +53,8 @@ class LanguageControllerSpec extends ControllerBaseSpec {
 
     "providing an unsupported language parameter" should {
 
-      controller.switchToLanguage("english")(request)
-      lazy val result = controller.switchToLanguage("orcish")(request)
+      controller.switchToLanguage("english")(getRequest)
+      lazy val result = controller.switchToLanguage("orcish")(postRequest)
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER

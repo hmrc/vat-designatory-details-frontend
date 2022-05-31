@@ -64,7 +64,7 @@ class MainTemplateSpec extends ViewBaseSpec {
       }
 
         "the user is not known" should {
-          lazy val view = injectedView(pageTitle = "Test")(Html("Test"))(request, messages, mockConfig)
+          lazy val view = injectedView(pageTitle = "Test")(Html("Test"))(postRequest, messages, mockConfig)
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
           "have no nav title" in {

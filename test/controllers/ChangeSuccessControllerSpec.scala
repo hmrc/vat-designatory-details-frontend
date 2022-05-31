@@ -45,7 +45,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the user is a principal entity" should {
         lazy val result: Future[Result] = {
           mockGetCustomerInfo("999999999")(Right(fullCustomerInfoModel))
-          controller.tradingName()(request.withSession(
+          controller.tradingName()(getRequest.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
           ))
         }
@@ -58,7 +58,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the user is an agent" should {
         lazy val result: Future[Result] = {
           mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-          controller.tradingName()(request.withSession(
+          controller.tradingName()(getRequest.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test",
             mtdVatvcClientVrn -> "111111111"
           ))
@@ -73,7 +73,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
       "the call to CustomerInfo returns an error" should {
         lazy val result: Future[Result] = {
           mockGetCustomerInfo("999999999")(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "")))
-          controller.tradingName()(request.withSession(
+          controller.tradingName()(getRequest.withSession(
             tradingNameChangeSuccessful -> "true", prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "Test"
           ))
         }
@@ -86,7 +86,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
     "one or more of the expected session keys is missing" should {
 
-      lazy val result: Future[Result] = controller.tradingName()(request)
+      lazy val result: Future[Result] = controller.tradingName()(getRequest)
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -182,7 +182,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
           lazy val document = Jsoup.parse(contentAsString(result))
 
           lazy val result: Future[Result] = {
-            controller.businessName()(request.withSession(businessNameChangeSuccessful -> "true"))
+            controller.businessName()(getRequest.withSession(businessNameChangeSuccessful -> "true"))
           }
 
           "return 200" in {
@@ -197,7 +197,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         "the user is an agent" should {
           lazy val result: Future[Result] = {
             mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-            controller.businessName()(request.withSession(
+            controller.businessName()(getRequest.withSession(
               businessNameChangeSuccessful -> "true", mtdVatvcClientVrn -> "111111111"
             ))
           }
@@ -211,7 +211,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
       "the businessNameChangeSuccessful session key is not populated" should {
 
-        lazy val result: Future[Result] = controller.businessName()(request)
+        lazy val result: Future[Result] = controller.businessName()(getRequest)
 
         "return 303" in {
           status(result) shouldBe Status.SEE_OTHER
@@ -230,7 +230,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         lazy val result: Future[Result] = {
           mockConfig.features.businessNameR19_R20Enabled(false)
           mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-          controller.businessName()(request)
+          controller.businessName()(getRequest)
         }
 
         status(result) shouldBe NOT_FOUND

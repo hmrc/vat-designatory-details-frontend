@@ -54,10 +54,10 @@ class InFlightPredicateSpec extends MockAuth {
   )
 
   def inflightRequest(value: String): User[AnyContentAsEmpty.type] =
-    User("999999999")(request.withSession(inFlightOrgDetailsKey -> value))
+    User("999999999")(postRequest.withSession(inFlightOrgDetailsKey -> value))
 
   def inflightRequestWithAccess(value: String, access: String): User[AnyContentAsEmpty.type] =
-    User("999999999")(request.withSession(inFlightOrgDetailsKey -> value, businessNameAccessPermittedKey -> access))
+    User("999999999")(postRequest.withSession(inFlightOrgDetailsKey -> value, businessNameAccessPermittedKey -> access))
 
   val userWithoutSession: User[AnyContentAsEmpty.type] = User("999999999")(FakeRequest())
 

@@ -55,37 +55,45 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
   val oldBusinessName = "Old Business Name"
   val oldTradingName = "Old trading name"
 
-  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/path")
+  implicit lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/path")
+    .withSession(
+      inFlightOrgDetailsKey -> "false",
+      insolventWithoutAccessKey -> "false")
+
+  implicit lazy val postRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/path")
     .withHeaders(CONTENT_TYPE -> "application/x-www-form-urlencoded")
     .withSession(
     inFlightOrgDetailsKey -> "false",
     insolventWithoutAccessKey -> "false")
 
-  lazy val requestWithNewTradingName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(prepopulationTradingNameKey -> testTradingName)
+  lazy val getRequestWithNewTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    getRequest.withSession(prepopulationTradingNameKey -> testTradingName)
 
-  lazy val requestWithoutNewTradingName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(prepopulationTradingNameKey -> "")
+  lazy val postRequestWithNewTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    postRequest.withSession(prepopulationTradingNameKey -> testTradingName)
 
-  lazy val requestWithOnlyExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(validationTradingNameKey -> oldTradingName)
+  lazy val getRequestWithOnlyExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    getRequest.withSession(validationTradingNameKey -> oldTradingName)
 
-  lazy val requestWithoutExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "")
+  lazy val postRequestWithoutExistingTradingName: FakeRequest[AnyContentAsEmpty.type] =
+    postRequest.withSession(prepopulationTradingNameKey -> testTradingName, validationTradingNameKey -> "")
 
-  lazy val requestWithBusinessName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(prepopulationBusinessNameKey -> testBusinessName, validationBusinessNameKey -> oldBusinessName)
+  lazy val getRequestWithBusinessName: FakeRequest[AnyContentAsEmpty.type] =
+    getRequest.withSession(prepopulationBusinessNameKey -> testBusinessName, validationBusinessNameKey -> oldBusinessName)
 
-  lazy val requestWithoutExistingBusinessName: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(validationBusinessNameKey -> "")
+  lazy val postRequestWithBusinessName: FakeRequest[AnyContentAsEmpty.type] =
+    postRequest.withSession(prepopulationBusinessNameKey -> testBusinessName, validationBusinessNameKey -> oldBusinessName)
+
+  lazy val getRequestWithoutExistingBusinessName: FakeRequest[AnyContentAsEmpty.type] =
+    getRequest.withSession(validationBusinessNameKey -> "")
 
   lazy val fakeRequestWithClientsVRN: FakeRequest[AnyContentAsEmpty.type] =
-    request.withSession(mtdVatvcClientVrn -> vrn)
+    getRequest.withSession(mtdVatvcClientVrn -> vrn)
 
   lazy val insolventRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withSession(SessionKeys.insolventWithoutAccessKey -> "true")
 
-  lazy val user: User[AnyContentAsEmpty.type] = User[AnyContentAsEmpty.type](vrn, active = true)(request)
+  lazy val user: User[AnyContentAsEmpty.type] = User[AnyContentAsEmpty.type](vrn, active = true)(getRequest)
   lazy val agent: User[AnyContentAsEmpty.type] =
     User[AnyContentAsEmpty.type](vrn, active = true, Some(arn))(fakeRequestWithClientsVRN)
 
