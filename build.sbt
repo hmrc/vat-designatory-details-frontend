@@ -21,19 +21,17 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "3.9.0-play-28"
-val playLanguageVersion         = "5.2.0-play-28"
+val hmrcUkFrontendVersion       = "3.21.0-play-28"
 val playAllowListFilterVersion  = "1.0.0-play-28"
 val scalaTestPlusVersion        = "5.1.0"
 val scalatestVersion            = "3.2.10"
 val pegdownVersion              = "1.6.0"
 val jsoupVersion                = "1.13.1"
-val mockitoVersion              = "2.28.2"
+val mockitoVersion              = "3.2.3.0"
 val scalaMockVersion            = "3.6.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "5.20.0"
-val scalatestplusMockitoVersion = "1.0.0-M2"
+val bootstrapFrontendVersion    = "5.24.0"
 val flexmarkVersion             = "0.62.2"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
@@ -65,7 +63,6 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 val compile = Seq(
   ws,
   "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapFrontendVersion,
-  "uk.gov.hmrc"       %% "play-language"              % playLanguageVersion,
   "uk.gov.hmrc"       %% "play-allowlist-filter"      % playAllowListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,
   "com.typesafe.play" %% "play-json-joda"             % playJsonJodaVersion
@@ -77,9 +74,8 @@ def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
   "org.scalamock"           %% "scalamock-scalatest-support"  % scalaMockVersion            % scope,
   "org.pegdown"             %  "pegdown"                      % pegdownVersion              % scope,
   "org.jsoup"               %  "jsoup"                        % jsoupVersion                % scope,
-  "org.mockito"             %  "mockito-core"                 % mockitoVersion              % scope,
+  "org.scalatestplus"       %% "mockito-3-4"                  % mockitoVersion              % scope,
   "com.github.tomakehurst"  %  "wiremock-jre8"                % wiremockVersion             % scope,
-  "org.scalatestplus"       %% "scalatestplus-mockito"        % scalatestplusMockitoVersion % scope,
   "com.vladsch.flexmark"    % "flexmark-all"                  % flexmarkVersion             % scope
 )
 

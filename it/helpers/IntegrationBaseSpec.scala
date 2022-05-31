@@ -36,6 +36,7 @@ trait IntegrationBaseSpec extends CustomMatchers with GuiceOneServerPerSuite wit
   val mockHost: String = WireMockHelper.host
   val mockPort: String = WireMockHelper.wireMockPort.toString
   val appRouteContext: String = "/vat-through-software/account/designatory"
+  val authToken : String = "authToken"
 
   lazy val messagesApi: MessagesApi = inject[MessagesApi]
   implicit lazy val messages: Messages = MessagesImpl(Lang("en-GB"), messagesApi)
@@ -107,16 +108,18 @@ trait IntegrationBaseSpec extends CustomMatchers with GuiceOneServerPerSuite wit
     }
   }
 
+  def authSession: Map[String, String] = Map(authToken -> "mock-bearer-token")
+
   def buildRequest(path: String): WSRequest = client.url(s"http://localhost:$port$appRouteContext$path").withFollowRedirects(false)
 
   def document(response: WSResponse): Document = Jsoup.parse(response.body)
 
   def get(path: String, additionalCookies: Map[String, String] = Map.empty): WSResponse = await(
-    buildRequest(path, additionalCookies).get()
+    buildRequest(path, additionalCookies ++ authSession).get()
   )
 
   def post(path: String, additionalCookies: Map[String, String] = Map.empty)(body: Map[String, Seq[String]]): WSResponse = await(
-    buildRequest(path, additionalCookies).post(body)
+    buildRequest(path, additionalCookies ++ authSession).post(body)
   )
 
   def toFormData[T](form: Form[T], data: T): Map[String, Seq[String]] =
