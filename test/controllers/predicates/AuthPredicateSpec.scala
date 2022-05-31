@@ -73,7 +73,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
 
       "return ISE (500)" in {
         mockUserWithoutAffinity()
-        status(authPredicate(request)) shouldBe Status.INTERNAL_SERVER_ERROR
+        status(authPredicate(postRequest)) shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
 
@@ -122,7 +122,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
         "the value is 'false' (user permitted to trade)" should {
 
           "return OK (200)" in {
-            status(authPredicate(request)) shouldBe Status.OK
+            status(authPredicate(postRequest)) shouldBe Status.OK
           }
         }
       }

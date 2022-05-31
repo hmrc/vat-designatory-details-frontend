@@ -49,7 +49,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
     "there is a validation trading name in session that is not empty ('change' or 'remove' journey)" should {
 
-      lazy val result = target().show()(request.withSession(validationTradingNameKey -> "ABC Trading"))
+      lazy val result = target().show()(getRequest.withSession(validationTradingNameKey -> "ABC Trading"))
 
       "return 200" in {
         status(result) shouldBe Status.OK
@@ -72,7 +72,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
     "there is a validation trading name in session that is empty ('add' journey)" should {
 
-      lazy val result = target().show()(request.withSession(validationTradingNameKey -> ""))
+      lazy val result = target().show()(getRequest.withSession(validationTradingNameKey -> ""))
 
       "return 303" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -96,7 +96,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
       "the customerInfo call succeeds" should {
 
-        lazy val result = target().show()(request)
+        lazy val result = target().show()(getRequest)
 
         "return 200" in {
           status(result) shouldBe Status.OK
@@ -114,7 +114,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
       "the customerInfo call fails" should {
 
-        lazy val result = target(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "error"))).show()(request)
+        lazy val result = target(Left(ErrorModel(Status.INTERNAL_SERVER_ERROR, "error"))).show()(postRequest)
 
         "return 500" in {
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -136,7 +136,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
       "the form is bound as a 'Change'" should {
 
-        lazy val result = target().submit()(request
+        lazy val result = target().submit()(postRequest
           .withSession(validationTradingNameKey -> "ABC Trading")
           .withFormUrlEncodedBody(changeRemove -> change))
 
@@ -151,7 +151,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
       "the form is bound as a 'Remove'" should {
 
-        lazy val result = target().submit()(request.
+        lazy val result = target().submit()(postRequest.
           withSession(validationTradingNameKey -> "ABC Trading")
           .withFormUrlEncodedBody(changeRemove -> remove))
 
@@ -166,7 +166,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
       "the form is bound with errors" should {
 
-        lazy val result = target().submit()(request.
+        lazy val result = target().submit()(postRequest.
           withSession(validationTradingNameKey -> "ABC Trading")
           .withFormUrlEncodedBody(changeRemove -> ""))
 
@@ -183,7 +183,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
     "there is not a validation trading name in session" should {
 
-      lazy val result = target().submit()(request)
+      lazy val result = target().submit()(postRequest)
 
       "return 500" in {
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR

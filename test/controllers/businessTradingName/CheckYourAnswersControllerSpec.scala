@@ -51,7 +51,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "show the Check your answer page" in {
         mockIndividualAuthorised()
-        val result = controller.showTradingName()(requestWithNewTradingName)
+        val result = controller.showTradingName()(getRequestWithNewTradingName)
 
         status(result) shouldBe OK
       }
@@ -61,7 +61,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       lazy val result = {
         mockIndividualAuthorised()
-        controller.showTradingName()(request)
+        controller.showTradingName()(getRequest)
       }
 
       "return 303" in {
@@ -77,7 +77,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "return forbidden (403)" in {
         mockIndividualWithoutEnrolment()
-        val result = controller.showTradingName()(requestWithNewTradingName)
+        val result = controller.showTradingName()(getRequestWithNewTradingName)
 
         status(result) shouldBe FORBIDDEN
       }
@@ -97,7 +97,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           lazy val result = {
             mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(
               Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
-            controller.updateTradingName()(requestWithNewTradingName)
+            controller.updateTradingName()(postRequestWithNewTradingName)
           }
 
           "return 303" in {
@@ -125,7 +125,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
           lazy val result = {
             mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(CONFLICT, "bad things"))))
-            controller.updateTradingName()(requestWithNewTradingName)
+            controller.updateTradingName()(postRequestWithNewTradingName)
           }
 
           "return 303" in {
@@ -145,7 +145,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
           lazy val result = {
             mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again"))))
-            controller.updateTradingName()(requestWithNewTradingName)
+            controller.updateTradingName()(postRequestWithNewTradingName)
           }
 
           "return 500" in {
@@ -157,7 +157,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "there isn't a trading name in session" should {
 
         lazy val result = {
-          controller.updateTradingName()(request)
+          controller.updateTradingName()(postRequest)
         }
 
         "return 303" in {
@@ -179,7 +179,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           lazy val result = {
             mockUpdateTradingName(vrn, UpdateTradingName(Some(testTradingName), None))(
               Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
-            controller.updateTradingName()(requestWithoutExistingTradingName)
+            controller.updateTradingName()(postRequestWithoutExistingTradingName)
           }
 
           "return 303" in {
@@ -209,7 +209,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "return forbidden (403)" in {
         mockIndividualWithoutEnrolment()
-        val result = controller.updateTradingName()(requestWithNewTradingName)
+        val result = controller.updateTradingName()(postRequestWithNewTradingName)
 
         status(result) shouldBe FORBIDDEN
       }
@@ -224,7 +224,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "show the Check your answer page" in {
         mockIndividualAuthorised()
-        val result = controller.showConfirmTradingNameRemoval()(requestWithOnlyExistingTradingName)
+        val result = controller.showConfirmTradingNameRemoval()(getRequestWithOnlyExistingTradingName)
 
         status(result) shouldBe OK
       }
@@ -233,7 +233,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there is no trading name in session" should {
 
       mockIndividualAuthorised()
-      val result = controller.showConfirmTradingNameRemoval()(request)
+      val result = controller.showConfirmTradingNameRemoval()(getRequest)
 
       "have status 303" in {
         status(result) shouldBe SEE_OTHER
@@ -248,7 +248,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "return forbidden (403)" in {
         mockIndividualWithoutEnrolment()
-        val result = controller.showConfirmTradingNameRemoval()(requestWithNewTradingName)
+        val result = controller.showConfirmTradingNameRemoval()(getRequestWithNewTradingName)
 
         status(result) shouldBe FORBIDDEN
       }
@@ -266,7 +266,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         lazy val result = {
           mockUpdateTradingName(vrn, UpdateTradingName(None, None))(
             Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle"))))
-          controller.removeTradingName()(request
+          controller.removeTradingName()(postRequest
             .withSession(validationTradingNameKey -> "ABC Trading")
             .withFormUrlEncodedBody(yesNo -> yes))
         }
@@ -295,7 +295,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
       "the form is bound as a No" should {
 
-        lazy val result = controller.removeTradingName()(request
+        lazy val result = controller.removeTradingName()(postRequest
           .withSession(validationTradingNameKey -> "ABC Trading")
           .withFormUrlEncodedBody(yesNo -> YesNoForm.no))
 
@@ -311,7 +311,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
     "the form is bound with errors" should {
 
-      lazy val result = controller.removeTradingName()(request
+      lazy val result = controller.removeTradingName()(postRequest
         .withSession(validationTradingNameKey -> "ABC Trading")
         .withFormUrlEncodedBody(yesNo -> ""))
 
@@ -327,7 +327,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
     "there is no validation trading name in session" should {
 
-      lazy val result = controller.removeTradingName()(request)
+      lazy val result = controller.removeTradingName()(postRequest)
 
       "return 500" in {
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -352,7 +352,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         "show the Check your answer page" in {
           mockIndividualAuthorised()
           mockConfig.features.businessNameR19_R20Enabled(true)
-          val result = controller.showBusinessName()(requestWithBusinessName.withSession(
+          val result = controller.showBusinessName()(getRequestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true"))
 
           status(result) shouldBe OK
@@ -364,7 +364,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         lazy val result = {
           mockIndividualAuthorised()
           mockConfig.features.businessNameR19_R20Enabled(true)
-          controller.showBusinessName()(request.withSession(
+          controller.showBusinessName()(getRequest.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
@@ -382,7 +382,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         "return forbidden (403)" in {
           mockIndividualWithoutEnrolment()
           mockConfig.features.businessNameR19_R20Enabled(true)
-          val result = controller.showBusinessName()(requestWithBusinessName)
+          val result = controller.showBusinessName()(getRequestWithBusinessName)
 
           status(result) shouldBe FORBIDDEN
         }
@@ -394,7 +394,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
       "return not found (404)" in {
         mockConfig.features.businessNameR19_R20Enabled(false)
         mockIndividualAuthorised()
-        val result = controller.showBusinessName()(requestWithBusinessName.withSession(
+        val result = controller.showBusinessName()(getRequestWithBusinessName.withSession(
           businessNameAccessPermittedKey -> "true"))
 
         status(result) shouldBe NOT_FOUND
@@ -418,7 +418,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
             Future(Right(UpdateOrganisationDetailsSuccess("someFormBundle")))
           )
-          controller.updateBusinessName()(requestWithBusinessName.withSession(
+          controller.updateBusinessName()(postRequestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true",
 
           ))
@@ -449,7 +449,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
             Future(Left(ErrorModel(CONFLICT, "bad things")))
           )
-          controller.updateBusinessName()(requestWithBusinessName.withSession(
+          controller.updateBusinessName()(postRequestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
@@ -473,7 +473,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
           mockUpdateBusinessName(vrn, UpdateBusinessName(testBusinessName, None))(
             Future(Left(ErrorModel(INTERNAL_SERVER_ERROR, "bad things, again")))
           )
-          controller.updateBusinessName()(requestWithBusinessName.withSession(
+          controller.updateBusinessName()(postRequestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
@@ -486,7 +486,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockConfig.features.businessNameR19_R20Enabled(true)
-          controller.updateBusinessName()(request.withSession(
+          controller.updateBusinessName()(postRequest.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
@@ -504,7 +504,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         "return forbidden (403)" in {
           mockConfig.features.businessNameR19_R20Enabled(true)
           mockIndividualWithoutEnrolment()
-          val result = controller.updateBusinessName()(requestWithBusinessName)
+          val result = controller.updateBusinessName()(postRequestWithBusinessName)
 
           status(result) shouldBe FORBIDDEN
         }
@@ -519,7 +519,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
         lazy val result = {
           mockConfig.features.businessNameR19_R20Enabled(false)
-          controller.updateBusinessName()(requestWithBusinessName.withSession(
+          controller.updateBusinessName()(postRequestWithBusinessName.withSession(
             businessNameAccessPermittedKey -> "true"))
         }
 
