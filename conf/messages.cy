@@ -1,7 +1,6 @@
 base.signOut = Allgofnodi
 base.back = Yn ôl
 base.confirmAndContinue = Cadarnhau ac yn eich blaen
-base.finish = Gorffen
 base.pageTitle = {0} - {1} - GOV.UK
 
 common.clientService = Rheoli eich cyfrif TAW
@@ -11,12 +10,6 @@ common.continue = Yn eich blaen
 common.error.heading = Mae problem wedi codi
 common.error.prefixTitle = Gwall: {0}
 common.whatHappensNext = Yr hyn sy’n digwydd nesaf
-common.helpOne.apiFailure = Byddwn yn anfon diweddariad atoch cyn pen 15 diwrnod gwaith.
-common.changeClient = Newid cleient
-common.agent.updateClient1 = Byddwn hefyd yn cysylltu ag
-common.agent.updateClient2 = gyda diweddariad.
-common.agent.yourClient = eich cleient
-common.cancel = Canslo
 common.yes = Iawn
 common.no = Na
 
@@ -42,7 +35,6 @@ insolventError.buttonText = Ewch i’ch cyfrif treth busnes
 
 captureTradingName.title = Beth yw’r enw masnachu?
 captureNewTradingName.title = Beth yw’r enw masnachu newydd?
-captureTradingName.removeTradingName.linkText = Dileu’r enw masnachu
 captureTradingName.para = Ni all eich enwau masnachu fod yn hirach na 160 o gymeriadau
 captureTradingName.error.exceedsMaxLength = Nodwch enw masnachu sy’n 160 o gymeriadau neu lai
 captureTradingName.error.empty = Nodwch enw masnachu
