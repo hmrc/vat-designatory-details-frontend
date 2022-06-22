@@ -93,7 +93,7 @@ captureBusinessName.error.empty = Nodwch enw busnes
 captureBusinessName.error.notChanged = Nodwch enw busnes newydd
 
 inFlightChange.title = Mae gennych newid ar y gweill yn barod
-nFlightChange.pendingChange = Mae newid eisoes ar y gweill ar y cyfrif hwn.
+inFlightChange.pendingChange = Mae newid eisoes ar y gweill ar y cyfrif hwn.
 inFlightChange.pendingChange2 = Gallwn ond derbyn un cais i newid enw ar y tro.
 inFlightChange.confirm = Fel arfer, rydym yn cadarnhau ceisiadau am newidiadau cyn pen 2 ddiwrnod gwaith.
 inFlightChange.confirm2 = Ar ôl i ni gadarnhau p’un a allwn dderbyn y newid sydd ar y gweill, gallwch ofyn am wneud newid pellach i’r canlynol:
