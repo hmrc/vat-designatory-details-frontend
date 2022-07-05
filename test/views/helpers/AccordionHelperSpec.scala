@@ -25,7 +25,6 @@ import views.html.helpers.AccordionHelper
 class AccordionHelperSpec extends ViewBaseSpec {
 
   val testLabel: String = "test label"
-  val testFeature: String = "test-feature"
   val testPageName: String = "test-page-name"
   val testHtml: Html = Html("test html")
 

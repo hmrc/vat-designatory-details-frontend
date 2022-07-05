@@ -28,7 +28,6 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.businessName.CaptureBusinessNameView
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
@@ -54,137 +53,95 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
 
   "Calling the show action" when {
 
-    "the business name feature is switched on" when {
+    insolvencyCheck(controller.show)
 
-      insolvencyCheck(controller.show)
+    "a user is enrolled with a valid enrolment" when {
 
-      "a user is enrolled with a valid enrolment" when {
+      "the user's current business name is retrieved from session" should {
 
-        "the user's current business name is retrieved from session" should {
-
-          lazy val result = {
-            mockConfig.features.businessNameR19_R20Enabled(true)
-            target().show()(getRequest.withSession(
-              validationBusinessNameKey -> testValidationBusinessName,
-              businessNameAccessPermittedKey -> "true"))
-          }
-
-          lazy val document = Jsoup.parse(contentAsString(result))
-
-          "return 200" in {
-            status(result) shouldBe Status.OK
-          }
-
-          "return HTML" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          "prepopulate the form with the user's current business name" in {
-            document.select("#business-name").attr("value") shouldBe testValidationBusinessName
-          }
+        lazy val result = {
+          target().show()(getRequest.withSession(
+            validationBusinessNameKey -> testValidationBusinessName,
+            businessNameAccessPermittedKey -> "true"))
         }
 
-        "the previous form value is retrieved from session" should {
+        lazy val document = Jsoup.parse(contentAsString(result))
 
-          lazy val result = {
-            mockConfig.features.businessNameR19_R20Enabled(true)
-            target().show()(getRequest.withSession(
-              validationBusinessNameKey -> testValidationBusinessName,
-              prepopulationBusinessNameKey -> testValidBusinessName,
-              businessNameAccessPermittedKey -> "true")
-            )
-          }
-          lazy val document = Jsoup.parse(contentAsString(result))
-
-          "return 200" in {
-            status(result) shouldBe Status.OK
-          }
-
-          "return HTML" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          "prepopulate the form with the previously entered form value" in {
-            document.select("#business-name").attr("value") shouldBe testValidBusinessName
-          }
+        "return 200" in {
+          status(result) shouldBe Status.OK
         }
 
-        "there is no business name in session but vatSubscriptionService returns a business name" should {
-
-          lazy val result = {
-            mockConfig.features.businessNameR19_R20Enabled(true)
-            target(Right(fullCustomerInfoModel)).show()(getRequest
-              .withSession(businessNameAccessPermittedKey -> "true"))
-          }
-
-          lazy val document = Jsoup.parse(contentAsString(result))
-
-          "return 200" in {
-            status(result) shouldBe Status.OK
-          }
-
-          "return HTML" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          "prepopulate the form with the user's current business name" in {
-            Some(document.select("#business-name").attr("value")) shouldBe fullCustomerInfoModel.organisationName
-          }
+        "return HTML" in {
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
 
-        "there is no business name in session and the user doesn't have a business name" when {
-
-          lazy val result = {
-            target(Right(customerInfoNoBusinessName)).show()(getRequestWithoutExistingBusinessName
-              .withSession(businessNameAccessPermittedKey -> "true"))
-          }
-
-          "return 500" in {
-            status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-          }
-
-          "render the error view" in {
-            status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-          }
-
-          "return HTML" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-        }
-
-        "there is no business name in session and the user's organisation details can't be retrieved" when {
-
-          lazy val result = {
-            target(Left(invalidJsonError)).show()(getRequest
-              .withSession(businessNameAccessPermittedKey -> "true"))
-          }
-
-          "return 500" in {
-            status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-          }
-
-          "render the error view" in {
-            status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-          }
-
-          "return HTML" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
+        "prepopulate the form with the user's current business name" in {
+          document.select("#business-name").attr("value") shouldBe testValidationBusinessName
         }
       }
 
-      "a user does not have a valid enrolment" should {
+      "the previous form value is retrieved from session" should {
 
-        lazy val result = controller.show()(getRequest)
+        lazy val result = {
+          target().show()(getRequest.withSession(
+            validationBusinessNameKey -> testValidationBusinessName,
+            prepopulationBusinessNameKey -> testValidBusinessName,
+            businessNameAccessPermittedKey -> "true")
+          )
+        }
+        lazy val document = Jsoup.parse(contentAsString(result))
 
-        "return 403" in {
-          mockIndividualWithoutEnrolment()
-          status(result) shouldBe Status.FORBIDDEN
+        "return 200" in {
+          status(result) shouldBe Status.OK
+        }
+
+        "return HTML" in {
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
+
+        "prepopulate the form with the previously entered form value" in {
+          document.select("#business-name").attr("value") shouldBe testValidBusinessName
+        }
+      }
+
+      "there is no business name in session but vatSubscriptionService returns a business name" should {
+
+        lazy val result = {
+          target(Right(fullCustomerInfoModel)).show()(getRequest
+            .withSession(businessNameAccessPermittedKey -> "true"))
+        }
+
+        lazy val document = Jsoup.parse(contentAsString(result))
+
+        "return 200" in {
+          status(result) shouldBe Status.OK
+        }
+
+        "return HTML" in {
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
+
+        "prepopulate the form with the user's current business name" in {
+          Some(document.select("#business-name").attr("value")) shouldBe fullCustomerInfoModel.organisationName
+        }
+      }
+
+      "there is no business name in session and the user doesn't have a business name" when {
+
+        lazy val result = {
+          target(Right(customerInfoNoBusinessName)).show()(getRequestWithoutExistingBusinessName
+            .withSession(businessNameAccessPermittedKey -> "true"))
+        }
+
+        "return 500" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        }
+
+        "render the error view" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
         }
 
         "return HTML" in {
@@ -193,13 +150,19 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
         }
       }
 
-      "a user is not logged in" should {
+      "there is no business name in session and the user's organisation details can't be retrieved" when {
 
-        lazy val result = controller.show()(getRequest)
+        lazy val result = {
+          target(Left(invalidJsonError)).show()(getRequest
+            .withSession(businessNameAccessPermittedKey -> "true"))
+        }
 
-        "return 401" in {
-          mockMissingBearerToken()()
-          status(result) shouldBe Status.UNAUTHORIZED
+        "return 500" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        }
+
+        "render the error view" in {
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
         }
 
         "return HTML" in {
@@ -209,24 +172,38 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    "the business name feature switch is off" should {
+    "a user does not have a valid enrolment" should {
 
-      "return not found (404)" in {
+      lazy val result = controller.show()(getRequest)
 
-        lazy val result = {
-          mockConfig.features.businessNameR19_R20Enabled(false)
-          target(Right(fullCustomerInfoModel)).show()(getRequest
-            .withSession(businessNameAccessPermittedKey -> "true"))
-        }
+      "return 403" in {
+        mockIndividualWithoutEnrolment()
+        status(result) shouldBe Status.FORBIDDEN
+      }
 
-        status(result) shouldBe NOT_FOUND
+      "return HTML" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+
+    "a user is not logged in" should {
+
+      lazy val result = controller.show()(getRequest)
+
+      "return 401" in {
+        mockMissingBearerToken()()
+        status(result) shouldBe Status.UNAUTHORIZED
+      }
+
+      "return HTML" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
   }
 
   "Calling the submit action" when {
-
-    "the business name feature switch is on" when {
 
       insolvencyCheck(controller.submit)
 
@@ -237,7 +214,6 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
           "the form is successfully submitted" should {
 
             lazy val result = {
-              mockConfig.features.businessNameR19_R20Enabled(true)
               controller.submit()(postRequest
                 .withFormUrlEncodedBody("business-name" -> testValidBusinessName)
                 .withSession(validationBusinessNameKey -> testValidationBusinessName, businessNameAccessPermittedKey -> "true"))
@@ -325,20 +301,5 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
         }
       }
     }
-
-    "the business name feature is off" should {
-
-      "return not found (404)" in {
-
-        lazy val result = {
-          mockConfig.features.businessNameR19_R20Enabled(false)
-          target(Right(fullCustomerInfoModel)).submit()(postRequest
-            .withSession(businessNameAccessPermittedKey -> "true"))
-        }
-
-        status(result) shouldBe NOT_FOUND
-      }
-    }
-  }
 
 }

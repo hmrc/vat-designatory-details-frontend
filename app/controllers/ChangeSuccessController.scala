@@ -20,14 +20,12 @@ import common.SessionKeys._
 import config.{AppConfig, ErrorHandler}
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
-
 import javax.inject.{Inject, Singleton}
 import models.User
 import play.api.mvc._
 import utils.LoggerUtil
 import views.html.businessName.BusinessNameChangeSuccessView
 import views.html.tradingName.TradingNameChangeSuccessView
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -51,17 +49,14 @@ class ChangeSuccessController @Inject()(tradingNameSuccessView: TradingNameChang
   }
 
   def businessName(): Action[AnyContent] = authPredicate.async { implicit user =>
-    if(appConfig.features.businessNameR19_R20Enabled()) {
-      user.session.get(businessNameChangeSuccessful) match {
-        case Some("true") =>
-          Future.successful(Ok(businessNameSuccessView()))
-        case _ =>
-          Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show))
-      }
-    } else {
-      Future.successful(errorHandler.showNotFoundError)
+    user.session.get(businessNameChangeSuccessful) match {
+      case Some("true") =>
+        Future.successful(Ok(businessNameSuccessView()))
+      case _ =>
+        Future.successful(Redirect(controllers.businessName.routes.CaptureBusinessNameController.show))
     }
   }
+
 
   private[controllers] def renderTradingNameView(isRemoval: Boolean,
                                                  isAddition: Boolean)(implicit user: User[_]): Future[Result] = {

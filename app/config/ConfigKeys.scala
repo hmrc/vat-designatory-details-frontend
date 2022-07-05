@@ -40,8 +40,6 @@ object ConfigKeys {
   val vatSummaryFrontendHost: String = "vat-summary-frontend.host"
   val vatSummaryFrontendUrl: String = "vat-summary-frontend.url"
 
-  val businessNameR19_R20Feature: String = "features.businessNameR19_R20.enabled"
-
   val host: String = "host"
 
   val vatSubscription: String = "vat-subscription"

@@ -25,7 +25,6 @@ import play.api.mvc.Result
 import play.api.test.Helpers._
 import views.html.businessName.BusinessNameChangeSuccessView
 import views.html.tradingName.TradingNameChangeSuccessView
-
 import scala.concurrent.Future
 
 class ChangeSuccessControllerSpec extends ControllerBaseSpec {
@@ -172,68 +171,51 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
 
   "Calling the businessName action" when {
 
-    "the business name feature switch is on" when {
+    insolvencyCheck(controller.businessName)
 
-      insolvencyCheck(controller.businessName)
+    "the businessNameChangeSuccessful session key is 'true'" when {
 
-      "the businessNameChangeSuccessful session key is 'true'" when {
+      "the user is a principal entity" should {
+        lazy val document = Jsoup.parse(contentAsString(result))
 
-        "the user is a principal entity" should {
-          lazy val document = Jsoup.parse(contentAsString(result))
-
-          lazy val result: Future[Result] = {
-            controller.businessName()(getRequest.withSession(businessNameChangeSuccessful -> "true"))
-          }
-
-          "return 200" in {
-            status(result) shouldBe Status.OK
-          }
-
-          "render the correct heading" in {
-            document.select("h1").text() shouldBe "You have asked to change the business name"
-          }
+        lazy val result: Future[Result] = {
+          controller.businessName()(getRequest.withSession(businessNameChangeSuccessful -> "true"))
         }
 
-        "the user is an agent" should {
-          lazy val result: Future[Result] = {
-            mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-            controller.businessName()(getRequest.withSession(
-              businessNameChangeSuccessful -> "true", mtdVatvcClientVrn -> "111111111"
-            ))
-          }
+        "return 200" in {
+          status(result) shouldBe Status.OK
+        }
 
-          "return 200" in {
-            mockAgentAuthorised()
-            status(result) shouldBe Status.OK
-          }
+        "render the correct heading" in {
+          document.select("h1").text() shouldBe "You have asked to change the business name"
         }
       }
 
-      "the businessNameChangeSuccessful session key is not populated" should {
-
-        lazy val result: Future[Result] = controller.businessName()(getRequest)
-
-        "return 303" in {
-          status(result) shouldBe Status.SEE_OTHER
+      "the user is an agent" should {
+        lazy val result: Future[Result] = {
+          mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
+          controller.businessName()(getRequest.withSession(
+            businessNameChangeSuccessful -> "true", mtdVatvcClientVrn -> "111111111"
+          ))
         }
 
-        "redirect the user to the capture business name controller" in {
-          redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show.url)
+        "return 200" in {
+          mockAgentAuthorised()
+          status(result) shouldBe Status.OK
         }
       }
     }
 
-    "the business name feature is off" should {
+    "the businessNameChangeSuccessful session key is not populated" should {
 
-      "return not found (404)" in {
+      lazy val result: Future[Result] = controller.businessName()(getRequest)
 
-        lazy val result: Future[Result] = {
-          mockConfig.features.businessNameR19_R20Enabled(false)
-          mockGetCustomerInfo("111111111")(Right(fullCustomerInfoModel))
-          controller.businessName()(getRequest)
-        }
+      "return 303" in {
+        status(result) shouldBe Status.SEE_OTHER
+      }
 
-        status(result) shouldBe NOT_FOUND
+      "redirect the user to the capture business name controller" in {
+        redirectLocation(result) shouldBe Some(controllers.businessName.routes.CaptureBusinessNameController.show.url)
       }
     }
   }

@@ -23,7 +23,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.Call
-import testOnly.features.Features
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -57,7 +56,6 @@ trait AppConfig {
   def feedbackUrl(redirect: String): String
   val gtmContainer: String
   val businessNameGuidanceUrl: String
-  val features: Features
   val btaHomeUrl: String
 }
 
@@ -134,8 +132,6 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val gtmContainer: String = sc.getString(Keys.gtmContainer)
 
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
-
-  override val features: Features = new Features(configuration)
 
   override lazy val btaHomeUrl: String =
     sc.getString(Keys.businessTaxAccountHost) + sc.getString(Keys.businessTaxAccountUrl)
