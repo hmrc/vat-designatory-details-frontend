@@ -21,8 +21,8 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "3.21.0-play-28"
-val playAllowListFilterVersion  = "1.0.0-play-28"
+val hmrcUkFrontendVersion       = "3.28.0-play-28"
+val playAllowListFilterVersion  = "1.1.0"
 val scalaTestPlusVersion        = "5.1.0"
 val scalatestVersion            = "3.2.10"
 val pegdownVersion              = "1.6.0"
@@ -31,7 +31,7 @@ val mockitoVersion              = "3.2.3.0"
 val scalaMockVersion            = "3.6.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "5.24.0"
+val bootstrapFrontendVersion    = "7.4.0"
 val flexmarkVersion             = "0.62.2"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
@@ -63,20 +63,18 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 val compile = Seq(
   ws,
   "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapFrontendVersion,
-  "uk.gov.hmrc"       %% "play-allowlist-filter"      % playAllowListFilterVersion,
+  "uk.gov.hmrc"       %% "play-allowlist-filter-play-28"      % playAllowListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,
   "com.typesafe.play" %% "play-json-joda"             % playJsonJodaVersion
 )
 
 def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
-  "org.scalatest"           %% "scalatest"                    % scalatestVersion            % scope,
-  "org.scalatestplus.play"  %% "scalatestplus-play"           % scalaTestPlusVersion        % scope,
+  "uk.gov.hmrc"             %% "bootstrap-test-play-28"       % bootstrapFrontendVersion    % scope,
   "org.scalamock"           %% "scalamock-scalatest-support"  % scalaMockVersion            % scope,
   "org.pegdown"             %  "pegdown"                      % pegdownVersion              % scope,
   "org.jsoup"               %  "jsoup"                        % jsoupVersion                % scope,
   "org.scalatestplus"       %% "mockito-3-4"                  % mockitoVersion              % scope,
-  "com.github.tomakehurst"  %  "wiremock-jre8"                % wiremockVersion             % scope,
-  "com.vladsch.flexmark"    % "flexmark-all"                  % flexmarkVersion             % scope
+  "com.github.tomakehurst"  %  "wiremock-jre8"                % wiremockVersion             % scope
 )
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {
@@ -103,17 +101,17 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    Keys.fork in Test := true,
-    scalaVersion := "2.12.15",
+    Test / Keys.fork := true,
+    scalaVersion := "2.12.16",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    Keys.fork in IntegrationTest := false,
-    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
+    IntegrationTest / Keys.fork := false,
+    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
-    parallelExecution in IntegrationTest := false
+    IntegrationTest / testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
+    IntegrationTest / parallelExecution := false
   )
