@@ -21,7 +21,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "3.28.0-play-28"
+val hmrcUkFrontendVersion       = "3.32.0-play-28"
 val playAllowListFilterVersion  = "1.1.0"
 val scalaTestPlusVersion        = "5.1.0"
 val scalatestVersion            = "3.2.10"
@@ -31,7 +31,7 @@ val mockitoVersion              = "3.2.3.0"
 val scalaMockVersion            = "3.6.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "7.4.0"
+val bootstrapFrontendVersion    = "7.8.0"
 val flexmarkVersion             = "0.62.2"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
