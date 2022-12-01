@@ -177,7 +177,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
       lazy val result = controller.show()(getRequest)
 
       "return 403" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         status(result) shouldBe Status.FORBIDDEN
       }
 
@@ -192,7 +192,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
       lazy val result = controller.show()(getRequest)
 
       "return 401" in {
-        mockMissingBearerToken()()
+        mockMissingBearerToken
         status(result) shouldBe Status.UNAUTHORIZED
       }
 
@@ -276,7 +276,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
         lazy val result = controller.submit()(postRequest)
 
         "return 403" in {
-          mockIndividualWithoutEnrolment()
+          mockIndividualWithoutEnrolment
           status(result) shouldBe Status.FORBIDDEN
         }
 
@@ -291,7 +291,7 @@ class CaptureBusinessNameControllerSpec extends ControllerBaseSpec {
         lazy val result = controller.submit()(postRequest)
 
         "return 401" in {
-          mockMissingBearerToken()()
+          mockMissingBearerToken
           status(result) shouldBe Status.UNAUTHORIZED
         }
 

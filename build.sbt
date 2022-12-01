@@ -23,16 +23,13 @@ val appName = "vat-designatory-details-frontend"
 
 val hmrcUkFrontendVersion       = "3.32.0-play-28"
 val playAllowListFilterVersion  = "1.1.0"
-val scalaTestPlusVersion        = "5.1.0"
-val scalatestVersion            = "3.2.10"
 val pegdownVersion              = "1.6.0"
 val jsoupVersion                = "1.13.1"
 val mockitoVersion              = "3.2.3.0"
-val scalaMockVersion            = "3.6.0"
+val scalaMockVersion            = "5.2.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "7.8.0"
-val flexmarkVersion             = "0.62.2"
+val bootstrapFrontendVersion    = "7.12.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
@@ -62,15 +59,15 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 
 val compile = Seq(
   ws,
-  "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapFrontendVersion,
-  "uk.gov.hmrc"       %% "play-allowlist-filter-play-28"      % playAllowListFilterVersion,
-  "uk.gov.hmrc"       %% "play-frontend-hmrc"         % hmrcUkFrontendVersion,
-  "com.typesafe.play" %% "play-json-joda"             % playJsonJodaVersion
+  "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"     % bootstrapFrontendVersion,
+  "uk.gov.hmrc"       %% "play-allowlist-filter-play-28"  % playAllowListFilterVersion,
+  "uk.gov.hmrc"       %% "play-frontend-hmrc"             % hmrcUkFrontendVersion,
+  "com.typesafe.play" %% "play-json-joda"                 % playJsonJodaVersion
 )
 
 def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc"             %% "bootstrap-test-play-28"       % bootstrapFrontendVersion    % scope,
-  "org.scalamock"           %% "scalamock-scalatest-support"  % scalaMockVersion            % scope,
+  "org.scalamock"           %% "scalamock"                    % scalaMockVersion            % scope,
   "org.pegdown"             %  "pegdown"                      % pegdownVersion              % scope,
   "org.jsoup"               %  "jsoup"                        % jsoupVersion                % scope,
   "org.scalatestplus"       %% "mockito-3-4"                  % mockitoVersion              % scope,
@@ -102,7 +99,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     Test / Keys.fork := true,
-    scalaVersion := "2.12.16",
+    scalaVersion := "2.13.8",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true
   )

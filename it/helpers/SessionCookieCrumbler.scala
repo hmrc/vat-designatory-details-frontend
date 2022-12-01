@@ -17,11 +17,10 @@
 package helpers
 
 import java.net.URLDecoder
-
 import play.api.http.SecretConfiguration
 import play.api.libs.crypto.DefaultCookieSigner
 import play.api.libs.ws.{WSCookie, WSResponse}
-import uk.gov.hmrc.crypto.{CompositeSymmetricCrypto, Crypted}
+import uk.gov.hmrc.crypto.{Crypted, SymmetricCryptoFactory}
 
 object SessionCookieCrumbler {
 
@@ -29,9 +28,9 @@ object SessionCookieCrumbler {
 
   private val cookieSigner = new DefaultCookieSigner(SecretConfiguration(cookieKey))
 
-  private def crumbleCookie(cookie: WSCookie) = {
+  private def crumbleCookie(cookie: WSCookie): Map[String, String] = {
     val crypted = Crypted(cookie.value)
-    val decrypted = CompositeSymmetricCrypto.aesGCM(cookieKey, Seq()).decrypt(crypted).value
+    val decrypted = SymmetricCryptoFactory.aesGcmCrypto(cookieKey).decrypt(crypted).value
 
     def decode(data: String): Map[String, String] = {
       // this part is hard coded because we are not certain at this time which hash algorithm is used by default

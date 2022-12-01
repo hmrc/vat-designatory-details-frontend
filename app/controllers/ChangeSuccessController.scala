@@ -22,6 +22,7 @@ import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import javax.inject.{Inject, Singleton}
 import models.User
+import controllers.BaseController
 import play.api.mvc._
 import utils.LoggerUtil
 import views.html.businessName.BusinessNameChangeSuccessView
@@ -39,7 +40,7 @@ class ChangeSuccessController @Inject()(tradingNameSuccessView: TradingNameChang
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
-  def tradingName(): Action[AnyContent] = authPredicate.async { implicit user =>
+  def tradingName: Action[AnyContent] = authPredicate.async { implicit user =>
     (user.session.get(tradingNameChangeSuccessful), user.session.get(validationTradingNameKey), user.session.get(prepopulationTradingNameKey)) match {
       case (Some("true"), Some(validationValue), Some(prePopValue)) =>
         renderTradingNameView(isRemoval = prePopValue == "", isAddition = validationValue == "")
@@ -48,7 +49,7 @@ class ChangeSuccessController @Inject()(tradingNameSuccessView: TradingNameChang
     }
   }
 
-  def businessName(): Action[AnyContent] = authPredicate.async { implicit user =>
+  def businessName: Action[AnyContent] = authPredicate.async { implicit user =>
     user.session.get(businessNameChangeSuccessful) match {
       case Some("true") =>
         Future.successful(Ok(businessNameSuccessView()))

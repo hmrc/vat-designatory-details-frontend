@@ -39,7 +39,7 @@ class BusinessNameFormSpec extends TestUtil {
     "validate that business name does not exceed max length" in {
       val exceed = businessNameForm("").bind(Map("business-name" -> ("a" * (maxLength + 1)))).errors
       exceed should contain(FormError("business-name", maxLengthErrorMessage))
-      exceed.seq.size shouldBe 1
+      exceed.size shouldBe 1
     }
 
     "validate that business name allows max length" in {

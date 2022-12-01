@@ -40,7 +40,7 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
 
   implicit val ec: ExecutionContext = mcc.executionContext
 
-  def show(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     val validationTradingName: Future[Option[String]] = user.session.get(validationTradingNameKey) match {
       case Some(tradingName) => Future.successful(Some(tradingName))
       case _ =>
@@ -57,10 +57,10 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
     }
   }
 
-  def submit(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(_) =>
-        whatToDoForm.bindFromRequest.fold(
+        whatToDoForm.bindFromRequest().fold(
           errorForm => {
             BadRequest(whatToDoView(errorForm))
           },

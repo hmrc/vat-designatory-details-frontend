@@ -49,7 +49,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there is a trading name in session" should {
 
       "show the Check your answer page" in {
-        mockIndividualAuthorised()
+        mockIndividualAuthorised
         val result = controller.showTradingName()(getRequestWithNewTradingName)
 
         status(result) shouldBe OK
@@ -59,7 +59,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there isn't a trading name in session" should {
 
       lazy val result = {
-        mockIndividualAuthorised()
+        mockIndividualAuthorised
         controller.showTradingName()(getRequest)
       }
 
@@ -75,7 +75,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "the user is not authorised" should {
 
       "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         val result = controller.showTradingName()(getRequestWithNewTradingName)
 
         status(result) shouldBe FORBIDDEN
@@ -207,7 +207,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "the user is not authorised" should {
 
       "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         val result = controller.updateTradingName()(postRequestWithNewTradingName)
 
         status(result) shouldBe FORBIDDEN
@@ -222,7 +222,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there is a trading name in session" should {
 
       "show the Check your answer page" in {
-        mockIndividualAuthorised()
+        mockIndividualAuthorised
         val result = controller.showConfirmTradingNameRemoval()(getRequestWithOnlyExistingTradingName)
 
         status(result) shouldBe OK
@@ -231,7 +231,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
 
     "there is no trading name in session" should {
 
-      mockIndividualAuthorised()
+      mockIndividualAuthorised
       val result = controller.showConfirmTradingNameRemoval()(getRequest)
 
       "have status 303" in {
@@ -246,7 +246,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "the user is not authorised" should {
 
       "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         val result = controller.showConfirmTradingNameRemoval()(getRequestWithNewTradingName)
 
         status(result) shouldBe FORBIDDEN
@@ -271,7 +271,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
         }
 
         "return 303" in {
-          mockIndividualAuthorised()
+          mockIndividualAuthorised
           status(result) shouldBe SEE_OTHER
         }
 
@@ -346,7 +346,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there is a business name in session" should {
 
       "show the Check your answer page" in {
-        mockIndividualAuthorised()
+        mockIndividualAuthorised
         val result = controller.showBusinessName()(getRequestWithBusinessName.withSession(
           businessNameAccessPermittedKey -> "true"))
 
@@ -357,7 +357,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "there isn't a business name in session" should {
 
       lazy val result = {
-        mockIndividualAuthorised()
+        mockIndividualAuthorised
         controller.showBusinessName()(getRequest.withSession(
           businessNameAccessPermittedKey -> "true"))
       }
@@ -374,7 +374,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "the user is not authorised" should {
 
       "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         val result = controller.showBusinessName()(getRequestWithBusinessName)
 
         status(result) shouldBe FORBIDDEN
@@ -475,7 +475,7 @@ class CheckYourAnswersControllerSpec extends ControllerBaseSpec {
     "the user is not authorised" should {
 
       "return forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         val result = controller.updateBusinessName()(postRequestWithBusinessName)
 
         status(result) shouldBe FORBIDDEN
