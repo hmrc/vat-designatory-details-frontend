@@ -22,7 +22,6 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 val appName = "vat-designatory-details-frontend"
 
 val hmrcUkFrontendVersion       = "3.34.0-play-28"
-val playAllowListFilterVersion  = "1.1.0"
 val pegdownVersion              = "1.6.0"
 val jsoupVersion                = "1.13.1"
 val mockitoVersion              = "3.2.3.0"
@@ -60,7 +59,6 @@ lazy val coverageSettings: Seq[Setting[_]] = {
 val compile = Seq(
   ws,
   "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"     % bootstrapFrontendVersion,
-  "uk.gov.hmrc"       %% "play-allowlist-filter-play-28"  % playAllowListFilterVersion,
   "uk.gov.hmrc"       %% "play-frontend-hmrc"             % hmrcUkFrontendVersion,
   "com.typesafe.play" %% "play-json-joda"                 % playJsonJodaVersion
 )
