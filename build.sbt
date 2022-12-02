@@ -21,7 +21,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "3.32.0-play-28"
+val hmrcUkFrontendVersion       = "3.34.0-play-28"
 val playAllowListFilterVersion  = "1.1.0"
 val pegdownVersion              = "1.6.0"
 val jsoupVersion                = "1.13.1"
