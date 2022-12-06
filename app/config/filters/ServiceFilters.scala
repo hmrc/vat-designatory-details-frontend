@@ -20,7 +20,7 @@ import javax.inject.Inject
 import play.api.http.{DefaultHttpFilters, EnabledFilters}
 import play.filters.csrf.CSRFFilter
 
-class ServiceFilters @Inject()(defaultFilters: EnabledFilters, excludingCSRFFilter: ExcludingCSRFFilter, allowListFilter: AllowListFilter)
+class ServiceFilters @Inject()(defaultFilters: EnabledFilters, excludingCSRFFilter: ExcludingCSRFFilter)
   extends DefaultHttpFilters({
-    defaultFilters.filters.filterNot(f => f.isInstanceOf[CSRFFilter]) :+ excludingCSRFFilter :+ allowListFilter
+    defaultFilters.filters.filterNot(f => f.isInstanceOf[CSRFFilter]) :+ excludingCSRFFilter
   }:_*)
