@@ -52,7 +52,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
   implicit val ec: ExecutionContext = mcc.executionContext
   val yesNoForm: Form[YesNo] = YesNoForm.yesNoForm("confirmRemove.error")
 
-  def showTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def showTradingName: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(prepopulationTradingNameKey) match {
       case Some(tradingName) =>
         val viewModel = CheckYourAnswersViewModel(
@@ -105,7 +105,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  def updateTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def updateTradingName: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
 
     user.session.get(prepopulationTradingNameKey) match {
       case Some(prepopTradingName) =>
@@ -121,7 +121,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  def showConfirmTradingNameRemoval(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def showConfirmTradingNameRemoval: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(tradingName) if tradingName.nonEmpty =>
         Future.successful(Ok(confirmRemoveTradingNameView(yesNoForm, tradingName)))
@@ -130,10 +130,10 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  def removeTradingName(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def removeTradingName: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(tradingName) =>
-        yesNoForm.bindFromRequest.fold(
+        yesNoForm.bindFromRequest().fold(
           errorForm => {
             Future.successful(BadRequest(confirmRemoveTradingNameView(errorForm, tradingName)))
           },
@@ -151,7 +151,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  def showBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
+  def showBusinessName: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate) { implicit user =>
     user.session.get(prepopulationBusinessNameKey) match {
       case Some(businessName) =>
         val viewModel = CheckYourAnswersViewModel(
@@ -166,7 +166,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  def updateBusinessName(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+  def updateBusinessName: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     (user.session.get(validationBusinessNameKey), user.session.get(prepopulationBusinessNameKey)) match {
       case (Some(currentBusinessName), Some(requestedBusinessName)) =>
 

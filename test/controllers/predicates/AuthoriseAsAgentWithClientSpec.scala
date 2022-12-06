@@ -39,7 +39,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
 
       "return 200" in {
 
-        mockAgentAuthorised()
+        mockAgentAuthorised
         val result = target(fakeRequestWithClientsVRN)
         status(result) shouldBe Status.OK
       }
@@ -49,7 +49,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
 
       "return 401 (Unauthorised)" in {
 
-        mockMissingBearerToken()
+        mockMissingBearerToken
         val result = target(fakeRequestWithClientsVRN)
         status(result) shouldBe Status.UNAUTHORIZED
       }
@@ -60,7 +60,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
       lazy val result = target(fakeRequestWithClientsVRN)
 
       "return 303" in {
-        mockAuthorisationException()
+        mockAuthorisationException
         status(result) shouldBe Status.SEE_OTHER
       }
 
@@ -74,7 +74,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
       lazy val result = target(fakeRequestWithClientsVRN)
 
       "return Internal Server Error (500)" in {
-        mockAgentWithoutAffinity()
+        mockAgentWithoutAffinity
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
 
@@ -85,7 +85,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
 
     "there is no client VRN in session" should {
 
-      mockAgentAuthorised()
+      mockAgentAuthorised
       lazy val result = target(postRequest)
 
       "return 303" in {

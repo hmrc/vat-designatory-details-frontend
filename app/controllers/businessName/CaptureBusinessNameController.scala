@@ -39,7 +39,7 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
 
   implicit val ec: ExecutionContext = authComps.executionContext
 
-  def show(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+  def show: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     val validationBusinessName: Future[Option[String]] = user.session.get(validationBusinessNameKey) match {
       case Some(businessName) => Future.successful(Some(businessName))
       case _ =>
@@ -59,11 +59,11 @@ class CaptureBusinessNameController @Inject()(val errorHandler: ErrorHandler,
   }
 
 
-  def submit(): Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
+  def submit: Action[AnyContent] = (authPredicate andThen businessNameAccessPredicate).async { implicit user =>
     val validationBusinessName: Option[String] = user.session.get(validationBusinessNameKey)
 
     validationBusinessName match {
-      case Some(validation) => businessNameForm(validation).bindFromRequest.fold(
+      case Some(validation) => businessNameForm(validation).bindFromRequest().fold(
         errorForm => {
           Future.successful(BadRequest(captureBusinessNameView(errorForm)))
         },

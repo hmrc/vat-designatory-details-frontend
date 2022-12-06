@@ -64,7 +64,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         }
 
         "return 200" in {
-          mockAgentAuthorised()
+          mockAgentAuthorised
           status(result) shouldBe Status.OK
         }
       }
@@ -200,7 +200,7 @@ class ChangeSuccessControllerSpec extends ControllerBaseSpec {
         }
 
         "return 200" in {
-          mockAgentAuthorised()
+          mockAgentAuthorised
           status(result) shouldBe Status.OK
         }
       }

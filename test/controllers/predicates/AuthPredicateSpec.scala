@@ -43,7 +43,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       "the Agent has an active HMRC-AS-AGENT enrolment" should {
 
         lazy val result = {
-          mockAgentAuthorised()
+          mockAgentAuthorised
           authPredicate(agent)
         }
 
@@ -54,7 +54,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       "the Agent does NOT have an Active HMRC-AS-AGENT enrolment" should {
 
         lazy val result = {
-          mockAgentWithoutEnrolment()
+          mockAgentWithoutEnrolment
           authPredicate(agent)
         }
 
@@ -72,7 +72,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
     "the agent does not have an affinity group" should {
 
       "return ISE (500)" in {
-        mockUserWithoutAffinity()
+        mockUserWithoutAffinity
         status(authPredicate(postRequest)) shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
@@ -82,7 +82,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       lazy val result = authPredicate(agent)
 
       "return Unauthorised (401)" in {
-        mockMissingBearerToken()
+        mockMissingBearerToken
         status(result) shouldBe Status.UNAUTHORIZED
       }
 
@@ -96,7 +96,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       lazy val result = authPredicate(agent)
 
       "return Internal Server Error (500)" in {
-        mockAuthorisationException()
+        mockAuthorisationException
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
 
@@ -180,7 +180,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       lazy val result = authPredicate(user)
 
       "return Forbidden (403)" in {
-        mockIndividualWithoutEnrolment()
+        mockIndividualWithoutEnrolment
         status(result) shouldBe Status.FORBIDDEN
       }
 

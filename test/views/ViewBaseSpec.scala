@@ -22,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import _root_.utils.TestUtil
 import org.jsoup.Jsoup
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait ViewBaseSpec extends TestUtil with GuiceOneAppPerSuite {
 

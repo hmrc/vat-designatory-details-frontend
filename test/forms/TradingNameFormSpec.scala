@@ -39,7 +39,7 @@ class TradingNameFormSpec extends TestUtil {
     "validate that trading name does not exceed max length" in {
       val exceed = tradingNameForm("").bind(Map("trading-name" -> ("a" * (maxLength + 1)))).errors
       exceed should contain(FormError("trading-name", maxLengthErrorMessage))
-      exceed.seq.size shouldBe 1
+      exceed.size shouldBe 1
     }
 
     "validate that trading name allows max length" in {

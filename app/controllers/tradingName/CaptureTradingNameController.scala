@@ -38,7 +38,7 @@ class CaptureTradingNameController @Inject()(val errorHandler: ErrorHandler,
                                              authComps: AuthPredicateComponents,
                                              inFlightComps: InFlightPredicateComponents) extends BaseController {
 
-  def show(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
+  def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate) { implicit user =>
     user.session.get(validationTradingNameKey) match {
       case Some(validationTradingName) =>
         val prepopulationTradingName = user.session.get(prepopulationTradingNameKey).getOrElse(validationTradingName)
@@ -49,11 +49,11 @@ class CaptureTradingNameController @Inject()(val errorHandler: ErrorHandler,
     }
   }
 
-  def submit(): Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+  def submit: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
     val validationTradingName: Option[String] = user.session.get(validationTradingNameKey)
 
     validationTradingName match {
-      case Some(validation) => tradingNameForm(validation).bindFromRequest.fold(
+      case Some(validation) => tradingNameForm(validation).bindFromRequest().fold(
         errorForm => {
           Future.successful(BadRequest(captureTradingNameView(errorForm, validation)))
         },
