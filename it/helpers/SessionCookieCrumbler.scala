@@ -45,6 +45,7 @@ object SessionCookieCrumbler {
       val Regex = """(.*)=(.*)""".r
       map.split("&").view.map {
         case Regex(k, v) => Map(URLDecoder.decode(k, "UTF-8") -> URLDecoder.decode(v, "UTF-8"))
+        case _ => Map("" -> "")
       }.view.reduce(_ ++ _)
     }
 
