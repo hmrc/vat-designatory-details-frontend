@@ -35,7 +35,7 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
     val yesOption = "div.govuk-radios__item:nth-child(1)"
     val noOption = "div.govuk-radios__item:nth-child(2)"
     val error = ".govuk-error-message"
-    val errorHeading = "#error-summary-title"
+    val errorHeading = ".govuk-error-summary__title"
     val errorLink = ".govuk-list > li > a"
     val errorMessage = "#yes_no-error"
     val backLink = ".govuk-back-link"

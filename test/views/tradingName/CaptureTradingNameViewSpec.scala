@@ -35,7 +35,7 @@ class CaptureTradingNameViewSpec extends ViewBaseSpec {
     val tradingNameField = "#trading-name"
     val continueButton = ".govuk-button"
     val errorSummary = "#trading-name-error"
-    val errorSummaryTitle = "#error-summary-title"
+    val errorSummaryTitle = ".govuk-error-summary__title"
     val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val tradingNameFormGroup = "#content > article > form > div:nth-child(1)"
   }

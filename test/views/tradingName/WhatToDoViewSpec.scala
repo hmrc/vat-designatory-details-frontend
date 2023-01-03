@@ -32,7 +32,7 @@ class WhatToDoViewSpec extends ViewBaseSpec {
     val backLink = ".govuk-back-link"
     val form = "form"
     val continueButton = ".govuk-button"
-    val errorSummaryTitle = "#error-summary-title"
+    val errorSummaryTitle = ".govuk-error-summary__title"
     val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val radioChangeLabel = "label[for=change]"
     val radioRemoveLabel = "label[for=remove]"

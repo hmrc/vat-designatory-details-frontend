@@ -34,7 +34,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
     val businessNameField = "#business-name"
     val continueButton = ".govuk-button"
     val errorSummary = "#business-name-error"
-    val errorSummaryTitle = "#error-summary-title"
+    val errorSummaryTitle = ".govuk-error-summary__title"
     val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val businessNameFormGroup = "#content > article > form > div:nth-child(1)"
     val paragraphOne = "#content p:nth-of-type(1)"
