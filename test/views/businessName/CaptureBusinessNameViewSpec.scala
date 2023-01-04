@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class CaptureBusinessNameViewSpec extends ViewBaseSpec {
     val businessNameField = "#business-name"
     val continueButton = ".govuk-button"
     val errorSummary = "#business-name-error"
-    val errorSummaryTitle = "#error-summary-title"
+    val errorSummaryTitle = ".govuk-error-summary__title"
     val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val businessNameFormGroup = "#content > article > form > div:nth-child(1)"
     val paragraphOne = "#content p:nth-of-type(1)"

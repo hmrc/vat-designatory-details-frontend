@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class ConfirmRemoveTradingNameViewSpec extends ViewBaseSpec {
     val yesOption = "div.govuk-radios__item:nth-child(1)"
     val noOption = "div.govuk-radios__item:nth-child(2)"
     val error = ".govuk-error-message"
-    val errorHeading = "#error-summary-title"
+    val errorHeading = ".govuk-error-summary__title"
     val errorLink = ".govuk-list > li > a"
     val errorMessage = "#yes_no-error"
     val backLink = ".govuk-back-link"

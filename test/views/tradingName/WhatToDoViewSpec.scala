@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class WhatToDoViewSpec extends ViewBaseSpec {
     val backLink = ".govuk-back-link"
     val form = "form"
     val continueButton = ".govuk-button"
-    val errorSummaryTitle = "#error-summary-title"
+    val errorSummaryTitle = ".govuk-error-summary__title"
     val errorSummaryLink = ".govuk-error-summary__list > li > a"
     val radioChangeLabel = "label[for=change]"
     val radioRemoveLabel = "label[for=remove]"
