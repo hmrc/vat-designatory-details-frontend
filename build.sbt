@@ -93,7 +93,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(playSettings: _*)
   .settings(majorVersion := 1)
   .settings(scalaSettings: _*)
-  .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
     Test / Keys.fork := true,
