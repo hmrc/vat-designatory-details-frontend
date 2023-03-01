@@ -17,7 +17,7 @@
 package connectors
 
 import config.AppConfig
-import connectors.httpParsers.ResponseHttpParser.{HttpGetResult, HttpPutResult}
+import connectors.httpParsers.ResponseHttpParser.HttpResult
 import javax.inject.{Inject, Singleton}
 import models.customerInformation.{CustomerInformation, UpdateBusinessName, UpdateOrganisationDetailsSuccess, UpdateTradingName}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -39,11 +39,11 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
     s"${appConfig.vatSubscriptionHost}/vat-subscription/$vrn/business-name"
 
   def getCustomerInfo(vrn: String)
-                     (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CustomerInformation]] = {
+                     (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResult[CustomerInformation]] = {
 
     import connectors.httpParsers.GetCustomerInfoHttpParser.CustomerInfoReads
 
-    http.GET[HttpGetResult[CustomerInformation]](getCustomerInfoUrl(vrn)).map {
+    http.GET[HttpResult[CustomerInformation]](getCustomerInfoUrl(vrn)).map {
       case customerInfo@Right(_) =>
         logger.debug(s"[VatSubscriptionConnector][getCustomerInfo] successfully received customer info response")
         customerInfo
@@ -55,22 +55,22 @@ class VatSubscriptionConnector @Inject()(http: HttpClient,
 
   def updateTradingName(vrn: String, orgDetails: UpdateTradingName)
                        (implicit hc: HeaderCarrier,
-                                ec: ExecutionContext): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+                                ec: ExecutionContext): Future[HttpResult[UpdateOrganisationDetailsSuccess]] = {
 
     import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
 
-    http.PUT[UpdateTradingName, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateTradingNameUrl(vrn), orgDetails)
+    http.PUT[UpdateTradingName, HttpResult[UpdateOrganisationDetailsSuccess]](updateTradingNameUrl(vrn), orgDetails)
 
   }
 
 
   def updateBusinessName(vrn: String, businessName: UpdateBusinessName)
                         (implicit hc: HeaderCarrier,
-                         ec: ExecutionContext): Future[HttpPutResult[UpdateOrganisationDetailsSuccess]] = {
+                         ec: ExecutionContext): Future[HttpResult[UpdateOrganisationDetailsSuccess]] = {
 
     import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsReads
 
-    http.PUT[UpdateBusinessName, HttpPutResult[UpdateOrganisationDetailsSuccess]](updateBusinessNameUrl(vrn), businessName)
+    http.PUT[UpdateBusinessName, HttpResult[UpdateOrganisationDetailsSuccess]](updateBusinessNameUrl(vrn), businessName)
   }
 
 }
