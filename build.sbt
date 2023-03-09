@@ -33,6 +33,7 @@ val bootstrapFrontendVersion    = "7.14.0"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
+scalacOptions ++= Seq("-Wconf:cat=unused-imports&site=.*views.html.*:s")
 RoutesKeys.routesImport := Seq.empty
 
 lazy val coverageSettings: Seq[Setting[_]] = {
