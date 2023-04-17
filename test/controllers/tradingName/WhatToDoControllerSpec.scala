@@ -40,7 +40,7 @@ class WhatToDoControllerSpec extends ControllerBaseSpec {
 
   def target(result: GetCustomerInfoResponse = Right(fullCustomerInfoModel)): WhatToDoController = {
     setup(result)
-    new WhatToDoController(inject[WhatToDoView], mockVatSubscriptionService)
+    new WhatToDoController(inject[WhatToDoView], mockVatSubscriptionService, mockAuditingService)
   }
 
   "Calling the show action" when {

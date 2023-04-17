@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package models.customerInformation
+package utils
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Writes}
+import play.api.libs.json.{JsNull, JsObject, Json}
 
-case class UpdateBusinessName(organisationName: String,
-                              capacitorEmail: Option[String])
+trait JsonObjectSugar {
 
-object UpdateBusinessName {
+  def jsonObjNoNulls(fields: (String, Json.JsValueWrapper)*): JsObject =
+    JsObject(Json.obj(fields:_*).fields.filterNot(_._2 == JsNull))
 
-  private val organisationNamePath = JsPath \ "organisationName"
-  private val capacitorEmailPath = JsPath \ "transactorOrCapacitorEmail"
-
-  implicit val writes: Writes[UpdateBusinessName] = (
-    organisationNamePath.write[String] and
-      capacitorEmailPath.writeNullable[String]
-    )(unlift(UpdateBusinessName.unapply))
 }
