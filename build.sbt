@@ -21,14 +21,14 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion       = "6.7.0-play-28"
+val hmrcUkFrontendVersion       = "7.3.0-play-28"
 val pegdownVersion              = "1.6.0"
 val jsoupVersion                = "1.13.1"
 val mockitoVersion              = "3.2.3.0"
 val scalaMockVersion            = "5.2.0"
 val wiremockVersion             = "2.26.3"
 val playJsonJodaVersion         = "2.9.2"
-val bootstrapFrontendVersion    = "7.14.0"
+val bootstrapFrontendVersion    = "7.15.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins] = Seq.empty
