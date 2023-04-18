@@ -16,23 +16,27 @@
 
 package controllers.tradingName
 
+import audit.AuditingService
 import common.SessionKeys.validationTradingNameKey
 import config.AppConfig
 import controllers.BaseController
 import controllers.predicates.AuthPredicateComponents
 import controllers.predicates.inflight.InFlightPredicateComponents
 import forms.WhatToDoForm.whatToDoForm
+
 import javax.inject.{Inject, Singleton}
 import models.{Change, Remove}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatSubscriptionService
 import views.html.tradingName.WhatToDoView
+import audit.models.StartChangeTradingNameAuditModel
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
-                                   vatSubscriptionService: VatSubscriptionService)
+                                   vatSubscriptionService: VatSubscriptionService,
+                                   auditService: AuditingService)
                                   (implicit val appConfig: AppConfig,
                                    mcc: MessagesControllerComponents,
                                    authComps: AuthPredicateComponents,
@@ -41,6 +45,12 @@ class WhatToDoController @Inject()(whatToDoView: WhatToDoView,
   implicit val ec: ExecutionContext = mcc.executionContext
 
   def show: Action[AnyContent] = (authPredicate andThen inFlightTradingNamePredicate).async { implicit user =>
+
+    auditService.audit(
+      StartChangeTradingNameAuditModel(user.vrn, user.isAgent, user.arn),
+        Some(controllers.tradingName.routes.WhatToDoController.show.url)
+    )
+
     val validationTradingName: Future[Option[String]] = user.session.get(validationTradingNameKey) match {
       case Some(tradingName) => Future.successful(Some(tradingName))
       case _ =>

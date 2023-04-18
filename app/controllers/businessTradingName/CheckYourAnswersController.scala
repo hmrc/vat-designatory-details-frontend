@@ -67,7 +67,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
     }
   }
 
-  private[controllers] def performTradingNameUpdate(updateTradingNameModel: UpdateTradingName, pageUrl: String)(implicit user: User[_]): Future[Result] = {
+  private[controllers] def performTradingNameUpdate(updateTradingNameModel: UpdateTradingName)(implicit user: User[_]): Future[Result] = {
     val existingTradingName = user.session.get(validationTradingNameKey)
     val newTradingName = updateTradingNameModel.tradingName.getOrElse("")
     vatSubscriptionService.updateTradingName(user.vrn, updateTradingNameModel).map {
@@ -82,7 +82,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             OK,
             successModel.formBundle
           ),
-          Some(pageUrl)
+          Some(controllers.routes.ChangeSuccessController.tradingName.url)
         )
         Redirect(controllers.routes.ChangeSuccessController.tradingName)
           .addingToSession(tradingNameChangeSuccessful -> "true", inFlightOrgDetailsKey -> "true", prepopulationTradingNameKey -> newTradingName)
@@ -114,7 +114,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
           tradingName = Some(prepopTradingName),
           capacitorEmail = user.session.get(mtdVatvcVerifiedAgentEmail)
         )
-        performTradingNameUpdate(orgDetails, routes.CheckYourAnswersController.updateTradingName.url)
+        performTradingNameUpdate(orgDetails)
 
       case _ =>
         Future.successful(Redirect(controllers.tradingName.routes.CaptureTradingNameController.show))
@@ -141,8 +141,7 @@ class CheckYourAnswersController @Inject() (val errorHandler: ErrorHandler,
             case Yes => performTradingNameUpdate(
               UpdateTradingName(
                 None, user.session.get(mtdVatvcVerifiedAgentEmail)
-              ),
-              controllers.businessTradingName.routes.CheckYourAnswersController.removeTradingName.url
+              )
             )
             case No => Future.successful(Redirect(appConfig.manageVatSubscriptionServicePath))
           }
