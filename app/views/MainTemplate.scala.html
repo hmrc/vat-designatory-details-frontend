@@ -17,17 +17,14 @@
 @import config.AppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.LanguageSelect
 @import views.utils.ServiceNameUtil
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 
 @this(govukLayout: GovukLayout,
       govukHeader: GovukHeader,
-      govukPhaseBanner: GovukPhaseBanner,
       hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
       hmrcLanguageSelect: HmrcLanguageSelect,
       hmrcTimeoutDialog: HmrcTimeoutDialog,
       hmrcStandardFooter: HmrcStandardFooter,
       hmrcStandardHeader: HmrcStandardHeader,
-      standardBetaBanner: StandardBetaBanner,
       hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet)
 
 @(pageTitle: String,
@@ -88,8 +85,7 @@
     serviceUrl = ServiceNameUtil.generateServiceUrl,
     signOutUrl =
       if(showSignOut) Some(routes.SignOutController.signOut(feedbackOnSignOut).url)
-      else None,
-    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl(request.uri)))
+      else None
   )
 }
 
