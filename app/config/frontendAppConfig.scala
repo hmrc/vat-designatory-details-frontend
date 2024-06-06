@@ -17,14 +17,15 @@
 package config
 
 import java.util.Base64
-
 import config.{ConfigKeys => Keys}
+
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.Call
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import java.net.URLEncoder
 
 trait AppConfig {
   val appName: String
@@ -80,7 +81,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   private lazy val signInBaseUrl: String = sc.getString(Keys.signInBaseUrl)
   private lazy val signInOrigin = sc.getString("appName")
   override lazy val signInUrl: String = s"$signInBaseUrl?continue=$signInContinueUrl&origin=$signInOrigin"
-  override lazy val signInContinueUrl: String = SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl
+  override lazy val signInContinueUrl: String = URLEncoder.encode(manageVatSubscriptionServicePath, "UTF-8")
   override def feedbackSignOutUrl(identifier: String): String =
     s"$governmentGatewayHost/bas-gateway/sign-out-without-state?continue=${feedbackSurveyUrl(identifier)}"
   override lazy val unauthorisedSignOutUrl: String =
@@ -117,7 +118,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val vatAgentClientLookupUnauthorisedForClient: String =
     vatAgentClientLookupServiceUrl +
       sc.getString(Keys.vatAgentClientLookupUnauthorisedForClient) +
-      s"?redirectUrl=${SafeRedirectUrl(manageVatSubscriptionServicePath).encodedUrl}"
+      s"?redirectUrl=${URLEncoder.encode(manageVatSubscriptionServicePath, "UTF-8")}"
 
   override lazy val vatSummaryFrontendUrl: String = sc.getString(Keys.vatSummaryFrontendHost) + sc.getString(Keys.vatSummaryFrontendUrl)
 
@@ -127,7 +128,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val contactHmrcUrl: String = sc.getString(Keys.contactHmrc)
 
   override def feedbackUrl(redirect: String): String = s"$contactFrontendService/contact/beta-feedback?service=$contactFormServiceIdentifier" +
-    s"&backUrl=${SafeRedirectUrl(host + redirect).encodedUrl}"
+    s"&backUrl=${URLEncoder.encode(host + redirect, "UTF-8")}"
 
   override val gtmContainer: String = sc.getString(Keys.gtmContainer)
 
