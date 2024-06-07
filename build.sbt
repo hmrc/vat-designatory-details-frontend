@@ -72,13 +72,6 @@ def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
   "com.github.tomakehurst"  %  "wiremock"                % wiremockVersion             % scope
 )
 
-def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] = tests map {
-  test =>
-    Group(test.name, Seq(test), SubProcess(
-      ForkOptions().withRunJVMOptions(Vector("-Dtest.name=" + test.name, "-Dlogger.resource=logback-test.xml"))
-    ))
-}
-
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
@@ -106,6 +99,5 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / Keys.fork := false,
     IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest / testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     IntegrationTest / parallelExecution := false
   )
