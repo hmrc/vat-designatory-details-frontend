@@ -104,10 +104,3 @@ lazy val microservice = Project(appName, file("."))
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest / parallelExecution := false
   )
-
-//dependencyOverrides ++= Seq(
-//  "com.fasterxml.jackson.core"    % "jackson-databind"     % "2.14.3",
-//  "com.fasterxml.jackson.core"    % "jackson-core"         % "2.14.3",
-//  "com.fasterxml.jackson.core"    % "jackson-annotations"  % "2.14.3",
-//  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.3"
-//)
