@@ -20,44 +20,42 @@ import assets.CustomerInfoConstants._
 import connectors.VatSubscriptionConnector
 import connectors.httpParsers.GetCustomerInfoHttpParser.GetCustomerInfoResponse
 import connectors.httpParsers.UpdateOrganisationDetailsHttpParser.UpdateOrganisationDetailsResponse
-import models.customerInformation.{UpdateBusinessName, UpdateTradingName, UpdateOrganisationDetailsSuccess}
+import models.customerInformation.{UpdateBusinessName, UpdateOrganisationDetailsSuccess, UpdateTradingName}
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockVatSubscriptionConnector extends MockFactory {
+  self: TestSuite =>
 
   val connector: VatSubscriptionConnector = mock[VatSubscriptionConnector]
 
-  def mockGetCustomerInfoResponse(result: Future[GetCustomerInfoResponse]): Unit = {
-    (connector.getCustomerInfo(_: String)(_: HeaderCarrier, _: ExecutionContext))
+  def mockGetCustomerInfoResponse(result: Future[GetCustomerInfoResponse]): Unit =
+    (connector
+      .getCustomerInfo(_: String)(_: HeaderCarrier, _: ExecutionContext))
       .expects(*, *, *)
       .returns(result)
-  }
 
-  def mockUpdateTradingNameResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit = {
-    (connector.updateTradingName(_: String, _: UpdateTradingName)(_: HeaderCarrier,
-      _: ExecutionContext))
+  def mockUpdateTradingNameResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit =
+    (connector
+      .updateTradingName(_: String, _: UpdateTradingName)(_: HeaderCarrier, _: ExecutionContext))
       .expects(*, *, *, *)
       .returns(result)
-  }
 
-  def mockUpdateBusinessNameResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit = {
-    (connector.updateBusinessName(_: String, _: UpdateBusinessName)(_: HeaderCarrier, _: ExecutionContext))
+  def mockUpdateBusinessNameResponse(result: Future[UpdateOrganisationDetailsResponse]): Unit =
+    (connector
+      .updateBusinessName(_: String, _: UpdateBusinessName)(_: HeaderCarrier, _: ExecutionContext))
       .expects(*, *, *, *)
       .returns(result)
-  }
 
-  def mockGetCustomerInfoSuccessResponse(): Unit = mockGetCustomerInfoResponse(
-    Future.successful(Right(fullCustomerInfoModel)))
+  def mockGetCustomerInfoSuccessResponse(): Unit = mockGetCustomerInfoResponse(Future.successful(Right(fullCustomerInfoModel)))
 
-  def mockGetCustomerInfoFailureResponse(): Unit = mockGetCustomerInfoResponse(
-    Future.successful(Left(invalidJsonError)))
+  def mockGetCustomerInfoFailureResponse(): Unit = mockGetCustomerInfoResponse(Future.successful(Left(invalidJsonError)))
 
   def mockUpdateTradingNameSuccessResponse(): Unit = mockUpdateTradingNameResponse(
     Future.successful(Right(UpdateOrganisationDetailsSuccess("success"))))
 
-  def mockUpdateTradingNameFailureResponse(): Unit = mockUpdateTradingNameResponse(
-    Future.successful(Left(invalidJsonError)))
+  def mockUpdateTradingNameFailureResponse(): Unit = mockUpdateTradingNameResponse(Future.successful(Left(invalidJsonError)))
 }
