@@ -19,11 +19,11 @@ import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, s
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion    = "9.11.0"
-val pegdownVersion           = "1.6.0"
+val hmrcUkFrontendVersion    = "12.11.0"
 val jsoupVersion             = "1.19.1"
 val mockitoVersion           = "3.2.10.0"
 val scalaMockVersion         = "7.3.0"
+val flexMarkVersion          = "0.64.8"
 val wiremockVersion          = "3.0.1"
 val playJsonJodaVersion      = "2.10.6"
 val bootstrapFrontendVersion = "8.6.0"
@@ -69,7 +69,7 @@ val compile = Seq(
 def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc"           %% "bootstrap-test-play-30" % bootstrapFrontendVersion % scope,
   "org.scalamock"         %% "scalamock"              % scalaMockVersion         % scope,
-  "org.pegdown"            % "pegdown"                % pegdownVersion           % scope,
+  "com.vladsch.flexmark"   %  "flexmark-all"          % flexMarkVersion          % scope,
   "org.jsoup"              % "jsoup"                  % jsoupVersion             % scope,
   "org.scalatestplus"     %% "mockito-3-4"            % mockitoVersion           % scope,
   "com.github.tomakehurst" % "wiremock"               % wiremockVersion          % scope
