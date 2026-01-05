@@ -16,6 +16,7 @@
 
 @import config.AppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.LanguageSelect
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import views.utils.ServiceNameUtil
 @import views.html.helper.CSPNonce
 
@@ -26,14 +27,16 @@
       hmrcTimeoutDialog: HmrcTimeoutDialog,
       hmrcStandardFooter: HmrcStandardFooter,
       hmrcStandardHeader: HmrcStandardHeader,
-      hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet)
+      hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+      hmrcUserResearchBanner : HmrcUserResearchBanner)
 
 @(pageTitle: String,
   serviceName: Option[String] = None,
   showSignOut: Boolean = true,
   feedbackOnSignOut: Boolean = true,
-  backLinkContent: Option[Html] = None
-)(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
+  backLinkContent: Option[Html] = None,
+  urBanner: Option[UserResearchBanner] = None
+)(mainContent: Html)(implicit request : RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @navTitle = @{
   serviceName.fold{
@@ -89,7 +92,8 @@
     serviceUrl = ServiceNameUtil.generateServiceUrl,
     signOutUrl =
       if(showSignOut) Some(routes.SignOutController.signOut(feedbackOnSignOut).url)
-      else None
+      else None,
+    additionalBannersBlock = urBanner.map(hmrcUserResearchBanner(_))
   )
 }
 

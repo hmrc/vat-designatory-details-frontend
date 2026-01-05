@@ -19,14 +19,14 @@ import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, s
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion    = "12.11.0"
-val jsoupVersion             = "1.19.1"
+val hmrcUkFrontendVersion    = "12.25.0"
+val jsoupVersion             = "1.22.1"
 val mockitoVersion           = "3.2.10.0"
-val scalaMockVersion         = "7.3.0"
+val scalaMockVersion         = "7.5.2"
 val flexMarkVersion          = "0.64.8"
-val wiremockVersion          = "3.0.1"
-val playJsonJodaVersion      = "2.10.6"
-val bootstrapFrontendVersion = "8.6.0"
+val wiremockVersion          = "3.8.0"
+val playJsonJodaVersion      = "2.10.8"
+val bootstrapFrontendVersion = "10.5.0"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins]          = Seq.empty
@@ -63,13 +63,13 @@ val compile = Seq(
   "uk.gov.hmrc"                  %% "bootstrap-frontend-play-30" % bootstrapFrontendVersion,
   "uk.gov.hmrc"                  %% "play-frontend-hmrc-play-30" % hmrcUkFrontendVersion,
   "com.typesafe.play"            %% "play-json-joda"             % playJsonJodaVersion,
-  "com.fasterxml.jackson.module" %% "jackson-module-scala"       % "2.15.2"
+  "com.fasterxml.jackson.module" %% "jackson-module-scala"       % "2.20.1"
 )
 
 def test(scope: String = "test, it"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc"           %% "bootstrap-test-play-30" % bootstrapFrontendVersion % scope,
   "org.scalamock"         %% "scalamock"              % scalaMockVersion         % scope,
-  "com.vladsch.flexmark"   %  "flexmark-all"          % flexMarkVersion          % scope,
+  "com.vladsch.flexmark"   % "flexmark-all"           % flexMarkVersion          % scope,
   "org.jsoup"              % "jsoup"                  % jsoupVersion             % scope,
   "org.scalatestplus"     %% "mockito-3-4"            % mockitoVersion           % scope,
   "com.github.tomakehurst" % "wiremock"               % wiremockVersion          % scope
@@ -92,7 +92,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings() *)
   .settings(
     Test / Keys.fork := true,
-    scalaVersion     := "2.13.16",
+    scalaVersion     := "2.13.18",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true
   )

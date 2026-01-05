@@ -101,7 +101,7 @@ class AuthPredicateSpec extends MockAuth with MaterializerSupport {
       }
 
       "render the Unauthorised page" in {
-        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "There is a problem with the service - Your client’s VAT details - GOV.UK"
+        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "Sorry, there is a problem with the service - Your client’s VAT details - GOV.UK"
       }
     }
   }

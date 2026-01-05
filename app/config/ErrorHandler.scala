@@ -18,26 +18,34 @@ package config
 
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{Request, RequestHeader, Result}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import play.api.mvc.Results.{InternalServerError, NotFound}
+import play.api.mvc.Results.InternalServerError
 import views.html.errors.StandardErrorView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                              standardErrorView: StandardErrorView,
-                             implicit val appConfig: AppConfig) extends FrontendErrorHandler {
+                             implicit val appConfig: AppConfig,
+                             implicit val ec: ExecutionContext) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)
-                                    (implicit request: Request[_]): Html =
-    standardErrorView("standardError.title", "standardError.heading", "standardError.message")
+                                    (implicit request: RequestHeader): Future[Html] =
+    Future.successful(standardErrorView("standardError.title", "standardError.heading", "standardError.message"))
 
-  def showInternalServerError(implicit request: Request[_]): Result = InternalServerError(internalServerErrorTemplate)
+  def showInternalServerError(implicit request: Request[_]): Result =
+    InternalServerError(
+      standardErrorView(
+        "global.error.InternalServerError500.title",
+        "global.error.InternalServerError500.heading",
+        "global.error.InternalServerError500.message"
+      )
+    )
 
-  override def notFoundTemplate(implicit request: Request[_]): Html =
-    standardErrorView("notFound.title", "notFound.heading", "notFound.message")
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] =
+    Future.successful(standardErrorView("notFound.title", "notFound.heading", "notFound.message"))
 
-  def showNotFoundError(implicit request: Request[_]): Result =
-    NotFound(notFoundTemplate)
 }

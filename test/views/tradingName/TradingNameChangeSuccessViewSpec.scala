@@ -28,7 +28,7 @@ class TradingNameChangeSuccessViewSpec extends ViewBaseSpec {
   object Selectors {
     val title = "title"
     val pageHeading = "h1"
-    val secondaryHeading = "h2"
+    val secondaryHeading = "#content h2"
     val paragraphOne = "#content p:nth-of-type(1)"
     val paragraphTwo = "#content p:nth-of-type(2)"
     val button = ".govuk-button"
