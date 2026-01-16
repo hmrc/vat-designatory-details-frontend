@@ -79,7 +79,7 @@ class AuthoriseAsAgentWithClientSpec extends MockAuth {
       }
 
       "render the Internal Server Error page" in {
-        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "There is a problem with the service - VAT - GOV.UK"
+        messages(Jsoup.parse(contentAsString(result)).title) shouldBe "Sorry, there is a problem with the service - VAT - GOV.UK"
       }
     }
 

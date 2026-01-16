@@ -47,7 +47,7 @@ trait TestUtil extends AnyWordSpecLike with Matchers with OptionValues
   implicit lazy val messages: Messages = MessagesImpl(Lang("en-GB"), messagesApi)
   implicit lazy val mockConfig: MockAppConfig = new MockAppConfig(app.configuration)
 
-  lazy val mockErrorHandler: ErrorHandler = new ErrorHandler(messagesApi, inject[StandardErrorView], mockConfig)
+  lazy val mockErrorHandler: ErrorHandler = new ErrorHandler(messagesApi, inject[StandardErrorView], mockConfig, ec)
 
   val testTradingName = "Test Trading Name"
   val testBusinessName = "Test Business Name"

@@ -42,7 +42,7 @@ class BusinessNameChangeSuccessViewSpec extends ViewBaseSpec {
       }
 
       "have the correct second heading" in {
-        elementText("h2") shouldBe secondHeading
+        elementText("#content h2") shouldBe secondHeading
       }
 
       "have the correct first paragraph" in {

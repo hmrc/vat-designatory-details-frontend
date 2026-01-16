@@ -21,7 +21,14 @@
 @messageKeySuffix = @{if(user.isAgent){".agent"}else{""}}
 @buttonMessageKey = @{s"changeSuccess.viewBusinessDetails$messageKeySuffix"}
 
-@mainTemplate(pageTitle = messages("updateBusinessNameSuccess.title")) {
+@mainTemplate(
+    pageTitle = messages("updateBusinessNameSuccess.title"),
+    urBanner = Some(UserResearchBanner(
+        url = appConfig.urBannerUrl,
+        hideCloseButton = true,
+        language = if(messages.lang.code == "en") En else Cy
+    ))
+) {
 
   <div class="govuk-panel govuk-panel--confirmation">
     <h1 class="govuk-panel__title">

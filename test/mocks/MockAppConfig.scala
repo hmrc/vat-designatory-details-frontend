@@ -65,4 +65,6 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
 
   override val btaHomeUrl: String = "bta-url"
+
+  override val urBannerUrl: String = "ur-banner-url"
 }
