@@ -17,6 +17,7 @@
 package mocks
 
 import config.AppConfig
+import config.features.Features
 import play.api.{Configuration, Mode}
 import play.api.i18n.Lang
 import play.api.mvc.Call
@@ -65,6 +66,8 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val businessNameGuidanceUrl: String = "https://www.gov.uk/government/publications/incorporation-and-names/incorporation-and-names"
 
   override val btaHomeUrl: String = "bta-url"
+
+  override val features: Features = new Features()(runModeConfiguration)
 
   override val urBannerUrl: String = "ur-banner-url"
 }
