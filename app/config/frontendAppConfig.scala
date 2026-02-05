@@ -16,6 +16,8 @@
 
 package config
 
+import config.features.Features
+
 import java.util.Base64
 import config.{ConfigKeys => Keys}
 
@@ -58,6 +60,7 @@ trait AppConfig {
   val gtmContainer: String
   val businessNameGuidanceUrl: String
   val btaHomeUrl: String
+  val features: Features
   val urBannerUrl: String
 }
 
@@ -137,6 +140,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
 
   override lazy val btaHomeUrl: String =
     sc.getString(Keys.businessTaxAccountHost) + sc.getString(Keys.businessTaxAccountUrl)
+
+  override val features: Features = new Features()(configuration)
 
   override val urBannerUrl: String = sc.getString(ConfigKeys.urBannerUrl)
 }
