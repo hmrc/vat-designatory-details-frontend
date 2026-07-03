@@ -19,7 +19,7 @@ import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, s
 
 val appName = "vat-designatory-details-frontend"
 
-val hmrcUkFrontendVersion    = "12.25.0"
+val hmrcUkFrontendVersion    = "12.32.0"
 val jsoupVersion             = "1.22.1"
 val mockitoVersion           = "3.2.10.0"
 val scalaMockVersion         = "7.5.2"
