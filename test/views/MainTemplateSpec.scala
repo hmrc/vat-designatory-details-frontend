@@ -26,7 +26,8 @@ class MainTemplateSpec extends ViewBaseSpec {
   val injectedView: MainTemplate = inject[MainTemplate]
 
   object Selectors {
-    val navTitle = ".govuk-header__service-name"
+    val navTitle = ".govuk-service-navigation__link"
+    val navTitleNoUserType = ".govuk-service-navigation__text"
     val signOutLink = ".hmrc-sign-out-nav__link"
     val firstListLink = "li > a"
   }
@@ -68,11 +69,11 @@ class MainTemplateSpec extends ViewBaseSpec {
           lazy implicit val document: Document = Jsoup.parse(view.body)
 
           "have no nav title" in {
-            elementText(Selectors.navTitle) shouldBe "VAT"
+            elementText(Selectors.navTitleNoUserType) shouldBe "VAT"
           }
 
           "have the correct service URL" in {
-            element(Selectors.navTitle).attr("href") shouldBe ""
+            element(Selectors.navTitleNoUserType).attr("href") shouldBe ""
           }
         }
 
