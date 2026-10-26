@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import views.helpers.UrBannerUtil
+
 @this(mainTemplate: MainTemplate, govukButton: GovukButton)
 
 @()(implicit messages: Messages, appConfig: config.AppConfig, user: User[_])
@@ -23,11 +25,7 @@
 
 @mainTemplate(
     pageTitle = messages("updateBusinessNameSuccess.title"),
-    urBanner = Some(UserResearchBanner(
-        url = appConfig.urBannerUrl,
-        hideCloseButton = true,
-        language = if(messages.lang.code == "en") En else Cy
-    ))
+    urBanner = Some(UrBannerUtil.getUrBanner())
 ) {
 
   <div class="govuk-panel govuk-panel--confirmation">
