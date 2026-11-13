@@ -24,6 +24,10 @@ Use the following command to run unit and integration tests:
 
 `sbt test it:test`
 
+or 
+run the below script
+```./run-all-tests.sh```
+
 ## License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
