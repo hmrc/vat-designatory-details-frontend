@@ -70,5 +70,4 @@ class MockAppConfig(val runModeConfiguration: Configuration, val mode: Mode = Mo
   override val features: Features = new Features()(runModeConfiguration)
 
   override val urBannerUrl: String = "ur-banner-url"
-  override val isServiceNavigationEnabled: Boolean = false
 }
