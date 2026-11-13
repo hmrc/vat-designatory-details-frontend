@@ -62,7 +62,6 @@ trait AppConfig {
   val btaHomeUrl: String
   val features: Features
   val urBannerUrl: String
-  val isServiceNavigationEnabled: Boolean
 }
 
 @Singleton
@@ -145,5 +144,4 @@ class FrontendAppConfig @Inject()(configuration: Configuration, sc: ServicesConf
   override val features: Features = new Features()(configuration)
 
   override val urBannerUrl: String = sc.getString(ConfigKeys.urBannerUrl)
-  override lazy val isServiceNavigationEnabled: Boolean = sc.getBoolean("play-frontend-hmrc.forceServiceNavigation")
 }
