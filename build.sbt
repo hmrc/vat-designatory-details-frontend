@@ -26,7 +26,7 @@ val scalaMockVersion         = "7.5.2"
 val flexMarkVersion          = "0.64.8"
 val wiremockVersion          = "3.8.0"
 val playJsonJodaVersion      = "2.10.8"
-val bootstrapFrontendVersion = "10.5.0"
+val bootstrapFrontendVersion = "10.7.1"
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 lazy val plugins: Seq[Plugins]          = Seq.empty
